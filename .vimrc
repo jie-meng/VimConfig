@@ -20,6 +20,8 @@ Plug 'vim-scripts/a.vim'
 
 Plug 'pangloss/vim-javascript'
 
+Plug 'airblade/vim-gitgutter'
+
 call plug#end()
 
 " global 
@@ -122,3 +124,7 @@ map <Leader>ffs :Ack! --javascript<Space>
 
 " pangloss/vim-javascript'
 let g:javascript_plugin_jsdoc = 1
+
+" terminal
+set splitbelow
+map <Leader>] :ter ++rows=20<Enter>
