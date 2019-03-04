@@ -114,17 +114,17 @@ map <Leader>fc :Ack! --cpp <cword>
 map <Leader>fp :Ack! --python <cword>
 map <Leader>fj :Ack! --java <cword> 
 map <Leader>fx :Ack! --xml <cword> 
-map <Leader>fs :Ack! --javascript <cword> 
+map <Leader>fs :Ack! --js <cword> 
 
 map <Leader>ffc :Ack! --cpp<Space>
 map <Leader>ffp :Ack! --python<Space>
 map <Leader>ffj :Ack! --java<Space> 
 map <Leader>ffx :Ack! --xml<Space> 
-map <Leader>ffs :Ack! --javascript<Space> 
+map <Leader>ffs :Ack! --js<Space> 
 
 " pangloss/vim-javascript'
 let g:javascript_plugin_jsdoc = 1
 
 " terminal
 set splitbelow
-map <Leader>] :ter ++rows=20<Enter>
+map <Leader>t :ter ++rows=20<Enter>
