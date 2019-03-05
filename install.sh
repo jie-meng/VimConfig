@@ -8,11 +8,12 @@ main() {
     brew install ag
   fi
 
-  # ack
-  if brew ls --versions ack > /dev/null; then
-    echo "You had install ack"
+  # fzf
+  if brew ls --versions fzf > /dev/null; then
+    echo "You had install fzf"
   else
-    brew install ack
+    brew install fzf
+    $(brew --prefix)/opt/fzf/install
   fi
 
   # ctags

@@ -4,13 +4,9 @@ Plug 'tpope/vim-fugitive'
 
 Plug 'scrooloose/nerdtree'
 
-Plug 'kien/ctrlp.vim'
-
 Plug 'vim-airline/vim-airline'
 
 Plug 'flazz/vim-colorschemes'
-
-Plug 'mileszs/ack.vim'
 
 Plug 'terryma/vim-multiple-cursors'
 
@@ -27,6 +23,10 @@ Plug 'majutsushi/tagbar'
 Plug 'xolox/vim-misc'
 
 Plug 'crusoexia/vim-monokai'
+
+Plug 'junegunn/fzf'
+
+Plug 'junegunn/fzf.vim'
 
 call plug#end()
 
@@ -113,6 +113,25 @@ let g:NERDTreeDirArrowCollapsible = '▾'
 "" search dir
 let g:NERDTreeChDirMode = 2
 
+" fzf
+set rtp+=/usr/local/opt/fzf
+
+nmap <Leader>F :Files<CR>
+nmap <Leader>f :GFiles<CR>
+nmap <Leader>b :Buffers<CR>
+nmap <Leader>t :BTags<CR>
+nmap <Leader>T :Tags<CR>
+nmap <Leader>: :History:<CR>
+nmap <Leader>/ :History/<CR>
+nmap <Leader>l :BLines<CR>
+nmap <Leader>L :Lines<CR>
+nmap <Leader>' :Marks<CR>
+nmap <Leader>a :Ag<Space>
+nmap <Leader>H :Helptags!<CR>
+nmap <Leader>C :Commands<CR>
+nmap <Leader>M :Maps<CR>
+nmap <Leader>s :Filetypes<CR>
+
 " ctags 
 map <Leader>rr :!ctags -R --exclude=.git --exclude=log *<Enter>
 
@@ -122,43 +141,18 @@ let g:airline#extensions#tabline#enabled = 1
 "" configure the formatting of filenames
 let g:airline#extensions#tabline#fnamemod = ':t'
 
-" ctrlp
-map <Leader>e :CtrlPBuffer<Enter>
-let g:ctrlp_max_files = 0
-let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_working_path_mode = 'rw'
-
 " move between different window
 map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
-" mileszs/ack.vim
-" https://github.com/mileszs/ack.vim
-" let g:ackpreview = 1
-let g:ack_use_cword_for_empty_search = 1
-
-map <Leader>f :Ack!<Space>
-map <Leader>fc :Ack! --cpp <cword>
-map <Leader>fp :Ack! --python <cword>
-map <Leader>fj :Ack! --java <cword> 
-map <Leader>fx :Ack! --xml <cword> 
-map <Leader>fs :Ack! --js <cword> 
-
-map <Leader>ffc :Ack! --cpp<Space>
-map <Leader>ffp :Ack! --python<Space>
-map <Leader>ffj :Ack! --java<Space> 
-map <Leader>ffx :Ack! --xml<Space> 
-map <Leader>ffs :Ack! --js<Space> 
-
-
 " pangloss/vim-javascript'
 let g:javascript_plugin_jsdoc = 1
 
 " terminal
 set splitbelow
-map <Leader>t :ter ++rows=20<Enter>
+map <Leader>` :ter ++rows=20<Enter>
 
 " tagbar
 nnoremap <Leader><F12> :TagbarOpenAutoClose<CR>
