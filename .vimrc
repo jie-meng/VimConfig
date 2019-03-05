@@ -28,6 +28,8 @@ Plug 'junegunn/fzf'
 
 Plug 'junegunn/fzf.vim'
 
+Plug 'davidhalter/jedi-vim'
+
 call plug#end()
 
 " global 
@@ -120,6 +122,7 @@ nmap <Leader>F :Files<CR>
 nmap <Leader>f :GFiles<CR>
 nmap <Leader>b :Buffers<CR>
 nmap <Leader>t :BTags<CR>
+nmap <Leader>h :History<CR>
 nmap <Leader>T :Tags<CR>
 nmap <Leader>: :History:<CR>
 nmap <Leader>/ :History/<CR>
