@@ -22,14 +22,35 @@ Plug 'pangloss/vim-javascript'
 
 Plug 'airblade/vim-gitgutter'
 
+Plug 'majutsushi/tagbar'
+
+Plug 'xolox/vim-misc'
+
+Plug 'crusoexia/vim-monokai'
+
 call plug#end()
 
 " global 
+filetype on
+syntax on 
+colorscheme monokai
+
 set nu
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 set termencoding=utf-8
 set encoding=utf-8
 set hlsearch
+set nocompatible
+set backspace=indent,eol,start
+set smartindent
+set showmatch
+
+"" quick edit vimrc
+map <Leader><F2> :e ~/.vimrc<CR>
+
+"" chagne buffer
+map <Leader>[ :bp<Enter>
+map <Leader>] :bn<Enter>
 
 "" Disable swap
 set noswapfile
@@ -83,16 +104,23 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 "" toggle tree
 map <Leader>n :NERDTreeToggle<Enter>
 "" locate current file in the tree
-map <Leader>j :NERDTreeFind<Enter>
+nnoremap <Leader>j :NERDTreeFind<Enter>
 inoremap <Leader>j <Esc>:NERDTreeFind<Enter>
+""" autocmd BufWinEnter * NERDTreeFind
 "" folder icon
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 "" search dir
 let g:NERDTreeChDirMode = 2
 
-" ctags
+" ctags 
 map <Leader>rr :!ctags -R --exclude=.git --exclude=log *<Enter>
+
+" bling/vim-airline
+"" smarter tab line
+let g:airline#extensions#tabline#enabled = 1
+"" configure the formatting of filenames
+let g:airline#extensions#tabline#fnamemod = ':t'
 
 " ctrlp
 map <Leader>e :CtrlPBuffer<Enter>
@@ -108,7 +136,9 @@ map <C-l> <C-W>l
 
 " mileszs/ack.vim
 " https://github.com/mileszs/ack.vim
+" let g:ackpreview = 1
 let g:ack_use_cword_for_empty_search = 1
+
 map <Leader>f :Ack!<Space>
 map <Leader>fc :Ack! --cpp <cword>
 map <Leader>fp :Ack! --python <cword>
@@ -122,9 +152,13 @@ map <Leader>ffj :Ack! --java<Space>
 map <Leader>ffx :Ack! --xml<Space> 
 map <Leader>ffs :Ack! --js<Space> 
 
+
 " pangloss/vim-javascript'
 let g:javascript_plugin_jsdoc = 1
 
 " terminal
 set splitbelow
 map <Leader>t :ter ++rows=20<Enter>
+
+" tagbar
+nnoremap <Leader><F12> :TagbarOpenAutoClose<CR>
