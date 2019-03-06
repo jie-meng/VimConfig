@@ -80,14 +80,16 @@ set shiftwidth=4
 
 "" font
 if has('macunix')
-  set guifont=Monaco:h14
+    set guifont=Monaco:h14
 elseif has('unix')
-  set guifont="Ubuntu Mono" 14
+    set guifont="Ubuntu Mono" 14
 endif
 
 "" resize window
 map <Leader>= :vertical resize +10<Enter>
 map <Leader>- :vertical resize -10<Enter>
+map <Leader>. :resize +10<Enter>
+map <Leader>, :resize -10<Enter>
 
 "" hightline current line and column
 au WinLeave * set nocursorline nocursorcolumn
