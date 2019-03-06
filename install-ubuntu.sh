@@ -13,6 +13,11 @@ main() {
         curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
             https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     fi
+
+
+    cp ./vimrc ~
+
+    vim -c :PlugInstall
 }
 
 main
