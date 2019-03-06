@@ -30,6 +30,8 @@ Plug 'junegunn/fzf.vim'
 
 Plug 'davidhalter/jedi-vim'
 
+Plug 'kannokanno/previm'
+
 call plug#end()
 
 " global 
@@ -159,3 +161,13 @@ map <Leader>` :ter ++rows=20<Enter>
 
 " tagbar
 nnoremap <Leader><F12> :TagbarOpenAutoClose<CR>
+
+" previm
+if has('macunix')
+    let g:previm_open_cmd = 'open -a Google\ Chrome'
+elseif has('unix')
+    let g:previm_open_cmd = 'open -a Firefox'
+endif
+
+map <Leader>P :PrevimOpen<CR>
+
