@@ -33,7 +33,7 @@ main() {
             https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     fi
 
-    cp ./vimrc ~
+    cp ./.vimrc ~
 
     vim -c :PlugInstall
 }

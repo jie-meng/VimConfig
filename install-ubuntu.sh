@@ -15,7 +15,7 @@ main() {
     fi
 
 
-    cp ./vimrc ~
+    cp ./.vimrc ~
 
     vim -c :PlugInstall
 }
