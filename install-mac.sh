@@ -6,7 +6,6 @@ main() {
         echo "You had install ag"
     else
         brew install ag
-        # ubuntu: sudo apt-get install silversearcher-ag
     fi
 
     # fzf
