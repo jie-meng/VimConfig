@@ -117,6 +117,10 @@ let g:NERDTreeDirArrowCollapsible = '▾'
 "" search dir
 let g:NERDTreeChDirMode = 2
 
+" vim-fugitive'
+nnoremap <Leader>gs :Gstatus<CR>
+nnoremap <Leader>gc :Gcommit<CR>
+
 " fzf
 set rtp+=/usr/local/opt/fzf
 
