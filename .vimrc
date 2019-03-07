@@ -47,6 +47,7 @@ set hlsearch
 set nocompatible
 set backspace=indent,eol,start
 set smartindent
+set ignorecase
 set showmatch
 
 "" quick edit vimrc
