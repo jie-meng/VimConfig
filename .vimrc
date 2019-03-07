@@ -28,7 +28,7 @@ Plug 'junegunn/fzf'
 
 Plug 'junegunn/fzf.vim'
 
-Plug 'valloric/youcompleteme'
+Plug 'davidhalter/jedi-vim'
 
 Plug 'kannokanno/previm'
 
@@ -177,17 +177,3 @@ endif
 
 map <Leader>P :PrevimOpen<CR>
 
-" ycm
-let g:ycm_semantic_triggers =  {
-    \   'c': ['->', '.'],
-    \   'objc': ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
-    \            're!\[.*\]\s'],
-    \   'ocaml': ['.', '#'],
-    \   'cpp,cuda,objcpp': ['->', '.', '::'],
-    \   'perl': ['->'],
-    \   'php': ['->', '::'],
-    \   'cs,d,elixir,go,groovy,java,javascript,julia,perl6,python,scala,typescript,vb': ['.'],
-    \   'ruby,rust': ['.', '::'],
-    \   'lua': ['.', ':'],
-    \   'erlang': [':'],
-    \ }
