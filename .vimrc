@@ -52,6 +52,9 @@ set smartindent
 set ignorecase
 set showmatch
 
+" Java
+au BufNewFile,BufRead *.java,*.jav,*.aidl setf java
+
 "" quick edit vimrc
 map <Leader><F2> :e ~/.vimrc<CR>
 
