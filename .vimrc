@@ -32,6 +32,8 @@ Plug 'davidhalter/jedi-vim'
 
 Plug 'kannokanno/previm'
 
+Plug 'moll/vim-node'
+
 call plug#end()
 
 " global 
@@ -145,7 +147,7 @@ nmap <Leader>M :Maps<CR>
 nmap <Leader>s :Filetypes<CR>
 
 " ctags 
-map <Leader>rr :!ctags -R --exclude=.git --exclude=log *<Enter>
+map <Leader>rr :!ctags -R --exclude=.git --exclude=node_modules --exclude=log *<Enter>
 
 " bling/vim-airline
 "" smarter tab line
