@@ -34,6 +34,10 @@ Plug 'kannokanno/previm'
 
 Plug 'moll/vim-node'
 
+Plug 'ervandew/supertab'
+
+Plug 'fatih/vim-go'
+
 call plug#end()
 
 " global 
@@ -52,7 +56,8 @@ set smartindent
 set ignorecase
 set showmatch
 
-" Java
+"" filetype extension 
+"" java
 au BufNewFile,BufRead *.java,*.jav,*.aidl setf java
 
 "" quick edit vimrc
@@ -183,3 +188,6 @@ endif
 
 map <Leader>P :PrevimOpen<CR>
 
+" supertab
+let g:SuperTabMappingForward = '<s-tab>'
+let g:SuperTabMappingBackward = '<tab>'
