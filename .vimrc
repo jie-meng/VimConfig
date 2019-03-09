@@ -38,6 +38,8 @@ Plug 'ervandew/supertab'
 
 Plug 'fatih/vim-go'
 
+Plug 'vim-scripts/AutoComplPop'
+
 call plug#end()
 
 " global 
@@ -54,7 +56,6 @@ set nocompatible
 set backspace=indent,eol,start
 set smartindent
 set ignorecase
-set showmatch
 
 "" filetype extension 
 "" java
