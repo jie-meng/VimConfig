@@ -40,6 +40,8 @@ Plug 'fatih/vim-go'
 
 Plug 'vim-scripts/AutoComplPop'
 
+Plug 'skwp/greplace.vim'
+
 call plug#end()
 
 " global 
@@ -138,22 +140,14 @@ nnoremap <Leader>gc :Gcommit<CR>
 " fzf
 set rtp+=/usr/local/opt/fzf
 
-nmap <Leader>F :Files<CR>
-nmap <Leader>f :GFiles<CR>
-nmap <Leader>b :Buffers<CR>
-nmap <Leader>t :BTags<CR>
-nmap <Leader>e :History<CR>
-nmap <Leader>T :Tags<CR>
-nmap <Leader>: :History:<CR>
-nmap <Leader>/ :History/<CR>
-nmap <Leader>l :BLines<CR>
-nmap <Leader>L :Lines<CR>
-nmap <Leader>' :Marks<CR>
-nmap <Leader>a :Ag<Space>
-nmap <Leader>H :Helptags!<CR>
-nmap <Leader>C :Commands<CR>
-nmap <Leader>M :Maps<CR>
-nmap <Leader>s :Filetypes<CR>
+nmap <Leader>ff :Files<CR>
+nmap <Leader>fg :GFiles<CR>
+nmap <Leader>fb :Buffers<CR>
+nmap <Leader>fe :History<CR>
+nmap <Leader>ft :Tags<CR>
+nmap <Leader>fc :History:<CR>
+nmap <Leader>fa :Ag<Space>
+nmap <Leader>fs :Filetypes<CR>
 
 " ctags 
 map <Leader>rr :!ctags -R --exclude=.git --exclude=node_modules --exclude=log *<Enter>
@@ -192,3 +186,13 @@ map <Leader>P :PrevimOpen<CR>
 " supertab
 let g:SuperTabMappingForward = '<s-tab>'
 let g:SuperTabMappingBackward = '<tab>'
+
+" skwp/greplace
+set grepprg=ag
+let g:grep_cmd_opts = '--line-numbers --noheading'
+""" 1. Use :Gsearch to get a buffer window of your search results
+""" 2. then you can make the replacements inside the buffer window using traditional tools (%s/foo/bar/)
+""" 3. Invoke :Greplace to make your changes across all files. It will ask you interatively y/n/a - you can hit 'a' to do all.
+""" 4. Save changes to all files with :wall (write all)
+nnoremap <Leader>G :Gsearch<Space>
+
