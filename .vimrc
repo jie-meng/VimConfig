@@ -42,6 +42,12 @@ Plug 'vim-scripts/AutoComplPop'
 
 Plug 'skwp/greplace.vim'
 
+Plug 'mxw/vim-jsx'
+
+Plug 'othree/javascript-libraries-syntax.vim'
+
+Plug 'posva/vim-vue'
+
 call plug#end()
 
 " global 
@@ -196,3 +202,5 @@ let g:grep_cmd_opts = '--line-numbers --noheading'
 """ 4. Save changes to all files with :wall (write all)
 nnoremap <Leader>G :Gsearch<Space>
 
+" othree/javascript-libraries-syntax.vim
+let g:used_javascript_libs = 'jquery,underscore,backbone,react'
