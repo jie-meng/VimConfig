@@ -48,6 +48,8 @@ Plug 'othree/javascript-libraries-syntax.vim'
 
 Plug 'posva/vim-vue'
 
+Plug 'plasticboy/vim-markdown'
+
 call plug#end()
 
 " global 
@@ -83,6 +85,12 @@ set noswapfile
 :inoremap <C-v> <ESC>"+pa
 :vnoremap <C-c> "+y
 :vnoremap<C-d> "+d
+
+"" move
+nnoremap mb ^
+nnoremap me $
+vnoremap mb ^
+vnoremap me $
 
 "" Alt + * move line
 "" http://vim.wikia.com/wiki/Moving_lines_up_or_down
@@ -175,7 +183,7 @@ let g:javascript_plugin_jsdoc = 1
 
 " terminal
 set splitbelow
-map <Leader>` :ter ++rows=20<Enter>
+map <Leader>` :ter ++rows=12<CR>
 
 " tagbar
 nnoremap <Leader><F12> :TagbarOpenAutoClose<CR>
@@ -203,4 +211,5 @@ let g:grep_cmd_opts = '--line-numbers --noheading'
 nnoremap <Leader>G :Gsearch<Space>
 
 " othree/javascript-libraries-syntax.vim
-let g:used_javascript_libs = 'jquery,underscore,backbone,react'
+let g:used_javascript_libs = 'jquery,underscore,backbone,react,vue'
+
