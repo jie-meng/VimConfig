@@ -184,6 +184,7 @@ let g:javascript_plugin_jsdoc = 1
 " terminal
 set splitbelow
 map <Leader>` :ter ++rows=12<CR>
+tnoremap <F3> <C-\><C-n>
 
 " tagbar
 nnoremap <Leader><F12> :TagbarOpenAutoClose<CR>
