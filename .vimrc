@@ -50,6 +50,12 @@ Plug 'posva/vim-vue'
 
 Plug 'plasticboy/vim-markdown'
 
+Plug 'arthurxavierx/vim-caser'
+
+Plug 'hail2u/vim-css3-syntax'
+
+Plug 'ap/vim-css-color'
+
 call plug#end()
 
 " global 
@@ -58,6 +64,7 @@ syntax on
 colorscheme monokai
 
 set nu
+set nowrap
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 set termencoding=utf-8
 set encoding=utf-8
@@ -154,14 +161,15 @@ nnoremap <Leader>gc :Gcommit<CR>
 " fzf
 set rtp+=/usr/local/opt/fzf
 
-nmap <Leader>ff :Files<CR>
-nmap <Leader>fg :GFiles<CR>
-nmap <Leader>fb :Buffers<CR>
-nmap <Leader>fe :History<CR>
-nmap <Leader>ft :Tags<CR>
-nmap <Leader>fc :History:<CR>
-nmap <Leader>fa :Ag<Space>
-nmap <Leader>fs :Filetypes<CR>
+nnoremap <Leader>ff :Files<CR>
+nnoremap <Leader>fg :GFiles<CR>
+nnoremap <Leader>fb :Buffers<CR>
+nnoremap <Leader>fe :History<CR>
+nnoremap <Leader>ft :Tags<CR>
+nnoremap <Leader>fc :History:<CR>
+nnoremap <Leader>fa :Ag<Space>
+nnoremap <Leader>fs :Filetypes<CR>
+nnoremap <Leader>fd :Ag <C-R><C-W><CR>
 
 " ctags 
 map <Leader>rr :!ctags -R --exclude=.git --exclude=node_modules --exclude=log *<Enter>
@@ -183,7 +191,7 @@ let g:javascript_plugin_jsdoc = 1
 
 " terminal
 set splitbelow
-map <Leader>` :ter ++rows=12<CR>
+map <Leader>` :ter ++rows=11<CR>
 tnoremap <F3> <C-\><C-n>
 
 " tagbar
@@ -196,7 +204,7 @@ elseif has('unix')
     let g:previm_open_cmd = 'open -a Firefox'
 endif
 
-map <Leader>P :PrevimOpen<CR>
+map <Leader>p :PrevimOpen<CR>
 
 " supertab
 let g:SuperTabMappingForward = '<s-tab>'
