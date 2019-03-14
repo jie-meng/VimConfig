@@ -56,6 +56,14 @@ Plug 'hail2u/vim-css3-syntax'
 
 Plug 'ap/vim-css-color'
 
+Plug 'raimondi/delimitmate'
+
+Plug 'octol/vim-cpp-enhanced-highlight'
+
+Plug 'honza/vim-snippets'
+
+Plug 'sirver/ultisnips'
+
 call plug#end()
 
 " global 
@@ -115,9 +123,9 @@ set shiftwidth=4
 
 "" font
 if has('macunix')
-    set guifont=Monaco:h14
+    set guifont=Monaco:h12
 elseif has('unix')
-    set guifont="Ubuntu Mono" 14
+    set guifont="Ubuntu Mono" 12
 endif
 
 "" resize window
