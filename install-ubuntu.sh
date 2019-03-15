@@ -14,8 +14,8 @@ main() {
             https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     fi
 
-
     cp ./.vimrc ~
+    cp ./.ctags ~
 
     vim -c :PlugInstall
 }

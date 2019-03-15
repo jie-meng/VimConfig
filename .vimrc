@@ -230,3 +230,6 @@ nnoremap <Leader>G :Gsearch<Space>
 " othree/javascript-libraries-syntax.vim
 let g:used_javascript_libs = 'jquery,underscore,backbone,react,vue'
 
+" sirver/ultisnips
+let g:UltiSnipsUsePythonVersion = 3
+
