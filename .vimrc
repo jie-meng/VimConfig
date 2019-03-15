@@ -24,6 +24,10 @@ Plug 'xolox/vim-misc'
 
 Plug 'crusoexia/vim-monokai'
 
+Plug 'morhetz/gruvbox'
+
+Plug 'joshdick/onedark.vim'
+
 Plug 'junegunn/fzf'
 
 Plug 'junegunn/fzf.vim'
@@ -69,7 +73,11 @@ call plug#end()
 " global 
 filetype on
 syntax on 
-colorscheme monokai
+
+"" color
+colorscheme gruvbox
+""" colorscheme monokai
+""" colorscheme onedark
 
 set nu
 set nowrap
@@ -80,7 +88,7 @@ set hlsearch
 set nocompatible
 set backspace=indent,eol,start
 set smartindent
-set ignorecase
+""" set ignorecase
 
 "" filetype extension 
 "" java
