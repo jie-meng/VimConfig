@@ -22,12 +22,6 @@ Plug 'majutsushi/tagbar'
 
 Plug 'xolox/vim-misc'
 
-Plug 'crusoexia/vim-monokai'
-
-Plug 'morhetz/gruvbox'
-
-Plug 'joshdick/onedark.vim'
-
 Plug 'junegunn/fzf'
 
 Plug 'junegunn/fzf.vim'
@@ -77,7 +71,6 @@ syntax on
 "" color
 colorscheme gruvbox
 """ colorscheme monokai
-""" colorscheme onedark
 
 set nu
 set nowrap
