@@ -167,6 +167,9 @@ let g:NERDTreeChDirMode = 2
 " vim-fugitive'
 nnoremap <Leader>gs :Gstatus<CR>
 nnoremap <Leader>gc :Gcommit<CR>
+nnoremap <Leader>gb :Gblame<CR>
+nnoremap <Leader>gm :Gmove<CR>
+nnoremap <Leader>gd :Gdelete<CR>
 
 " fzf
 set rtp+=/usr/local/opt/fzf
@@ -189,12 +192,6 @@ map <Leader>rr :!ctags -R --exclude=.git --exclude=node_modules --exclude=log *<
 let g:airline#extensions#tabline#enabled = 1
 "" configure the formatting of filenames
 let g:airline#extensions#tabline#fnamemod = ':t'
-
-" move between different window
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
 
 " pangloss/vim-javascript'
 let g:javascript_plugin_jsdoc = 1
