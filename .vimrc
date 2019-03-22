@@ -1,66 +1,49 @@
 call plug#begin('~/.vim/plugged')
 
-Plug 'tpope/vim-fugitive'
-
+" window
 Plug 'scrooloose/nerdtree'
-
-Plug 'vim-airline/vim-airline'
-
-Plug 'flazz/vim-colorschemes'
-
-Plug 'terryma/vim-multiple-cursors'
-
-Plug 'easymotion/vim-easymotion'
-
-Plug 'vim-scripts/a.vim'
-
-Plug 'pangloss/vim-javascript'
-
-Plug 'airblade/vim-gitgutter'
-
 Plug 'majutsushi/tagbar'
-
+Plug 'vim-airline/vim-airline'
 Plug 'xolox/vim-misc'
 
+" search
 Plug 'junegunn/fzf'
-
 Plug 'junegunn/fzf.vim'
+Plug 'easymotion/vim-easymotion'
 
-Plug 'davidhalter/jedi-vim'
-
-Plug 'kannokanno/previm'
-
-Plug 'moll/vim-node'
-
-Plug 'ervandew/supertab'
-
-Plug 'fatih/vim-go'
-
-Plug 'vim-scripts/AutoComplPop'
-
+" edit
+Plug 'terryma/vim-multiple-cursors'
 Plug 'skwp/greplace.vim'
-
-Plug 'mxw/vim-jsx'
-
-Plug 'othree/javascript-libraries-syntax.vim'
-
-Plug 'posva/vim-vue'
-
-Plug 'plasticboy/vim-markdown'
-
 Plug 'arthurxavierx/vim-caser'
 
-Plug 'hail2u/vim-css3-syntax'
+" git
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 
-Plug 'ap/vim-css-color'
+" color
+Plug 'flazz/vim-colorschemes'
 
+" complete
 Plug 'raimondi/delimitmate'
-
-Plug 'octol/vim-cpp-enhanced-highlight'
-
+Plug 'vim-scripts/AutoComplPop'
+Plug 'ervandew/supertab'
 Plug 'honza/vim-snippets'
-
 Plug 'sirver/ultisnips'
+Plug 'davidhalter/jedi-vim'
+
+" language
+Plug 'plasticboy/vim-markdown'
+Plug 'kannokanno/previm'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'fatih/vim-go'
+Plug 'moll/vim-node'
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+Plug 'posva/vim-vue'
+Plug 'othree/javascript-libraries-syntax.vim'
+Plug 'ap/vim-css-color'
+Plug 'hail2u/vim-css3-syntax'
+Plug 'vim-scripts/a.vim'
 
 call plug#end()
 
@@ -232,3 +215,8 @@ let g:used_javascript_libs = 'jquery,underscore,backbone,react,vue'
 " sirver/ultisnips
 let g:UltiSnipsUsePythonVersion = 3
 
+" Shifting blocks visually
+nnoremap <Tab> >>_
+nnoremap <S-Tab> <<_
+vnoremap <Tab> >gv
+vnoremap <S-Tab> <gv

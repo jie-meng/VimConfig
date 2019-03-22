@@ -4,8 +4,10 @@ main() {
     # ag
     sudo apt-get install -y silversearcher-ag
 
+    # ctags
     sudo apt-get install -y ctags
 
+    # python autocomplete
     pip3 install jedi
 
     # vim-plug
