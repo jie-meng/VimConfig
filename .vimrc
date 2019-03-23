@@ -74,6 +74,9 @@ au BufNewFile,BufRead *.java,*.jav,*.aidl setf java
 "" quick edit vimrc
 map <Leader><F2> :e ~/.vimrc<CR>
 
+"" remap C-p to C-i, because C-i and tab are equal, and tab will be redefined
+nnoremap <C-p> <C-i>
+
 "" chagne buffer
 map <Leader>[ :bp<Enter>
 map <Leader>] :bn<Enter>
