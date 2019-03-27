@@ -219,6 +219,8 @@ let g:used_javascript_libs = 'jquery,underscore,backbone,react,vue'
 let g:UltiSnipsUsePythonVersion = 3
 
 " Shifting blocks visually
+nnoremap > >>
+nnoremap < << 
 vnoremap > >gv
 vnoremap < <gv
 
