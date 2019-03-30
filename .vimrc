@@ -15,10 +15,12 @@ Plug 'easymotion/vim-easymotion'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'skwp/greplace.vim'
 Plug 'arthurxavierx/vim-caser'
+Plug 'scrooloose/nerdcommenter'
 
 " git
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/gv.vim'
 
 " color
 Plug 'flazz/vim-colorschemes'
@@ -32,14 +34,9 @@ Plug 'sirver/ultisnips'
 Plug 'davidhalter/jedi-vim'
 
 " language
-Plug 'plasticboy/vim-markdown'
-Plug 'kannokanno/previm'
-Plug 'octol/vim-cpp-enhanced-highlight'
-Plug 'fatih/vim-go'
+Plug 'sheerun/vim-polyglot'
 Plug 'moll/vim-node'
-Plug 'pangloss/vim-javascript'
-Plug 'mxw/vim-jsx'
-Plug 'posva/vim-vue'
+Plug 'kannokanno/previm'
 Plug 'othree/javascript-libraries-syntax.vim'
 Plug 'ap/vim-css-color'
 Plug 'hail2u/vim-css3-syntax'
