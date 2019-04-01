@@ -252,6 +252,6 @@ nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
 "" run lint only on saving a file
-"" let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_text_changed = 'never'
 "" dont run lint on opening a file
 "" let g:ale_lint_on_enter = 0
