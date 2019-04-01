@@ -42,6 +42,9 @@ Plug 'ap/vim-css-color'
 Plug 'hail2u/vim-css3-syntax'
 Plug 'vim-scripts/a.vim'
 
+" tools
+Plug 'w0rp/ale'
+
 call plug#end()
 
 " global 
@@ -146,6 +149,8 @@ let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 "" search dir
 let g:NERDTreeChDirMode = 2
+"" startup cursor in editing area
+autocmd VimEnter * NERDTree | wincmd p
 
 " vim-fugitive'
 nnoremap <Leader>gs :Gstatus<CR>
@@ -221,3 +226,32 @@ nnoremap < <<
 vnoremap > >gv
 vnoremap < <gv
 
+" ale
+"" keep the sign gutter open
+let g:ale_sign_column_always = 1
+let g:ale_sign_error = '>>'
+let g:ale_sign_warning = '--'
+
+"" show errors or warnings in my statusline
+let g:airline#extensions#ale#enabled = 1
+
+"" use quickfix list instead of the loclist
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+
+"" only enable these linters
+"" let g:ale_linters = {
+"" \    'javascript': ['eslint']
+"" \}
+
+"" Fix files with prettier, and then ESLint.
+let b:ale_fixers = ['prettier', 'eslint']
+let g:ale_fix_on_save = 1
+
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
+
+"" run lint only on saving a file
+"" let g:ale_lint_on_text_changed = 'never'
+"" dont run lint on opening a file
+"" let g:ale_lint_on_enter = 0
