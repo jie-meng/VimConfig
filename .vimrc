@@ -144,6 +144,7 @@ inoremap <Leader>j <Esc>:NERDTreeFind<Enter>
 "" folder icon
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
+
 "" search dir
 let g:NERDTreeChDirMode = 2
 "" startup cursor in editing area
@@ -197,6 +198,8 @@ elseif has('unix')
 endif
 
 map <Leader>p :PrevimOpen<CR>
+""" hide header to print html page
+let g:previm_show_header = 0
 
 " supertab
 let g:SuperTabMappingForward = '<s-tab>'
