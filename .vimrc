@@ -218,7 +218,7 @@ nnoremap <Leader>G :Gsearch<Space>
 let g:used_javascript_libs = 'jquery,underscore,backbone,react,vue'
 
 " sirver/ultisnips
-let g:UltiSnipsUsePythonVersion = 3
+""" let g:UltiSnipsUsePythonVersion = 3
 
 " Shifting blocks visually
 nnoremap > >>
