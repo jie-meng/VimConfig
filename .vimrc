@@ -51,10 +51,6 @@ call plug#end()
 filetype on
 syntax on 
 
-"" color
-colorscheme gruvbox
-""" colorscheme monokai
-
 set nu
 set nowrap
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
@@ -66,6 +62,17 @@ set nocompatible
 set backspace=indent,eol,start
 set smartindent
 """ set ignorecase
+
+"" color
+colorscheme gruvbox
+""" colorscheme molokai
+""" colorscheme wombat
+""" colorscheme solarized
+""" colorscheme ir_black
+""" colorscheme atom
+
+"" highligt search if colorscheme does not well such as 'ir_black'
+""" hi Search guibg=peru guifg=wheat
 
 "" filetype extension 
 "" java
