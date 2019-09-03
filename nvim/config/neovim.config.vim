@@ -1,3 +1,22 @@
+" support mouse
+:set mouse=a
+
+" global 
+filetype on
+syntax on 
+
+set nu
+set nowrap
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+set termencoding=utf-8
+set encoding=utf-8
+set bg=dark
+set hlsearch
+set nocompatible
+set backspace=indent,eol,start
+set smartindent
+""" set ignorecase
+
 " Alt + * move line
 " http://vim.wikia.com/wiki/Moving_lines_up_or_down
 if has('macunix')
@@ -17,18 +36,16 @@ elseif has('unix')
 endif
 
 " Shifting blocks visually
-" https://vim.fandom.com/wiki/Shifting_blocks_visually
-nnoremap <Tab> >>_
-nnoremap <S-Tab> <<_
-inoremap <S-Tab> <C-D>
-vnoremap <Tab> >gv
-vnoremap <S-Tab> <gv
+nnoremap > >>
+nnoremap < << 
+vnoremap > >gv
+vnoremap < <gv
 
-" move between different window
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+"" move
+nnoremap mb ^
+nnoremap me $
+vnoremap mb ^
+vnoremap me $
 
 " quit
 nmap <Leader>w :wq<Enter>
@@ -42,6 +59,7 @@ map <Leader>- :resize -10<Enter>
 map <Leader>+ :resize +10<Enter>
 map <Leader>< :vertical resize -10<Enter>
 map <Leader>> :vertical resize +10<Enter>
+
 "" hightline current line and column
 au WinLeave * set nocursorline nocursorcolumn
 au WinEnter * set cursorline cursorcolumn
@@ -49,9 +67,9 @@ set cursorline cursorcolumn
 
 " font
 if has('macunix')
-  set guifont=Monaco:h14
+  set guifont=Hack\ Nerd\ Font:h14
 elseif has('unix')
-  set guifont=Monospace\ 14
+  set guifont=Hack\ Nerd\ Font\ 14
 endif
 
 " tab spaces
@@ -59,6 +77,7 @@ set tabstop=2
 set softtabstop=2
 set shiftwidth=2
 set expandtab
+set path+=directory/**
 
 " line number
 set nu
@@ -84,7 +103,6 @@ map <Leader>[ :bp<Enter>
 map <Leader>] :bn<Enter>
 
 "" terminal
-map <Leader><F11> :below terminal<Enter>
 
 "" split window
 map <Leader>sv :vsplit<Enter>

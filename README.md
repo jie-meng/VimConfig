@@ -8,14 +8,4 @@ Go to _/vim/_ execute install-xxx.sh depends on you operating system.
 
 ### Install nvim
 
-On Mac 
-
-    brew install --HEAD neovim
-
-On Linux
-
-    sudo apt install neovim
-
-### Install config
-
-Go to _/vim/_ execute install-xxx.sh depends on you operating system.
+Go to _/nvim/_ execute install-xxx.sh depends on you operating system.

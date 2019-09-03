@@ -1,5 +1,12 @@
+" https://github.com/neoclide/coc.nvim
+
 " extensions
-let g:coc_global_extensions = ['coc-tslint-plugin', 'coc-tsserver', 'coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-yank', 'coc-prettier', 'coc-highlight']
+let g:coc_global_extensions = ['coc-python', 'coc-node', 'coc-tslint-plugin', 'coc-tsserver', 'coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-yank', 'coc-prettier', 'coc-highlight', 'coc-lists']
+
+" extensions->coc-tsserver
+" Note: for React to work as expected, you need your JSX filetype to be javascript.jsx and your TSX filetype to be typescript.jsx or typescript.tsx. In coc.nvim, these filetypes are mapped to javascriptreact and typescriptreact because that's what tsserver uses.
+au BufNewFile,BufRead *.ts setlocal filetype=typescript
+au BufNewFile,BufRead *.tsx setlocal filetype=typescript.tsx
 
 " if hidden is not set, TextEdit might fail.
 set hidden
@@ -106,19 +113,13 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Using CocList
-" Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Find files
+nnoremap <silent> <space>f  :<C-u>CocList files<cr>
 " Search workspace symbols
 nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Find recent used files
+nnoremap <silent> <space>e  :<C-u>CocList mru<cr>
 " Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+nnoremap <silent> <space>g  :<C-u>CocList grep<cr>
+" Resume latest coc list
+nnoremap <silent> <space>w  :<C-u>CocList words<cr>
