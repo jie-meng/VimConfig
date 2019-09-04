@@ -73,11 +73,9 @@ elseif has('unix')
 endif
 
 " tab spaces
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
+set tabstop=4
 set expandtab
-set path+=directory/**
+set shiftwidth=4
 
 " line number
 set nu

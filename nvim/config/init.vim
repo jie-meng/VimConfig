@@ -12,8 +12,7 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 " vim-nerdtree-syntax-highlight, display different icon by file type
 """ Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 
-" vim-airline, a statusline
-Plug 'vim-airline/vim-airline'
+" vim-airline, a statusline Plug 'vim-airline/vim-airline'
 " vim-airline-themes, more Theme for vim-airline
 Plug 'vim-airline/vim-airline-themes'
 
@@ -34,7 +33,13 @@ Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/gv.vim'
 
 " language
+Plug 'sheerun/vim-polyglot'
+Plug 'moll/vim-node'
 Plug 'kannokanno/previm'
+Plug 'othree/javascript-libraries-syntax.vim'
+Plug 'ap/vim-css-color'
+Plug 'hail2u/vim-css3-syntax'
+Plug 'vim-scripts/a.vim'
 
 call plug#end()
 
@@ -48,3 +53,4 @@ source ~/.config/nvim/colorschemes.config.vim
 source ~/.config/nvim/git_fugitive.config.vim
 source ~/.config/nvim/greplace.config.vim
 source ~/.config/nvim/previm.config.vim
+source ~/.config/nvim/javascript_libraries_syntax.config.vim
