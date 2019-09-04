@@ -118,7 +118,9 @@ nnoremap <silent> <space>f  :<C-u>CocList files<cr>
 " Search workspace symbols
 nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
 " Find recent used files
-nnoremap <silent> <space>e  :<C-u>CocList mru<cr>
+nnoremap <silent> <space>e  :<C-u>CocList buffers<cr>
+" Find history used files
+nnoremap <silent> <space>h  :<C-u>CocList mru<cr>
 " Resume latest coc list
 nnoremap <silent> <space>g  :<C-u>CocList grep<cr>
 " Resume latest coc list
