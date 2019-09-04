@@ -1,7 +1,7 @@
 " https://github.com/neoclide/coc.nvim
 
 " extensions
-let g:coc_global_extensions = ['coc-python', 'coc-tslint-plugin', 'coc-tsserver', 'coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-yank', 'coc-prettier', 'coc-highlight', 'coc-lists']
+let g:coc_global_extensions = ['coc-python', 'coc-java', 'coc-tslint-plugin', 'coc-tsserver', 'coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-yank', 'coc-prettier', 'coc-highlight', 'coc-lists']
 
 " extensions->coc-tsserver
 " Note: for React to work as expected, you need your JSX filetype to be javascript.jsx and your TSX filetype to be typescript.jsx or typescript.tsx. In coc.nvim, these filetypes are mapped to javascriptreact and typescriptreact because that's what tsserver uses.
@@ -121,7 +121,9 @@ nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
 nnoremap <silent> <space>e  :<C-u>CocList buffers<cr>
 " Find history used files
 nnoremap <silent> <space>h  :<C-u>CocList mru<cr>
-" Resume latest coc list
+" Search in project
 nnoremap <silent> <space>g  :<C-u>CocList grep<cr>
-" Resume latest coc list
+" Search in current file
 nnoremap <silent> <space>w  :<C-u>CocList words<cr>
+" Search word under cursor
+nnoremap <silent> <space>d  :exe 'CocList -I --input='.expand('<cword>').' grep'<CR>
