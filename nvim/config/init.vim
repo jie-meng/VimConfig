@@ -23,6 +23,19 @@ Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 " colorschemes
 Plug 'flazz/vim-colorschemes'
 
+" edit
+Plug 'skwp/greplace.vim'
+Plug 'arthurxavierx/vim-caser'
+Plug 'scrooloose/nerdcommenter'
+
+" git
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/gv.vim'
+
+" language
+Plug 'kannokanno/previm'
+
 call plug#end()
 
 " load config from modules
@@ -32,3 +45,6 @@ source ~/.config/nvim/vim_airline.config.vim
 source ~/.config/nvim/vim_airline_themes.config.vim
 source ~/.config/nvim/coc.config.vim
 source ~/.config/nvim/colorschemes.config.vim
+source ~/.config/nvim/git_fugitive.config.vim
+source ~/.config/nvim/greplace.config.vim
+source ~/.config/nvim/previm.config.vim

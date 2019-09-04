@@ -55,10 +55,10 @@ imap <Leader>q <Esc>:q!<Enter>
 nmap <C-s> :w<Enter>
 
 " resize window
-map <Leader>- :resize -10<Enter>
-map <Leader>+ :resize +10<Enter>
-map <Leader>< :vertical resize -10<Enter>
-map <Leader>> :vertical resize +10<Enter>
+map <Leader>= :vertical resize +10<Enter>
+map <Leader>- :vertical resize -10<Enter>
+map <Leader>. :resize +10<Enter>
+map <Leader>, :resize -10<Enter>
 
 "" hightline current line and column
 au WinLeave * set nocursorline nocursorcolumn
@@ -107,3 +107,32 @@ map <Leader>] :bn<Enter>
 "" split window
 map <Leader>sv :vsplit<Enter>
 map <Leader>sh :split<Enter>
+
+" Toggle terminal
+nnoremap <F3> :call ToggleTerm("term-slider", 1)<CR>
+ 
+function! ToggleTerm(termname, slider)
+    let pane = bufwinnr(a:termname)
+    let buf = bufexists(a:termname)
+    if pane > 0
+        " pane is visible
+        if a:slider > 0
+            :exe pane . "wincmd c"
+        else
+            :exe "e #"
+        endif
+    elseif buf > 0
+        " buffer is not in pane
+        if a:slider
+            :exe "botright split +resize10"
+        endif
+        :exe "buffer " . a:termname
+    else
+        " buffer is not loaded, create
+        if a:slider
+            :exe "botright split +resize10"
+        endif
+        :terminal
+        :exe "f " a:termname
+    endif
+endfunction
