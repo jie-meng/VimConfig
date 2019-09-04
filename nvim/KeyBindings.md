@@ -28,6 +28,7 @@
 |\<space\>s|Normal|Search workspace symbols|
 |\<space\>g|Normal|Search workspace string|
 |\<space\>e|Normal|Search recent used files|
+|\<space\>h|Normal|Search history used files|
 
 ### Format
 
