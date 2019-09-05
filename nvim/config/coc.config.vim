@@ -115,8 +115,8 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " Using CocList
 " Find files
 nnoremap <silent> <space>f  :<C-u>CocList files<cr>
-nnoremap <silent> <space>i :<C-u>CocList files --hidden<cr>
-nnoremap <silent> <space>cf  :exe 'CocList --input='.expand('<cword>').' files'<CR>
+nnoremap <silent> <space>fi :<C-u>CocList files --hidden<cr>
+nnoremap <silent> <space>fc  :exe 'CocList --input='.expand('<cword>').' files'<CR>
 " Search workspace symbols
 nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
 " Find recent used files
@@ -125,9 +125,7 @@ nnoremap <silent> <space>e  :<C-u>CocList buffers<cr>
 nnoremap <silent> <space>h  :<C-u>CocList mru<cr>
 " Search in project
 nnoremap <silent> <space>g  :<C-u>CocList grep<cr>
-nnoremap <silent> <space>cg  :exe 'CocList -I --input='.expand('<cword>').' grep'<CR>
+nnoremap <silent> <space>gc  :exe 'CocList -I --input='.expand('<cword>').' grep'<CR>
 " Search in current file
 nnoremap <silent> <space>w  :<C-u>CocList words<cr>
-nnoremap <silent> <space>cw  :exe 'CocList -I --input='.expand('<cword>').' words'<CR>
-
-
+nnoremap <silent> <space>wc  :exe 'CocList -I --input='.expand('<cword>').' words'<CR>
