@@ -2,7 +2,8 @@
 
 main() {
     mkdir ~/.config/nvim
-    rm ~/.config/*.vim
+    rm ~/.config/nvim/*.vim
+    rm ~/.config/nvim/*.json
     cp -r ./config/. ~/.config/nvim/
 
     nvim -c :PlugInstall
