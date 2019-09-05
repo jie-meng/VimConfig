@@ -128,3 +128,5 @@ nnoremap <silent> <space>cg  :exe 'CocList -I --input='.expand('<cword>').' grep
 " Search in current file
 nnoremap <silent> <space>w  :<C-u>CocList words<cr>
 nnoremap <silent> <space>cw  :exe 'CocList -I --input='.expand('<cword>').' words'<CR>
+
+

@@ -17,6 +17,9 @@ set backspace=indent,eol,start
 set smartindent
 """ set ignorecase
 
+" ctags
+map <Leader>rr :!ctags -R --exclude=.git --exclude=node_modules --exclude=log *<Enter>
+
 " Alt + * move line
 " http://vim.wikia.com/wiki/Moving_lines_up_or_down
 if has('macunix')

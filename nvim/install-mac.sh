@@ -1,11 +1,16 @@
 # /bin/sh
 
 main() {
+    brew update
+
     # nvim
     brew install --HEAD neovim
     
     # ripgrep
     brew install ripgrep
+
+    # ccls
+    brew install ccls
 
     # vim-plug
     if [ ! -f "~/.local/share/nvim/site/autoload/plug.vim" ]; then
