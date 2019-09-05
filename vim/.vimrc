@@ -180,8 +180,8 @@ set rtp+=/usr/local/opt/fzf
 """nnoremap <Leader>fs :Filetypes<CR>
 """nnoremap <Leader>fd :Ag <C-R><C-W><CR>
 
-nnoremap <silent> <space>f :Files<CR>
-nnoremap <silent> <space>fg :GFiles<CR>
+nnoremap <silent> <space>f :GFiles<CR>
+nnoremap <silent> <space>ff :Files<CR>
 nnoremap <silent> <space>e :Buffers<CR>
 nnoremap <silent> <space>h :History<CR>
 nnoremap <silent> <space>s :Tags<CR>
