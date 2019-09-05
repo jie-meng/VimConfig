@@ -50,6 +50,9 @@ nnoremap me $
 vnoremap mb ^
 vnoremap me $
 
+"" remap C-p to C-i, because C-i does not work sometimes
+nnoremap <C-p> <C-i>
+
 " quit
 nmap <Leader>w :wq<Enter>
 nmap <Leader>q :q!<Enter>
