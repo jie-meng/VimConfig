@@ -115,6 +115,7 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " Using CocList
 " Find files
 nnoremap <silent> <space>f  :<C-u>CocList files<cr>
+nnoremap <silent> <space>i :<C-u>CocList files --hidden<cr>
 nnoremap <silent> <space>cf  :exe 'CocList --input='.expand('<cword>').' files'<CR>
 " Search workspace symbols
 nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
