@@ -71,6 +71,9 @@ colorscheme gruvbox
 """ colorscheme ir_black
 """ colorscheme atom
 
+"" remap C-p to C-i, because C-i sometimes override by other shortcuts
+nnoremap <C-p> <C-i>
+
 "" highligt search if colorscheme does not well such as 'ir_black'
 """ hi Search guibg=peru guifg=wheat
 
@@ -167,15 +170,23 @@ nnoremap <Leader>gd :Gdelete<CR>
 " fzf
 set rtp+=/usr/local/opt/fzf
 
-nnoremap <Leader>ff :Files<CR>
-nnoremap <Leader>fg :GFiles<CR>
-nnoremap <Leader>fb :Buffers<CR>
-nnoremap <Leader>fe :History<CR>
-nnoremap <Leader>ft :Tags<CR>
-nnoremap <Leader>fc :History:<CR>
-nnoremap <Leader>fa :Ag<Space>
-nnoremap <Leader>fs :Filetypes<CR>
-nnoremap <Leader>fd :Ag <C-R><C-W><CR>
+"""nnoremap <Leader>ff :Files<CR>
+"""nnoremap <Leader>fg :GFiles<CR>
+"""nnoremap <Leader>fb :Buffers<CR>
+"""nnoremap <Leader>fe :History<CR>
+"""nnoremap <Leader>ft :Tags<CR>
+"""nnoremap <Leader>fc :History:<CR>
+"""nnoremap <Leader>fa :Ag<Space>
+"""nnoremap <Leader>fs :Filetypes<CR>
+"""nnoremap <Leader>fd :Ag <C-R><C-W><CR>
+
+nnoremap <silent> <space>f :Files<CR>
+nnoremap <silent> <space>fg :GFiles<CR>
+nnoremap <silent> <space>e :Buffers<CR>
+nnoremap <silent> <space>h :History<CR>
+nnoremap <silent> <space>s :Tags<CR>
+nnoremap <silent> <space>g :Ag <Space>
+nnoremap <silent> <space>gc :Ag <C-R><C-W><CR>
 
 " ctags 
 map <Leader>rr :!ctags -R --exclude=.git --exclude=node_modules --exclude=log *<Enter>

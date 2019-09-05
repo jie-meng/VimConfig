@@ -50,7 +50,7 @@ nnoremap me $
 vnoremap mb ^
 vnoremap me $
 
-"" remap C-p to C-i, because C-i does not work sometimes
+"" remap C-p to C-i, because C-i sometimes override by other shortcuts
 nnoremap <C-p> <C-i>
 
 " quit
