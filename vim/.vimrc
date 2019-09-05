@@ -148,8 +148,8 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 "" toggle tree
 map <Leader>w :NERDTreeToggle<Enter>
 "" locate current file in the tree
-nnoremap <Leader>j :NERDTreeFind<Enter>
-inoremap <Leader>j <Esc>:NERDTreeFind<Enter>
+nnoremap <silent> <space>j :NERDTreeFind<Enter>
+inoremap <silent> <space>j <Esc>:NERDTreeFind<Enter>
 """ autocmd BufWinEnter * NERDTreeFind
 "" folder icon
 let g:NERDTreeDirArrowExpandable = '▸'
