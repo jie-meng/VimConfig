@@ -113,7 +113,7 @@ map <Leader>sv :vsplit<Enter>
 map <Leader>sh :split<Enter>
 
 " Toggle terminal
-nnoremap <F3> :call ToggleTerm("term-slider", 1)<CR>
+nnoremap <F2> :call ToggleTerm("term-slider", 1)<CR>
  
 function! ToggleTerm(termname, slider)
     let pane = bufwinnr(a:termname)

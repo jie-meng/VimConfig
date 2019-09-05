@@ -202,7 +202,7 @@ let g:javascript_plugin_jsdoc = 1
 
 " terminal
 set splitbelow
-map <Leader>` :ter ++rows=11<CR>
+nnoremap <F2> :ter ++rows=11<CR>
 tnoremap <F3> <C-\><C-n>
 
 " tagbar
