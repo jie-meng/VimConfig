@@ -17,6 +17,7 @@ Plug 'flazz/vim-colorschemes'
 Plug 'skwp/greplace.vim'
 Plug 'arthurxavierx/vim-caser'
 Plug 'scrooloose/nerdcommenter'
+Plug 'jiangmiao/auto-pairs'
 
 " git
 Plug 'tpope/vim-fugitive'
