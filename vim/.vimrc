@@ -2,6 +2,7 @@ call plug#begin('~/.vim/plugged')
 
 " window
 Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'majutsushi/tagbar'
 Plug 'vim-airline/vim-airline'
 Plug 'xolox/vim-misc'
