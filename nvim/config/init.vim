@@ -45,3 +45,4 @@ source ~/.config/nvim/git_fugitive.config.vim
 source ~/.config/nvim/greplace.config.vim
 source ~/.config/nvim/previm.config.vim
 source ~/.config/nvim/javascript_libraries_syntax.config.vim
+source ~/.config/nvim/nerdcommenter.config.vim

@@ -273,3 +273,13 @@ nmap <silent> <C-j> <Plug>(ale_next_wrap)
 let g:ale_lint_on_text_changed = 'never'
 "" dont run lint on opening a file
 "" let g:ale_lint_on_enter = 0
+
+" scrooloose/nerdcommenter
+"" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
+
+"" Use compact syntax for prettified multi-line comments
+let g:NERDCompactSexyComs = 1
+
+"" Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDDefaultAlign = 'left'
