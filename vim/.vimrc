@@ -17,6 +17,7 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'skwp/greplace.vim'
 Plug 'arthurxavierx/vim-caser'
 Plug 'scrooloose/nerdcommenter'
+Plug 'jiangmiao/auto-pairs'
 
 " git
 Plug 'tpope/vim-fugitive'
