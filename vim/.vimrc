@@ -181,13 +181,13 @@ set rtp+=/usr/local/opt/fzf
 """nnoremap <Leader>fs :Filetypes<CR>
 """nnoremap <Leader>fd :Ag <C-R><C-W><CR>
 
-nnoremap <silent> <space>f :GFiles<CR>
-nnoremap <silent> <space>ff :Files<CR>
-nnoremap <silent> <space>e :Buffers<CR>
-nnoremap <silent> <space>h :History<CR>
-nnoremap <silent> <space>s :Tags<CR>
-nnoremap <silent> <space>g :Ag <Space>
-nnoremap <silent> <space>gc :Ag <C-R><C-W><CR>
+nnoremap <space>f :GFiles<CR>
+nnoremap <space>ff :Files<CR>
+nnoremap <space>e :Buffers<CR>
+nnoremap <space>h :History<CR>
+nnoremap <space>s :Tags<CR>
+nnoremap <space>g :Ag <Space>
+nnoremap <space>gc :Ag <C-R><C-W><CR>
 
 " ctags 
 map <Leader>rr :!ctags -R --exclude=.git --exclude=node_modules --exclude=log *<Enter>
@@ -231,7 +231,7 @@ let g:grep_cmd_opts = '--line-numbers --noheading'
 """ 2. then you can make the replacements inside the buffer window using traditional tools (%s/foo/bar/)
 """ 3. Invoke :Greplace to make your changes across all files. It will ask you interatively y/n/a - you can hit 'a' to do all.
 """ 4. Save changes to all files with :wall (write all)
-nnoremap <Leader>G :Gsearch<Space>
+nnoremap <space>G :Gsearch<Space>
 
 " othree/javascript-libraries-syntax.vim
 let g:used_javascript_libs = 'jquery,underscore,backbone,react,vue'
