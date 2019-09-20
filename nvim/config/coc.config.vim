@@ -132,3 +132,11 @@ nnoremap <silent> <space>gc  :exe 'CocList -I --input='.expand('<cword>').' grep
 " Search in current file
 nnoremap <silent> <space>w  :<C-u>CocList words<cr>
 nnoremap <silent> <space>wc  :exe 'CocList -I --input='.expand('<cword>').' words'<CR>
+
+" Remap keys for gotos
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
