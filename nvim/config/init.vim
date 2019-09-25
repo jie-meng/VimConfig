@@ -33,6 +33,7 @@ Plug 'ap/vim-css-color'
 Plug 'hail2u/vim-css3-syntax'
 Plug 'vim-scripts/a.vim'
 
+lang zh_CN.UTF-8
 lang zh_TW.UTF-8
 
 call plug#end()
