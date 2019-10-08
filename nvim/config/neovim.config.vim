@@ -106,7 +106,8 @@ set guioptions-=r
 map <Leader>[ :bp<Enter>
 map <Leader>] :bn<Enter>
 
-"" terminal
+"" Disable swap
+set noswapfile
 
 "" split window
 map <Leader>sv :vsplit<Enter>
