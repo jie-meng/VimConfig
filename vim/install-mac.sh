@@ -34,6 +34,7 @@ main() {
     fi
 
     cp ./.vimrc ~
+    cp ./.ideavimrc ~
     cp ./.ctags ~
 
     vim -c :PlugInstall
