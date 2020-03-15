@@ -45,6 +45,7 @@ Plug 'vim-scripts/a.vim'
 
 " tools
 Plug 'w0rp/ale'
+Plug 'will133/vim-dirdiff'
 
 call plug#end()
 
