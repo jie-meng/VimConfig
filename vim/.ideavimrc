@@ -27,5 +27,6 @@ vnoremap < <gv
 " mappping
 nnoremap <Space>e :action RecentFiles<CR>
 nnoremap <Space>ff :action SearchEverywhere<CR>
+nnoremap <Space>gc :action ShowUsages<CR>
 nnoremap <F2> :action ActivateTerminalToolWindow<CR>
 nnoremap <Leader>gs :action VersionControlsGroup<CR>
