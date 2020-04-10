@@ -22,4 +22,10 @@ vnoremap < <gv
 " enable clipboard
 :inoremap <C-v> <ESC>"+pa
 :vnoremap <C-c> "+y
-:vnoremap<C-d> "+d
+:vnoremap <C-d> "+d
+
+" mappping
+nnoremap <Space>e :action RecentFiles<CR>
+nnoremap <Space>ff :action SearchEverywhere<CR>
+nnoremap <F2> :action ActivateTerminalToolWindow<CR>
+nnoremap <Leader>gs :action VersionControlsGroup<CR>
