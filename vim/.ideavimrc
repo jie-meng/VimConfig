@@ -26,7 +26,12 @@ vnoremap < <gv
 
 " mappping
 nnoremap <Space>e :action RecentFiles<CR>
-nnoremap <Space>ff :action GotoFile<CR>
+nnoremap <Space>ff :action SearchEverywhere<CR>
 nnoremap <Space>gc :action ShowUsages<CR>
-nnoremap <F2> :action ActivateTerminalToolWindow<CR>
 nnoremap <Leader>gs :action VersionControlsGroup<CR>
+nnoremap <Leader>gb :action Annotate<CR>
+nnoremap <F2> :action ActivateTerminalToolWindow<CR>
+nnoremap <C-p> <C-i>
+nnoremap <C-r> :action Run<CR>
+nnoremap <C-e> :action Debug<CR>
+nnoremap == :action ReformatCode<CR>
