@@ -67,17 +67,18 @@ set smartindent
 
 "" color
 colorscheme gruvbox
+""" colorscheme dracula
 """ colorscheme molokai
 """ colorscheme wombat
 """ colorscheme solarized
-""" colorscheme ir_black
+"""" colorscheme ir_black
 """ colorscheme atom
-
-"" remap C-p to C-i, because C-i sometimes override by other shortcuts
-nnoremap <C-p> <C-i>
 
 "" highligt search if colorscheme does not well such as 'ir_black'
 """ hi Search guibg=peru guifg=wheat
+
+"" remap C-p to C-i, because C-i sometimes override by other shortcuts
+nnoremap <C-p> <C-i>
 
 "" filetype extension 
 "" java
