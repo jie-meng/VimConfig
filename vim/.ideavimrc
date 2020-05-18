@@ -1,6 +1,3 @@
-" color
-set incsearch
-
 "" move
 nnoremap mb ^
 nnoremap me $
