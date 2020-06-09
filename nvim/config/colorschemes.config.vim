@@ -2,7 +2,6 @@
 
 " use theme
 colorscheme gruvbox
-""" colorscheme dracula
 """ colorscheme molokai
 """ colorscheme wombat
 """ colorscheme solarized

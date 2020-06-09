@@ -47,6 +47,9 @@ Plug 'vim-scripts/a.vim'
 Plug 'w0rp/ale'
 Plug 'will133/vim-dirdiff'
 
+" lint
+Plug 'scrooloose/syntastic'
+
 call plug#end()
 
 " global 
