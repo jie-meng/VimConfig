@@ -12,7 +12,7 @@ au BufNewFile,BufRead *.tsx setlocal filetype=typescript.tsx
 " if hidden is not set, TextEdit might fail.
 set hidden
 
-" Some servers have issues with backup files, see #649
+" Some servers have issues with backup files
 set nobackup
 set nowritebackup
 
@@ -58,7 +58,7 @@ nmap <silent> ]c <Plug>(coc-diagnostic-next)
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gm <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window
@@ -119,7 +119,7 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " Using CocList
 " Find files
 nnoremap <silent> <space>ff :<C-u>CocList files<cr>
-nnoremap <silent> <space>fi :<C-u>CocList files --hidden<cr>
+nnoremap <silent> <space>fi :<C-u>CocList files --hidden --no-ignore-vcs --glob=!.git/*<cr>
 nnoremap <silent> <space>fc  :exe 'CocList --input='.expand('<cword>').' files'<CR>
 " Search workspace symbols
 nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
@@ -129,15 +129,12 @@ nnoremap <silent> <space>e  :<C-u>CocList buffers<cr>
 nnoremap <silent> <space>h  :<C-u>CocList mru<cr>
 " Search in project
 nnoremap <silent> <space>g  :<C-u>CocList grep<cr>
+nnoremap <silent> <space>gi :exe 'CocList -I grep --hidden --no-ignore-vcs --glob=!.git/*'<CR>
 nnoremap <silent> <space>gc  :exe 'CocList -I --input='.expand('<cword>').' grep'<CR>
+nnoremap <silent> <space>gci  :exe 'CocList -I --input='.expand('<cword>').' grep --hidden --no-ignore-vcs --glob=!.git/*'<CR>
 " Search in current file
 nnoremap <silent> <space>w  :<C-u>CocList words<cr>
 nnoremap <silent> <space>wc  :exe 'CocList -I --input='.expand('<cword>').' words'<CR>
-
-" Remap keys for gotos
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
 
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
