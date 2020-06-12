@@ -19,5 +19,7 @@ colorscheme ir_black
 """ colorscheme monokai 
 """ colorscheme wombat
 
-"" highligt search if colorscheme does not well such as 'ir_black'
+"" colorscheme override
 hi Search guibg=peru guifg=wheat
+hi CursorLine term=bold cterm=bold guibg=Grey15
+hi CursorColumn term=bold cterm=bold guibg=Grey15
