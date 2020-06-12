@@ -70,15 +70,15 @@ set smartindent
 
 "" color
 colorscheme gruvbox
-""" colorscheme dracula
+""" colorscheme ir_black
 """ colorscheme molokai
+""" colorscheme monokai
 """ colorscheme wombat
-""" colorscheme solarized
-"""" colorscheme ir_black
-""" colorscheme atom
 
-"" highligt search if colorscheme does not well such as 'ir_black'
+"" colorscheme override
 """ hi Search guibg=peru guifg=wheat
+""" hi CursorLine term=bold cterm=bold guibg=Grey15
+""" hi CursorColumn term=bold cterm=bold guibg=Grey15
 
 "" remap C-p to C-i, because C-i sometimes override by other shortcuts
 nnoremap <C-p> <C-i>
