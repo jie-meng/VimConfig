@@ -12,6 +12,7 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " colorschemes
 Plug 'flazz/vim-colorschemes'
+Plug 'hzchirs/vim-material'
 
 " edit
 Plug 'skwp/greplace.vim'
