@@ -21,5 +21,5 @@ colorscheme ir_black
 
 "" colorscheme override
 hi Search guibg=peru guifg=wheat
-hi CursorLine term=bold cterm=bold guibg=Grey15
-hi CursorColumn term=bold cterm=bold guibg=Grey15
+hi CursorLine term=bold cterm=bold guibg=Grey20
+hi CursorColumn term=bold cterm=bold guibg=Grey20
