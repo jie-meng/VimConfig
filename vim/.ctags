@@ -35,7 +35,7 @@
 --langmap=kotlin:+.kts
 --regex-kotlin=/^[[:space:]]*((abstract|final|sealed|implicit|lazy|inner|open)[[:space:]]*)*(private[^ ]*|protected)?[[:space:]]*class[[:space:]]+([[:alnum:]_:]+)/\4/c,classes/
 --regex-kotlin=/^[[:space:]]*((abstract|final|sealed|implicit|lazy)[[:space:]]*)*(private[^ ]*|protected)?[[:space:]]*object[[:space:]]+([[:alnum:]_:]+)/\4/o,objects/
---regex-kotlin=/^[[:space:]]*((abstract|final|sealed|implicit|lazy|open)[[:space:]]*)*(private[^ ]*|protected)?[[:space:]]*((abstract|final|sealed|implicit|lazy)[[:space:]]*)*data class[[:space:]]+([[:alnum:]_:]+)/\6/d,data classes/
+--regex-kotlin=/^[[:space:]]*((abstract|final|sealed|implicit|lazy|open)[[:space:]]*)*(private[^ ]*|protected)?[[:space:]]*((abstract|final|sealed|implicit|lazy)[[:space:]]*)*data[[:space:]]+class[[:space:]]+([[:alnum:]_:]+)/\6/d,dataclasses/
 --regex-kotlin=/^[[:space:]]*((abstract|final|sealed|implicit|lazy)[[:space:]]*)*(private[^ ]*|protected)?[[:space:]]*interface[[:space:]]+([[:alnum:]_:]+)/\4/i,interfaces/
 --regex-kotlin=/^[[:space:]]*type[[:space:]]+([[:alnum:]_:]+)/\1/T,types/
 --regex-kotlin=/^[[:space:]]*((abstract|final|sealed|implicit|lazy|override|open|private[^ ]*(\[[a-z]*\])*|protected)[[:space:]]*)*fun[[:space:]]+([[:alnum:]_:]+)/\4/m,methods/
