@@ -20,9 +20,9 @@ colorscheme gruvbox
 """ colorscheme wombat
 
 "" colorscheme override
-hi Search guibg=peru guifg=wheat
-hi CursorLine term=bold cterm=bold guibg=Grey20
-hi CursorColumn term=bold cterm=bold guibg=Grey20
+""" hi Search guibg=peru guifg=wheat
+""" hi CursorLine term=bold cterm=bold guibg=Grey20
+""" hi CursorColumn term=bold cterm=bold guibg=Grey20
 
 "" popup menu override
 """ https://alvinalexander.com/linux/vi-vim-editor-color-scheme-syntax/
