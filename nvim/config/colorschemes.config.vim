@@ -14,6 +14,7 @@ endif
 
 " use theme
 colorscheme gruvbox
+""" colorscheme codedark
 """ colorscheme ir_black
 """ colorscheme molokai
 """ colorscheme monokai 
