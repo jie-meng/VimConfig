@@ -85,7 +85,6 @@ endif
 colorscheme codedark
 """ colorscheme ir_black
 """ colorscheme molokai
-""" colorscheme monokai
 """ colorscheme wombat
 
 "" colorscheme override
@@ -97,7 +96,7 @@ hi CursorColumn term=bold cterm=bold guibg=Grey20
 """ https://alvinalexander.com/linux/vi-vim-editor-color-scheme-syntax/
 """ https://vi.stackexchange.com/questions/12664/is-there-any-way-to-change-the-popup-menu-color
 """ :highlight Pmenu ctermbg=DarkMagenta guibg=DarkMagenta
-""" :highlight PmenuSel ctermbg=DarkMagenta guibg=DarkMagenta
+:highlight PmenuSel ctermbg=DarkCyan guibg=DarkCyan
 """ :highlight PmenuSbar ctermbg=DarkMagenta guibg=DarkMagenta
 """ :highlight PmenuThumb ctermbg=DarkMagenta guibg=DarkMagenta
 
@@ -192,6 +191,10 @@ nnoremap <Leader>gc :Gcommit<CR>
 nnoremap <Leader>gb :Gblame<CR>
 nnoremap <Leader>gm :Gmove<CR>
 nnoremap <Leader>gd :Gdelete<CR>
+
+" vim-gitgutter
+nmap ]t <Plug>(GitGutterNextHunk)
+nmap [t <Plug>(GitGutterPrevHunk)
 
 " fzf
 set rtp+=/usr/local/opt/fzf
