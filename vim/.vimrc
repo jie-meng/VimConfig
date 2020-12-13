@@ -81,22 +81,22 @@ if (has('termguicolors'))
 endif
 
 "" color
+colorscheme molokai
 """ colorscheme gruvbox
-colorscheme codedark
+""" colorscheme codedark
 """ colorscheme ir_black
-""" colorscheme molokai
 """ colorscheme wombat
 
 "" colorscheme override
-hi Search guibg=peru guifg=wheat
-hi CursorLine term=bold cterm=bold guibg=Grey20
-hi CursorColumn term=bold cterm=bold guibg=Grey20
+""" hi Search guibg=peru guifg=wheat
+""" hi CursorLine term=bold cterm=bold guibg=Grey20
+""" hi CursorColumn term=bold cterm=bold guibg=Grey20
 
 "" popup menu override
 """ https://alvinalexander.com/linux/vi-vim-editor-color-scheme-syntax/
 """ https://vi.stackexchange.com/questions/12664/is-there-any-way-to-change-the-popup-menu-color
 """ :highlight Pmenu ctermbg=DarkMagenta guibg=DarkMagenta
-:highlight PmenuSel ctermbg=DarkCyan guibg=DarkCyan
+:highlight PmenuSel ctermbg=DarkMagenta guibg=DarkMagenta
 """ :highlight PmenuSbar ctermbg=DarkMagenta guibg=DarkMagenta
 """ :highlight PmenuThumb ctermbg=DarkMagenta guibg=DarkMagenta
 
