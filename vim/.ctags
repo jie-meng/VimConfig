@@ -1,5 +1,7 @@
 --exclude=node_modules
 --exclude=gulp
+--exclude=.ccls-cache
+
 --languages=-javascript
 --langdef=js
 --langmap=js:.js
