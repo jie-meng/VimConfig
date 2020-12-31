@@ -25,6 +25,7 @@ Plug 'junegunn/gv.vim'
 
 " color
 Plug 'flazz/vim-colorschemes'
+Plug 'rubberduck203/aosp-vim'
 
 " complete
 Plug 'raimondi/delimitmate'
