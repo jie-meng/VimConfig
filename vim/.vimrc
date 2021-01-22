@@ -24,7 +24,8 @@ Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/gv.vim'
 
 " color
-Plug 'flazz/vim-colorschemes'
+""" Plug 'flazz/vim-colorschemes'
+Plug 'rafi/awesome-vim-colorschemes'
 Plug 'rubberduck203/aosp-vim'
 
 " complete
@@ -86,11 +87,7 @@ if (has('termguicolors'))
 endif
 
 "" color
-colorscheme molokai
-""" colorscheme gruvbox
-""" colorscheme codedark
-""" colorscheme ir_black
-""" colorscheme wombat
+colorscheme ayu
 
 "" colorscheme override
 """ hi Search guibg=peru guifg=wheat
@@ -101,7 +98,7 @@ colorscheme molokai
 """ https://alvinalexander.com/linux/vi-vim-editor-color-scheme-syntax/
 """ https://vi.stackexchange.com/questions/12664/is-there-any-way-to-change-the-popup-menu-color
 """ :highlight Pmenu ctermbg=DarkMagenta guibg=DarkMagenta
-:highlight PmenuSel ctermbg=DarkMagenta guibg=DarkMagenta
+""" :highlight PmenuSel ctermbg=DarkMagenta guibg=DarkMagenta
 """ :highlight PmenuSbar ctermbg=DarkMagenta guibg=DarkMagenta
 """ :highlight PmenuThumb ctermbg=DarkMagenta guibg=DarkMagenta
 
