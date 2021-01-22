@@ -33,9 +33,9 @@ Plug 'raimondi/delimitmate'
 Plug 'vim-scripts/AutoComplPop'
 Plug 'ervandew/supertab'
 Plug 'honza/vim-snippets'
-" Plug 'sirver/ultisnips'
 Plug 'davidhalter/jedi-vim'
 Plug 'OmniSharp/omnisharp-vim'
+" Plug 'sirver/ultisnips'
 
 " language
 Plug 'sheerun/vim-polyglot'
@@ -292,9 +292,10 @@ let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 1
 
 "" only enable these linters
-"" let g:ale_linters = {
-"" \    'javascript': ['eslint']
-"" \}
+ let g:ale_linters = {
+ \    'javascript': ['eslint'],
+ \    'cs': ['OmniSharp']
+ \}
 
 "" Fix files with prettier, and then ESLint.
 let b:ale_fixers = ['prettier', 'eslint']
@@ -339,10 +340,7 @@ augroup omnisharp_commands
     autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
 
     "" automatic syntax check on events (TextChanged requires Vim 7.4)
-    autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
-
-    "" show type information automatically when the cursor stops moving
-    autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
+    "autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
 
     "" The following commands are contextual, based on the current cursor position.
     autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
