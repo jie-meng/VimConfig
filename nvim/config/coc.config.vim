@@ -29,7 +29,7 @@ set shortmess+=c
 set signcolumn=yes
 
 " Restart coc, when there shouldn't have any error but many error displaying. you can use this to refresh coc
-nmap <silent> <space>r :<C-u>CocRestart<cr>
+nmap <silent> <space>rc :<C-u>CocRestart<cr>
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
