@@ -36,9 +36,6 @@ augroup omnisharp_commands
     " automatic syntax check on events (TextChanged requires Vim 7.4)
     autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
 
-    " Automatically add new cs files to the nearest project on save
-    """ autocmd BufWritePost *.cs call OmniSharp#AddToProject()
-
     "show type information automatically when the cursor stops moving
     autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
 
@@ -82,12 +79,9 @@ command! -nargs=1 Rename :call OmniSharp#RenameTo("<args>")
 "" Force OmniSharp to reload the solution. Useful when switching branches etc.
 nnoremap <leader>rl :OmniSharpReloadSolution<cr>
 nnoremap <leader>cf :OmniSharpCodeFormat<cr>
-"" Load the current .cs file to the nearest project
-nnoremap <leader>tp :OmniSharpAddToProject<cr>
 
-"" (Experimental - uses vim-dispatch or vimproc plugin) - Start the omnisharp server for the current solution
-nnoremap <leader>ss :OmniSharpStartServer<cr>
-nnoremap <leader>sp :OmniSharpStopServer<cr>
+"" (Experimental - uses vim-dispatch or vimproc plugin) - Restart the omnisharp server for the current solution
+nnoremap <leader>rs :OmniSharpRestartServer<cr>
 
 "" Add syntax highlighting for types and interfaces
 nnoremap <leader>th :OmniSharpHighlightTypes<cr>
