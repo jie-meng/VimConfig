@@ -32,7 +32,6 @@ Plug 'othree/javascript-libraries-syntax.vim'
 Plug 'ap/vim-css-color'
 Plug 'hail2u/vim-css3-syntax'
 Plug 'vim-scripts/a.vim'
-Plug 'OmniSharp/omnisharp-vim'
 
 " lint
 Plug 'scrooloose/syntastic'
@@ -54,4 +53,3 @@ source ~/.config/nvim/greplace.config.vim
 source ~/.config/nvim/previm.config.vim
 source ~/.config/nvim/javascript_libraries_syntax.config.vim
 source ~/.config/nvim/nerdcommenter.config.vim
-source ~/.config/nvim/omnisharp.config.vim
