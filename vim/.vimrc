@@ -29,14 +29,15 @@ Plug 'rafi/awesome-vim-colorschemes'
 Plug 'rubberduck203/aosp-vim'
 
 " complete
-Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'raimondi/delimitmate'
 Plug 'vim-scripts/AutoComplPop'
 Plug 'ervandew/supertab'
 Plug 'honza/vim-snippets'
-Plug 'davidhalter/jedi-vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'OmniSharp/omnisharp-vim'
-" Plug 'sirver/ultisnips'
 
 " language
 Plug 'sheerun/vim-polyglot'
@@ -266,9 +267,6 @@ nnoremap <space>G :Gsearch<Space>
 " othree/javascript-libraries-syntax.vim
 let g:used_javascript_libs = 'jquery,underscore,backbone,react,vue'
 
-" sirver/ultisnips
-""" let g:UltiSnipsUsePythonVersion = 3
-
 " Shifting blocks visually
 nnoremap > >>
 nnoremap < << 
@@ -280,6 +278,7 @@ vnoremap < <gv
 let g:ale_sign_column_always = 1
 let g:ale_sign_error = '>>'
 let g:ale_sign_warning = '--'
+let g:ale_set_highlights = 0
 
 "" show errors or warnings in my statusline
 let g:airline#extensions#ale#enabled = 1
@@ -367,4 +366,41 @@ augroup omnisharp_commands
     autocmd FileType cs nnoremap <space>rs :OmniSharpRestartServer<cr>
     "" Add syntax highlighting for types and interfaces
     autocmd FileType cs nnoremap <space>th :OmniSharpHighlightTypes<cr>
+augroup END
+
+" vim-lsp
+if executable('pyls')
+    "" pip3 install python-language-server
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'allowlist': ['python'],
+        \ })
+endif
+
+function! s:on_lsp_buffer_enabled() abort
+    setlocal omnifunc=lsp#complete
+    setlocal signcolumn=yes
+    if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+    nmap <buffer> gd <plug>(lsp-definition)
+    nmap <buffer> gs <plug>(lsp-document-symbol-search)
+    nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+    nmap <buffer> gr <plug>(lsp-references)
+    nmap <buffer> gi <plug>(lsp-implementation)
+    nmap <buffer> gt <plug>(lsp-type-definition)
+    nmap <buffer> <leader>rn <plug>(lsp-rename)
+    nmap <buffer> [g <Plug>(lsp-previous-diagnostic)
+    nmap <buffer> ]g <Plug>(lsp-next-diagnostic)
+    nmap <buffer> K <plug>(lsp-hover)
+
+    let g:lsp_format_sync_timeout = 1000
+    autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
+
+    " refer to doc to add more commands
+endfunction
+
+augroup lsp_install
+    au!
+    " call s:on_lsp_buffer_enabled only for languages that has the server registered.
+    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
 augroup END
