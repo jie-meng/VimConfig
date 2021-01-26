@@ -7,8 +7,8 @@ main() {
     # ctags
     sudo apt-get install -y ctags
 
-    # python autocomplete
-    pip3 install jedi
+    # ccls
+    sudo snap install ccls --classic
 
     # vim-plug
     if [ ! -f "~/.vim/autoload/plug.vim" ]; then

@@ -24,8 +24,8 @@ main() {
         alias ctags="`brew --prefix`/bin/ctags"
     fi
 
-    # python autocomplete
-    pip3 install jedi
+    # ccls
+    brew install ccls
 
     # vim-plug
     if [ ! -f "~/.vim/autoload/plug.vim" ]; then
