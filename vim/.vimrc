@@ -152,7 +152,10 @@ elseif has('unix')
     set guifont="Ubuntu Mono" 12
 endif
 
-"" close quickfix by enter
+"" disable auto-insert-line after RETURN on a autocomplete-list"
+inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
+
+"" close quickfix by RETURN
 :autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>
 
 "" resize window
@@ -204,16 +207,6 @@ nmap [t <Plug>(GitGutterPrevHunk)
 
 " fzf
 set rtp+=/usr/local/opt/fzf
-
-"""nnoremap <Leader>ff :Files<CR>
-"""nnoremap <Leader>fg :GFiles<CR>
-"""nnoremap <Leader>fb :Buffers<CR>
-"""nnoremap <Leader>fe :History<CR>
-"""nnoremap <Leader>ft :Tags<CR>
-"""nnoremap <Leader>fc :History:<CR>
-"""nnoremap <Leader>fa :Ag<Space>
-"""nnoremap <Leader>fs :Filetypes<CR>
-"""nnoremap <Leader>fd :Ag <C-R><C-W><CR>
 
 nnoremap <space>fg :GFiles<CR>
 nnoremap <space>ff :Files<CR>
