@@ -152,6 +152,9 @@ elseif has('unix')
     set guifont="Ubuntu Mono" 12
 endif
 
+"" close quickfix by enter
+:autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>
+
 "" resize window
 map <Leader>= :vertical resize +10<Enter>
 map <Leader>- :vertical resize -10<Enter>
@@ -368,16 +371,7 @@ augroup omnisharp_commands
     autocmd FileType cs nnoremap <space>th :OmniSharpHighlightTypes<cr>
 augroup END
 
-" vim-lsp
-if executable('pyls')
-    "" pip3 install python-language-server
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'pyls',
-        \ 'cmd': {server_info->['pyls']},
-        \ 'allowlist': ['python'],
-        \ })
-endif
-
+"" vim-lsp
 function! s:on_lsp_buffer_enabled() abort
     setlocal omnifunc=lsp#complete
     setlocal signcolumn=yes
@@ -395,7 +389,7 @@ function! s:on_lsp_buffer_enabled() abort
 
     let g:lsp_format_sync_timeout = 1000
     autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
-
+    
     " refer to doc to add more commands
 endfunction
 
@@ -404,3 +398,9 @@ augroup lsp_install
     " call s:on_lsp_buffer_enabled only for languages that has the server registered.
     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
 augroup END
+
+" vim-lsp-settings
+""" https://github.com/mattn/vim-lsp-settings
+""" While editing a file with a supported filetype, :LspInstallServer server-name, if server-name not given, default server for the language will be used.
+""" :LspUninstallServer server-name
+
