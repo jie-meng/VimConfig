@@ -365,7 +365,7 @@ endif
 "" Compile omnisharp-roslyn locally and set the artifacts OmniSharp.exe to OmniSharp_server_path
 "" https://github.com/OmniSharp/omnisharp-roslyn
 "" Please set OMNI_SHARP_PATH in your .zshrc or .bashrc: export OMNI_SHARP_PATH={omni_sharp_executable_path}
-let g:OmniSharp_server_path = $OMNI_SHARP_PATH
+let g:OmniSharp_server_path = '/Users/jiemeng/programs/omnisharp-roslyn/artifacts/publish/OmniSharp.Stdio.Driver/mono/OmniSharp.exe'
 
 "" The roslyn server releases come with an embedded Mono, but this can be overridden to use the installed Mono by setting g:OmniSharp_server_use_mono
 let g:OmniSharp_server_use_mono = 1
