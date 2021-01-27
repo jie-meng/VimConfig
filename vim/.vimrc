@@ -155,9 +155,6 @@ endif
 "" disable auto-insert-line after RETURN on a autocomplete-list"
 inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
 
-"" close quickfix by RETURN
-:autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>
-
 "" resize window
 map <Leader>= :vertical resize +10<Enter>
 map <Leader>- :vertical resize -10<Enter>
@@ -319,13 +316,13 @@ function! s:on_lsp_buffer_enabled() abort
     nmap <buffer> gd <plug>(lsp-definition)
     nmap <buffer> gs <plug>(lsp-document-symbol-search)
     nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
-    nmap <buffer> gr <plug>(lsp-references)
     nmap <buffer> gi <plug>(lsp-implementation)
     nmap <buffer> gt <plug>(lsp-type-definition)
-    nmap <buffer> <leader>rn <plug>(lsp-rename)
     nmap <buffer> [g <Plug>(lsp-previous-diagnostic)
     nmap <buffer> ]g <Plug>(lsp-next-diagnostic)
     nmap <buffer> K <plug>(lsp-hover)
+    nmap <buffer> <space>gr <plug>(lsp-references)
+    nmap <buffer> <space>rn <plug>(lsp-rename)
 
     let g:lsp_format_sync_timeout = 1000
     autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
@@ -383,7 +380,7 @@ augroup omnisharp_commands
     autocmd FileType cs nnoremap <space>fi :OmniSharpFindImplementations<cr>
     autocmd FileType cs nnoremap <space>ft :OmniSharpFindType<cr>
     autocmd FileType cs nnoremap <space>fs :OmniSharpFindSymbol<cr>
-    autocmd FileType cs nnoremap <space>fu :OmniSharpFindUsages<cr>
+    autocmd FileType cs nnoremap <space>gr :OmniSharpFindUsages<cr>
     "" finds members in the current buffer
     autocmd FileType cs nnoremap <space>fm :OmniSharpFindMembers<cr>
     "" cursor can be anywhere on the line containing an issue
@@ -399,7 +396,7 @@ augroup omnisharp_commands
     "" Run code actions with text selected in visual mode to extract method
     autocmd FileType cs vnoremap <space>a :call OmniSharp#GetCodeActions('visual')<cr>
     "" rename with dialog
-    autocmd FileType cs nnoremap <space>rm :OmniSharpRename<cr>
+    autocmd FileType cs nnoremap <space>rn :OmniSharpRename<cr>
     "" Force OmniSharp to reload the solution. Useful when switching branches etc.
     autocmd FileType cs nnoremap <space>cf :OmniSharpCodeFormat<cr>
     "" (Experimental - uses vim-dispatch or vimproc plugin) - Restart the omnisharp server for the current solution
