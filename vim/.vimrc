@@ -1,3 +1,122 @@
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Basic configuration
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" global
+filetype on
+syntax on
+
+set nu
+set nowrap
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+set termencoding=utf-8
+set encoding=utf-8
+set bg=dark
+set hlsearch
+set nocompatible
+set backspace=indent,eol,start
+set smartindent
+"" if hidden is not set, TextEdit might fail.
+set hidden
+""" set ignorecase
+
+" For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
+if (has('nvim'))
+  let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
+endif
+
+" For Neovim > 0.1.5 and Vim > patch 7.4.1799 - https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162
+" Based on Vim patch 7.4.1770 (`guicolors` option) - https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd
+" https://github.com/neovim/neovim/wiki/Following-HEAD#20160511
+if (has('termguicolors'))
+  set termguicolors
+endif
+
+"" remap C-p to C-i, because C-i sometimes override by other shortcuts
+nnoremap <C-p> <C-i>
+
+"" filetype extension
+"" java
+au BufNewFile,BufRead *.java,*.jav,*.aidl setf java
+
+"" quick edit vimrc
+map <Leader><F2> :e ~/.vimrc<CR>
+
+"" change buffer
+map <Leader>[ :bp<Enter>
+map <Leader>] :bn<Enter>
+
+"" Disable swap
+set noswapfile
+
+"" enable clipboard
+:inoremap <C-v> <ESC>"+pa
+:vnoremap <C-c> "+y
+:vnoremap<C-d> "+d
+
+"" move
+nnoremap mb ^
+nnoremap me $
+vnoremap mb ^
+vnoremap me $
+
+"" Alt + * move line
+"" http://vim.wikia.com/wiki/Moving_lines_up_or_down
+nnoremap ∆ :m .+1<CR>==
+nnoremap ˚ :m .-2<CR>==
+inoremap ∆ <Esc>:m .+1<CR>==gi
+inoremap ˚ <Esc>:m .-2<CR>==gi
+vnoremap ∆ :m '>+1<CR>gv=gv
+vnoremap ˚ :m '<-2<CR>gv=gv
+
+"" tab spaces
+set tabstop=4
+set expandtab
+set shiftwidth=4
+
+"" tagbar
+nnoremap <Leader><F12> :TagbarOpenAutoClose<CR>
+
+"" Shifting blocks visually
+nnoremap > >
+nnoremap < <<
+vnoremap > >gv
+vnoremap < <gv
+
+"" terminal
+set splitbelow
+nnoremap <F2> :ter ++rows=11<CR>
+tnoremap <F3> <C-\><C-n>
+
+"" font
+if has('macunix')
+    set guifont=Monaco:h12
+elseif has('unix')
+    set guifont="Ubuntu Mono" 12
+endif
+
+"" ctags
+map <Leader>rr :!ctags -R --exclude=.git --exclude=node_modules --exclude=log *<Enter>
+
+"" disable auto-insert-line after RETURN on a autocomplete-list"
+inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
+
+"" resize window
+map <Leader>= :vertical resize +10<Enter>
+map <Leader>- :vertical resize -10<Enter>
+map <Leader>. :resize +10<Enter>
+map <Leader>, :resize -10<Enter>
+
+"" hightline current line and column
+au WinLeave * set nocursorline nocursorcolumn
+au WinEnter * set cursorline cursorcolumn
+set cursorline cursorcolumn
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" Plugin configuration
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 call plug#begin('~/.vim/plugged')
 
 " window
@@ -57,37 +176,7 @@ Plug 'scrooloose/syntastic'
 
 call plug#end()
 
-" global 
-filetype on
-syntax on 
-
-set nu
-set nowrap
-set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
-set termencoding=utf-8
-set encoding=utf-8
-set bg=dark
-set hlsearch
-set nocompatible
-set backspace=indent,eol,start
-set smartindent
-"" if hidden is not set, TextEdit might fail.
-set hidden
-""" set ignorecase
-
-" For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
-if (has('nvim'))
-  let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
-endif
-
-" For Neovim > 0.1.5 and Vim > patch 7.4.1799 - https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162
-" Based on Vim patch 7.4.1770 (`guicolors` option) - https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd
-" https://github.com/neovim/neovim/wiki/Following-HEAD#20160511
-if (has('termguicolors'))
-  set termguicolors
-endif
-
-"" color
+""" colorscheme
 colorscheme ayu
 
 "" colorscheme override
@@ -102,69 +191,6 @@ colorscheme ayu
 """ :highlight PmenuSel ctermbg=DarkMagenta guibg=DarkMagenta
 """ :highlight PmenuSbar ctermbg=DarkMagenta guibg=DarkMagenta
 """ :highlight PmenuThumb ctermbg=DarkMagenta guibg=DarkMagenta
-
-"" remap C-p to C-i, because C-i sometimes override by other shortcuts
-nnoremap <C-p> <C-i>
-
-"" filetype extension 
-"" java
-au BufNewFile,BufRead *.java,*.jav,*.aidl setf java
-
-"" quick edit vimrc
-map <Leader><F2> :e ~/.vimrc<CR>
-
-"" change buffer
-map <Leader>[ :bp<Enter>
-map <Leader>] :bn<Enter>
-
-"" Disable swap
-set noswapfile
-
-"" enable clipboard 
-:inoremap <C-v> <ESC>"+pa
-:vnoremap <C-c> "+y
-:vnoremap<C-d> "+d
-
-"" move
-nnoremap mb ^
-nnoremap me $
-vnoremap mb ^
-vnoremap me $
-
-"" Alt + * move line
-"" http://vim.wikia.com/wiki/Moving_lines_up_or_down
-nnoremap ∆ :m .+1<CR>==
-nnoremap ˚ :m .-2<CR>==
-inoremap ∆ <Esc>:m .+1<CR>==gi
-inoremap ˚ <Esc>:m .-2<CR>==gi
-vnoremap ∆ :m '>+1<CR>gv=gv
-vnoremap ˚ :m '<-2<CR>gv=gv
-
-"" tab spaces
-set tabstop=4
-set expandtab
-set shiftwidth=4
-
-"" font
-if has('macunix')
-    set guifont=Monaco:h12
-elseif has('unix')
-    set guifont="Ubuntu Mono" 12
-endif
-
-"" disable auto-insert-line after RETURN on a autocomplete-list"
-inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
-
-"" resize window
-map <Leader>= :vertical resize +10<Enter>
-map <Leader>- :vertical resize -10<Enter>
-map <Leader>. :resize +10<Enter>
-map <Leader>, :resize -10<Enter>
-
-"" hightline current line and column
-au WinLeave * set nocursorline nocursorcolumn
-au WinEnter * set cursorline cursorcolumn
-set cursorline cursorcolumn
 
 " scrooloose/nerdtree
 "" open a NERDTree automatically when vim starts up
@@ -213,9 +239,6 @@ nnoremap <space>s :Tags<CR>
 nnoremap <space>g :Ag <Space>
 nnoremap <space>gc :Ag <C-R><C-W><CR>
 
-" ctags 
-map <Leader>rr :!ctags -R --exclude=.git --exclude=node_modules --exclude=log *<Enter>
-
 " bling/vim-airline
 "" smarter tab line
 let g:airline#extensions#tabline#enabled = 1
@@ -224,14 +247,6 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 
 " pangloss/vim-javascript'
 let g:javascript_plugin_jsdoc = 1
-
-" terminal
-set splitbelow
-nnoremap <F2> :ter ++rows=11<CR>
-tnoremap <F3> <C-\><C-n>
-
-" tagbar
-nnoremap <Leader><F12> :TagbarOpenAutoClose<CR>
 
 " previm
 if has('macunix')
@@ -259,12 +274,6 @@ nnoremap <space>G :Gsearch<Space>
 
 " othree/javascript-libraries-syntax.vim
 let g:used_javascript_libs = 'jquery,underscore,backbone,react,vue'
-
-" Shifting blocks visually
-nnoremap > >>
-nnoremap < << 
-vnoremap > >gv
-vnoremap < <gv
 
 " ale
 "" keep the sign gutter open
@@ -355,7 +364,8 @@ endif
 " OmniSharp
 "" Compile omnisharp-roslyn locally and set the artifacts OmniSharp.exe to OmniSharp_server_path
 "" https://github.com/OmniSharp/omnisharp-roslyn
-let g:OmniSharp_server_path = '/Users/jiemeng/programs/omnisharp-roslyn/artifacts/publish/OmniSharp.Stdio.Driver/mono/OmniSharp.exe'
+"" Please set OMNI_SHARP_PATH in your .zshrc or .bashrc: export OMNI_SHARP_PATH={omni_sharp_executable_path}
+let g:OmniSharp_server_path = $OMNI_SHARP_PATH
 
 "" The roslyn server releases come with an embedded Mono, but this can be overridden to use the installed Mono by setting g:OmniSharp_server_use_mono
 let g:OmniSharp_server_use_mono = 1
