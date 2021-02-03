@@ -113,7 +113,7 @@ au WinEnter * set cursorline cursorcolumn
 set cursorline cursorcolumn
 
 "" close quickfix by type 'q'
-:autocmd FileType qf nnoremap <buffer>q <CR>:cclose<CR>
+:autocmd FileType qf nnoremap <buffer>q :cclose<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
