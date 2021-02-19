@@ -180,7 +180,8 @@ Plug 'scrooloose/syntastic'
 call plug#end()
 
 """ colorscheme
-colorscheme ayu
+""" colorscheme ayu
+colorscheme gruvbox
 
 "" colorscheme override
 """ hi Search guibg=peru guifg=wheat
