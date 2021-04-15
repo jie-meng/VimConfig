@@ -151,7 +151,6 @@ Plug 'rafi/awesome-vim-colorschemes'
 Plug 'rubberduck203/aosp-vim'
 
 " complete
-Plug 'raimondi/delimitmate'
 Plug 'vim-scripts/AutoComplPop'
 Plug 'ervandew/supertab'
 Plug 'honza/vim-snippets'
