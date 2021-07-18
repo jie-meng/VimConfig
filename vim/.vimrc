@@ -16,6 +16,7 @@ set hlsearch
 set nocompatible
 set backspace=indent,eol,start
 set smartindent
+set wildignore+=*.pyc,*.o,*.obj,*.exe,*.class,*.DS_Store,*.meta
 "" if hidden is not set, TextEdit might fail.
 set hidden
 """ set ignorecase
@@ -179,8 +180,8 @@ Plug 'scrooloose/syntastic'
 call plug#end()
 
 """ colorscheme
-""" colorscheme ayu
-colorscheme gruvbox
+""" colorscheme gruvbox
+colorscheme ayu
 
 "" colorscheme override
 """ hi Search guibg=peru guifg=wheat
@@ -219,6 +220,8 @@ let g:NERDTreeDirArrowCollapsible = '▾'
 let g:NERDTreeChDirMode = 2
 "" startup cursor in editing area
 autocmd VimEnter * NERDTree | wincmd p
+"" wildignore
+let NERDTreeRespectWildIgnore=1
 
 " vim-fugitive'
 nnoremap <Leader>gs :Gstatus<CR>
