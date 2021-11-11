@@ -169,10 +169,13 @@ Plug 'othree/javascript-libraries-syntax.vim'
 Plug 'ap/vim-css-color'
 Plug 'hail2u/vim-css3-syntax'
 Plug 'vim-scripts/a.vim'
+Plug 'aklt/plantuml-syntax'
 
 " tools
 Plug 'w0rp/ale'
 Plug 'will133/vim-dirdiff'
+Plug 'tyru/open-browser.vim'
+Plug 'weirongxu/plantuml-previewer.vim'
 
 " lint
 Plug 'scrooloose/syntastic'
@@ -261,7 +264,10 @@ elseif has('unix')
     let g:previm_open_cmd = 'open -a Firefox'
 endif
 
-map <Leader>p :PrevimOpen<CR>
+map <Leader>m :PrevimOpen<CR>
+map <Leader>po :PlantumlOpen<CR>
+nnoremap <Leader>ps :PlantumlSave <Space>
+
 """ hide header to print html page
 let g:previm_show_header = 0
 
