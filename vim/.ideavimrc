@@ -129,4 +129,4 @@ nnoremap <F2> :action ActivateTerminalToolWindow<CR>
 nnoremap <C-r> :action Run<CR>
 nnoremap <C-e> :action Debug<CR>
 nnoremap == :action ReformatCode<CR>
-
+iunmap <CR>
