@@ -116,6 +116,9 @@ set cursorline cursorcolumn
 "" close quickfix by type 'q'
 :autocmd FileType qf nnoremap <buffer>q :cclose<CR>
 
+"" close quickfix after selection
+:autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ Plugin configuration
@@ -359,14 +362,21 @@ augroup END
 
 "" vim-lsp register cpp server
 if executable('ccls')
-   au User lsp_setup call lsp#register_server({
-      \ 'name': 'ccls',
-      \ 'cmd': {server_info->['ccls']},
-      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-      \ 'initialization_options': {'cache': {'directory': '/tmp/ccls/cache' }},
-      \ 'whitelist': ['c', 'cpp', 'cxx', 'objc', 'objcpp', 'cc'],
-      \ })
+  au User lsp_setup call lsp#register_server({
+        \ 'name': 'ccls',
+        \ 'cmd': {server_info->['ccls']},
+        \ 'root_uri':{server_info->lsp#utils#path_to_uri(
+        \	lsp#utils#find_nearest_parent_file_directory(
+        \		lsp#utils#get_buffer_path(),
+        \		['.ccls', 'compile_commands.json', '.git/']
+        \	))},
+        \ 'initialization_options': {},
+        \ 'allowlist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+        \ })
 endif
+
+"" disable highlighting error
+let g:lsp_diagnostics_highlights_enabled = 0
 
 " vim-lsp-settings
 """ https://github.com/mattn/vim-lsp-settings
