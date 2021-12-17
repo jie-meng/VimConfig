@@ -230,11 +230,11 @@ autocmd VimEnter * NERDTree | wincmd p
 let NERDTreeRespectWildIgnore=1
 
 " vim-fugitive'
-nnoremap <Leader>gs :Gstatus<CR>
-nnoremap <Leader>gc :Gcommit<CR>
-nnoremap <Leader>gb :Gblame<CR>
-nnoremap <Leader>gm :Gmove<CR>
-nnoremap <Leader>gd :Gdelete<CR>
+nnoremap <Leader>gs :Git status<CR>
+nnoremap <Leader>gc :Git commit<CR>
+nnoremap <Leader>gb :Git blame<CR>
+nnoremap <Leader>gm :Git move<CR>
+nnoremap <Leader>gd :Git delete<CR>
 
 " vim-gitgutter
 nmap ]t <Plug>(GitGutterNextHunk)
