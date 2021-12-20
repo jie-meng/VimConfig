@@ -187,12 +187,14 @@ call plug#end()
 
 """ colorscheme
 """ colorscheme gruvbox
-colorscheme ayu
+""" colorscheme ayu
+colorscheme deus
+
 
 "" colorscheme override
 """ hi Search guibg=peru guifg=wheat
-""" hi CursorLine term=bold cterm=bold guibg=Grey20
-""" hi CursorColumn term=bold cterm=bold guibg=Grey20
+hi CursorLine term=bold cterm=bold guibg=Grey25
+hi CursorColumn term=bold cterm=bold guibg=Grey25
 
 "" popup menu override
 """ https://alvinalexander.com/linux/vi-vim-editor-color-scheme-syntax/
