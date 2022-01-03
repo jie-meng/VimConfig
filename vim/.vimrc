@@ -40,6 +40,9 @@ nnoremap <C-p> <C-i>
 nnoremap <Space>vs :vsplit<Enter>
 nnoremap <Space>hs :split<Enter>
 
+"" vimdiff
+nnoremap <Space>ds :diffthis<Enter>
+
 "" filetype extension
 "" java
 au BufNewFile,BufRead *.java,*.jav,*.aidl setf java
