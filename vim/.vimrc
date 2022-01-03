@@ -36,6 +36,10 @@ endif
 "" remap C-p to C-i, because C-i sometimes override by other shortcuts
 nnoremap <C-p> <C-i>
 
+"" split window
+nnoremap <Space>vs :vsplit<Enter>
+nnoremap <Space>hs :split<Enter>
+
 "" filetype extension
 "" java
 au BufNewFile,BufRead *.java,*.jav,*.aidl setf java
@@ -187,14 +191,14 @@ call plug#end()
 
 """ colorscheme
 """ colorscheme gruvbox
-""" colorscheme deus
-colorscheme ayu
+colorscheme deus
+""" colorscheme ayu
 
 
 "" colorscheme override
 """ hi Search guibg=peru guifg=wheat
-""" hi CursorLine term=bold cterm=bold guibg=Grey25
-""" hi CursorColumn term=bold cterm=bold guibg=Grey25
+hi CursorLine term=bold cterm=bold guibg=Grey25
+hi CursorColumn term=bold cterm=bold guibg=Grey25
 
 "" popup menu override
 """ https://alvinalexander.com/linux/vi-vim-editor-color-scheme-syntax/
@@ -388,7 +392,7 @@ let g:lsp_diagnostics_highlights_enabled = 0
 " OmniSharp
 "" Download release from https://github.com/OmniSharp/omnisharp-roslyn and set OmniSharp.exe path to g:OmniSharp_server_path
 "" Please set OMNI_SHARP_PATH in your .zshrc or .bashrc: export OMNI_SHARP_PATH={omni_sharp_executable_path}
-let g:OmniSharp_server_path = '/Users/jiemeng/programs/omnisharp/1.37.8/omnisharp/OmniSharp.exe'
+let g:OmniSharp_server_path = '/Users/jiemeng/programs/omnisharp/1.38.0/omnisharp/OmniSharp.exe'
 
 
 "" The roslyn server releases come with an embedded Mono, but this can be overridden to use the installed Mono by setting g:OmniSharp_server_use_mono
