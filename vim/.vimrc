@@ -276,6 +276,7 @@ elseif has('unix')
     let g:previm_open_cmd = 'open -a Firefox'
 endif
 
+" weirongxu/plantuml-previewer.vim
 map <Leader>m :PrevimOpen<CR>
 map <Leader>po :PlantumlOpen<CR>
 nnoremap <Leader>ps :PlantumlSave <Space>
