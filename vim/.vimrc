@@ -387,6 +387,7 @@ endif
 
 "" disable highlighting error
 let g:lsp_diagnostics_highlights_enabled = 0
+let g:lsp_diagnostics_virtual_text_enabled = 0
 
 " vim-lsp-settings
 """ https://github.com/mattn/vim-lsp-settings
