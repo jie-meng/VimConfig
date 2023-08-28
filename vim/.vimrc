@@ -303,9 +303,10 @@ let g:used_javascript_libs = 'jquery,underscore,backbone,react,vue'
 " ale
 "" keep the sign gutter open
 let g:ale_sign_column_always = 1
-let g:ale_sign_error = '>>'
-let g:ale_sign_warning = '--'
+let g:ale_sign_error = 'E>'
+let g:ale_sign_warning = 'W>'
 let g:ale_set_highlights = 0
+let g:ale_virtualtext_cursor = 0
 
 "" show errors or warnings in my statusline
 let g:airline#extensions#ale#enabled = 1
@@ -384,10 +385,6 @@ if executable('ccls')
         \ 'allowlist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
         \ })
 endif
-
-"" disable highlighting error
-let g:lsp_diagnostics_highlights_enabled = 0
-let g:lsp_diagnostics_virtual_text_enabled = 0
 
 " vim-lsp-settings
 """ https://github.com/mattn/vim-lsp-settings
