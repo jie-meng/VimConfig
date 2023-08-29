@@ -394,8 +394,7 @@ endif
 " OmniSharp
 "" Download release from https://github.com/OmniSharp/omnisharp-roslyn and set OmniSharp.exe path to g:OmniSharp_server_path
 "" Please set OMNI_SHARP_PATH in your .zshrc or .bashrc: export OMNI_SHARP_PATH={omni_sharp_executable_path}
-let g:OmniSharp_server_path = '/Users/jiemeng/programs/omnisharp/1.39.2/omnisharp/OmniSharp.exe'
-
+"" let g:OmniSharp_server_path = '/Users/{youraccount}/programs/omnisharp/1.39.2/omnisharp/OmniSharp.exe'
 
 "" The roslyn server releases come with an embedded Mono, but this can be overridden to use the installed Mono by setting g:OmniSharp_server_use_mono
 let g:OmniSharp_server_use_mono = 1
