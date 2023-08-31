@@ -160,6 +160,7 @@ Plug 'junegunn/gv.vim'
 """ Plug 'flazz/vim-colorschemes'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'rubberduck203/aosp-vim'
+Plug 'skammer/vim-css-color'
 
 " complete
 Plug 'vim-scripts/AutoComplPop'
