@@ -171,7 +171,7 @@ Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'OmniSharp/omnisharp-vim'
-Plug 'github/copilot.vim'
+""" Plug 'github/copilot.vim'
 
 " language
 Plug 'sheerun/vim-polyglot'
@@ -240,7 +240,7 @@ autocmd VimEnter * NERDTree | wincmd p
 "" wildignore
 let NERDTreeRespectWildIgnore=1
 
-" vim-fugitive'
+" vim-fugitive
 nnoremap <Leader>gs :Git status<CR>
 nnoremap <Leader>gc :Git commit<CR>
 nnoremap <Leader>gb :Git blame<CR>
@@ -268,7 +268,7 @@ let g:airline#extensions#tabline#enabled = 1
 "" configure the formatting of filenames
 let g:airline#extensions#tabline#fnamemod = ':t'
 
-" pangloss/vim-javascript'
+" pangloss/vim-javascript
 let g:javascript_plugin_jsdoc = 1
 
 " previm
