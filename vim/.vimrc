@@ -171,6 +171,7 @@ Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'OmniSharp/omnisharp-vim'
+Plug 'github/copilot.vim'
 
 " language
 Plug 'sheerun/vim-polyglot'
@@ -449,4 +450,10 @@ augroup omnisharp_commands
     "" Add syntax highlighting for types and interfaces
     autocmd FileType cs nnoremap <space>th :OmniSharpHighlightTypes<cr>
 augroup END
+
+" github/copilot.vim
+map <space>ae :Copilot enable<CR>
+map <space>ad :Copilot disable<CR>
+map <space>as :Copilot status<CR>
+map <space>ap :Copilot panel<CR>
 
