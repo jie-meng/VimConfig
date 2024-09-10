@@ -171,7 +171,7 @@ Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'OmniSharp/omnisharp-vim'
-""" Plug 'github/copilot.vim'
+Plug 'github/copilot.vim'
 
 " language
 Plug 'sheerun/vim-polyglot'
@@ -392,8 +392,8 @@ if executable('ccls')
 endif
 
 "" disable highlighting error
-let g:lsp_diagnostics_highlights_enabled = 0
-let g:lsp_diagnostics_virtual_text_enabled = 0
+" let g:lsp_diagnostics_highlights_enabled = 0
+" let g:lsp_diagnostics_virtual_text_enabled = 0
 
 " vim-lsp-settings
 """ https://github.com/mattn/vim-lsp-settings
