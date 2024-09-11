@@ -346,7 +346,13 @@ let g:NERDCompactSexyComs = 1
 let g:NERDDefaultAlign = 'left'
 
 "" prabirshrestha/asyncomplete
+"" To enable preview window
 let g:asyncomplete_auto_popup = 1
+let g:asyncomplete_auto_completeopt = 0
+set completeopt=menuone,noinsert,noselect,preview
+
+"" To auto close preview window when completion is done.
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " vim-lsp
 function! s:on_lsp_buffer_enabled() abort
