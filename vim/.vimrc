@@ -346,7 +346,7 @@ let g:NERDCompactSexyComs = 1
 let g:NERDDefaultAlign = 'left'
 
 "" prabirshrestha/asyncomplete
-let g:asyncomplete_auto_popup = 0
+let g:asyncomplete_auto_popup = 1
 
 " vim-lsp
 function! s:on_lsp_buffer_enabled() abort
