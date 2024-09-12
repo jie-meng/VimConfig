@@ -170,7 +170,6 @@ Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'OmniSharp/omnisharp-vim'
 Plug 'github/copilot.vim'
 
 " language
@@ -370,60 +369,6 @@ endif
 """ https://github.com/mattn/vim-lsp-settings
 """ While editing a file with a supported filetype, :LspInstallServer server-name, if server-name not given, default server for the language will be used.
 """ :LspUninstallServer server-name
-
-" OmniSharp
-"" Download release from https://github.com/OmniSharp/omnisharp-roslyn and set OmniSharp.exe path to g:OmniSharp_server_path
-"" Please set OMNI_SHARP_PATH in your .zshrc or .bashrc: export OMNI_SHARP_PATH={omni_sharp_executable_path}
-let g:OmniSharp_server_path = '/Users/jiemeng/programs/omnisharp/1.39.2/OmniSharp'
-
-
-"" The roslyn server releases come with an embedded Mono, but this can be overridden to use the installed Mono by setting g:OmniSharp_server_use_mono
-let g:OmniSharp_server_use_mono = 1
-
-"" Timeout in seconds to wait for a response from the server
-let g:OmniSharp_timeout = 1
-
-"" Get Code Issues and syntax errors
-let g:syntastic_cs_checkers = ['syntax', 'semantic', 'issues']
-
-augroup omnisharp_commands
-    autocmd!
-
-    "" Set autocomplete function to OmniSharp (if not using YouCompleteMe completion plugin)
-    autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
-
-    "" automatic syntax check on events (TextChanged requires Vim 7.4)
-    "autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
-
-    "" The following commands are contextual, based on the current cursor position.
-    autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
-    autocmd FileType cs nnoremap <space>fi :OmniSharpFindImplementations<cr>
-    autocmd FileType cs nnoremap <space>ft :OmniSharpFindType<cr>
-    autocmd FileType cs nnoremap <space>fs :OmniSharpFindSymbol<cr>
-    autocmd FileType cs nnoremap <space>gr :OmniSharpFindUsages<cr>
-    "" finds members in the current buffer
-    autocmd FileType cs nnoremap <space>fm :OmniSharpFindMembers<cr>
-    "" cursor can be anywhere on the line containing an issue
-    autocmd FileType cs nnoremap <space>fx :OmniSharpFixUsings<cr>
-    autocmd FileType cs nnoremap <space>tt :OmniSharpTypeLookup<cr>
-    autocmd FileType cs nnoremap <space>dc :OmniSharpDocumentation<cr>
-    "" navigate up by method/property/field
-    autocmd FileType cs nnoremap <C-K> :OmniSharpNavigateUp<cr>
-    "" navigate down by method/property/field
-    autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
-    "" Contextual code actions (requires CtrlP or unite.vim)
-    autocmd FileType cs nnoremap <space>a :OmniSharpGetCodeActions<cr>
-    "" Run code actions with text selected in visual mode to extract method
-    autocmd FileType cs vnoremap <space>a :call OmniSharp#GetCodeActions('visual')<cr>
-    "" rename with dialog
-    autocmd FileType cs nnoremap <space>rn :OmniSharpRename<cr>
-    "" Force OmniSharp to reload the solution. Useful when switching branches etc.
-    autocmd FileType cs nnoremap <space>cf :OmniSharpCodeFormat<cr>
-    "" (Experimental - uses vim-dispatch or vimproc plugin) - Restart the omnisharp server for the current solution
-    autocmd FileType cs nnoremap <space>rs :OmniSharpRestartServer<cr>
-    "" Add syntax highlighting for types and interfaces
-    autocmd FileType cs nnoremap <space>th :OmniSharpHighlightTypes<cr>
-augroup END
 
 " github/copilot.vim
 map <space>ae :Copilot enable<CR>
