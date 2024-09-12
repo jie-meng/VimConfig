@@ -120,11 +120,11 @@ au WinLeave * set nocursorline nocursorcolumn
 au WinEnter * set cursorline cursorcolumn
 set cursorline cursorcolumn
 
-"" close quickfix by type 'q'
-:autocmd FileType qf nnoremap <buffer>q :cclose<CR>
+"" close quickfix by type 'q' and return the cursor to the editor window
+:autocmd FileType qf nnoremap <buffer>q :cclose<CR>:wincmd p<CR>
 
-"" close quickfix after selection
-:autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>
+"" close quickfix after selection and return the cursor to the editor window
+"" :autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>:wincmd p<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -193,9 +193,9 @@ Plug 'scrooloose/syntastic'
 call plug#end()
 
 """ colorscheme
-""" colorscheme gruvbox
+colorscheme gruvbox
 """ colorscheme deus
-colorscheme ayu
+""" colorscheme ayu
 
 "" colorscheme override
 """ hi Search guibg=peru guifg=wheat
@@ -294,7 +294,8 @@ let g:grep_cmd_opts = '--line-numbers --noheading'
 """ 2. then you can make the replacements inside the buffer window using traditional tools (%s/foo/bar/)
 """ 3. Invoke :Greplace to make your changes across all files. It will ask you interatively y/n/a - you can hit 'a' to do all.
 """ 4. Save changes to all files with :wall (write all)
-nnoremap <space>G :Gsearch<Space>
+nnoremap <space>GS :Gsearch<Space>
+nnoremap <space>GR :Greplace<Space>
 
 " othree/javascript-libraries-syntax.vim
 let g:used_javascript_libs = 'jquery,underscore,backbone,react,vue'
