@@ -184,7 +184,6 @@ Plug 'vim-scripts/a.vim'
 Plug 'aklt/plantuml-syntax'
 
 " tools
-Plug 'w0rp/ale'
 Plug 'will133/vim-dirdiff'
 Plug 'tyru/open-browser.vim'
 Plug 'weirongxu/plantuml-previewer.vim'
@@ -198,7 +197,6 @@ call plug#end()
 """ colorscheme gruvbox
 """ colorscheme deus
 colorscheme ayu
-
 
 "" colorscheme override
 """ hi Search guibg=peru guifg=wheat
@@ -262,7 +260,7 @@ nnoremap <space>s :Tags<CR>
 nnoremap <space>g :Ag <Space>
 nnoremap <space>gc :Ag <C-R><C-W><CR>
 
-" bling/vim-airline
+" vim-airline/vim-airline
 "" smarter tab line
 let g:airline#extensions#tabline#enabled = 1
 "" configure the formatting of filenames
@@ -301,39 +299,6 @@ nnoremap <space>G :Gsearch<Space>
 
 " othree/javascript-libraries-syntax.vim
 let g:used_javascript_libs = 'jquery,underscore,backbone,react,vue'
-
-" ale
-"" keep the sign gutter open
-let g:ale_sign_column_always = 1
-let g:ale_sign_error = 'E>'
-let g:ale_sign_warning = 'W>'
-let g:ale_set_highlights = 0
-let g:ale_virtualtext_cursor = 0
-
-"" show errors or warnings in my statusline
-let g:airline#extensions#ale#enabled = 1
-
-"" use quickfix list instead of the loclist
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
-
-"" only enable these linters
- let g:ale_linters = {
- \    'javascript': ['eslint'],
- \    'cs': ['OmniSharp']
- \}
-
-"" Fix files with prettier, and then ESLint.
-let b:ale_fixers = ['prettier', 'eslint']
-let g:ale_fix_on_save = 1
-
-nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-nmap <silent> <C-j> <Plug>(ale_next_wrap)
-
-"" run lint only on saving a file
-let g:ale_lint_on_text_changed = 'never'
-"" dont run lint on opening a file
-"" let g:ale_lint_on_enter = 0
 
 " scrooloose/nerdcommenter
 "" Add spaces after comment delimiters by default
