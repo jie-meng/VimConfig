@@ -257,8 +257,8 @@ nnoremap <space>fg :GFiles<CR>
 nnoremap <space>ff :Files<CR>
 nnoremap <space>e :Buffers<CR>
 nnoremap <space>h :History<CR>
-nnoremap <space>s :Tags<CR>
-nnoremap <space>g :Ag <Space>
+nnoremap <space>t :Tags<CR>
+nnoremap <space>gs :Ag <Space>
 nnoremap <space>gc :Ag <C-R><C-W><CR>
 
 " vim-airline/vim-airline
