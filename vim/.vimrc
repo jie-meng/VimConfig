@@ -229,6 +229,8 @@ nnoremap <silent> <space>j :NERDTreeFind<Enter>
 "" folder icon
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
+"" startup width
+let g:NERDTreeWinSize = 40
 
 "" search dir
 let g:NERDTreeChDirMode = 2
