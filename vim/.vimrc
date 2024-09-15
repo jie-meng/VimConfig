@@ -243,11 +243,54 @@ autocmd VimEnter * NERDTree | wincmd p
 let NERDTreeRespectWildIgnore=1
 
 "" <vim-fugitive>
-nnoremap <Leader>gs :Git status<CR>
+function! GitStatusToQuickfix()
+  " Get the output of git status --porcelain
+  let l:git_status = system('git status --porcelain')
+
+  " Split the output into lines
+  let l:lines = split(l:git_status, "\n")
+
+  " Initialize an empty list for Quickfix entries
+  let l:quickfix_list = []
+
+  " Process each line
+  for l:line in l:lines
+    if l:line =~ '^\s*$'
+      continue
+    endif
+
+    " Extract the status part
+    let l:status = matchstr(l:line, '^\s*\zs\S\+')
+
+    " Extract the file path (ignoring the status part)
+    let l:filepath = matchstr(l:line, '\v\S+\s+\zs.*')
+
+    " Create a Quickfix entry
+    call add(l:quickfix_list, {
+          \ 'filename': l:filepath,
+          \ 'lnum': 1,
+          \ 'col': 1,
+          \ 'text': l:status,
+          \ })
+  endfor
+
+  " Populate the Quickfix list with the entries
+  call setqflist(l:quickfix_list, 'r')
+
+  " Open the Quickfix window
+  copen
+endfunction
+
+"" Command to call the function
+command! GitQuickfix call GitStatusToQuickfix()
+
+" nnoremap <Leader>gs :Git status<CR>
+nnoremap <leader>gs :GitQuickfix<CR>
 nnoremap <Leader>gc :Git commit<CR>
 nnoremap <Leader>gb :Git blame<CR>
 nnoremap <Leader>gm :Git move<CR>
-nnoremap <Leader>gd :Git delete<CR>
+nnoremap <Leader>gr :Git delete<CR>
+nnoremap <Leader>gd :Gdiff<CR>
 
 "" <vim-gitgutter>
 nmap ]t <Plug>(GitGutterNextHunk)
