@@ -381,7 +381,9 @@ function! s:on_lsp_buffer_enabled() abort
     nmap <buffer> [g <Plug>(lsp-previous-diagnostic)
     nmap <buffer> ]g <Plug>(lsp-next-diagnostic)
     nmap <buffer> K <plug>(lsp-hover)
-    nmap <buffer> <space>rn <plug>(lsp-rename)
+
+    " Add a command to save the file and reload LSP after renaming
+    nmap <buffer> <space>rn <plug>(lsp-rename)<Bar>:write<Bar>
 
     let g:lsp_format_sync_timeout = 1000
     autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
