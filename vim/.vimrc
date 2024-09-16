@@ -130,6 +130,11 @@ au WinLeave * set nocursorline nocursorcolumn
 au WinEnter * set cursorline cursorcolumn
 set cursorline cursorcolumn
 
+augroup QuickFixPosition
+    autocmd!
+    autocmd FileType qf wincmd J
+augroup END
+
 "" close quickfix by type 'q' and return the cursor to the editor window
 :autocmd FileType qf nnoremap <buffer>q :cclose<CR>:wincmd p<CR>
 
