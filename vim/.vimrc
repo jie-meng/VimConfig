@@ -243,7 +243,7 @@ autocmd VimEnter * NERDTree | wincmd p
 let NERDTreeRespectWildIgnore=1
 
 "" <vim-fugitive>
-function! GitStatusToQuickfix()
+function! s:git_status_to_quickfix()
   " Get the output of git status --porcelain
   let l:git_status = system('git status --porcelain')
 
@@ -282,7 +282,7 @@ function! GitStatusToQuickfix()
 endfunction
 
 "" Command to call the function
-command! GitQuickfix call GitStatusToQuickfix()
+command! GitQuickfix call s:git_status_to_quickfix()
 
 " nnoremap <Leader>gs :Git status<CR>
 nnoremap <leader>gs :GitQuickfix<CR>
