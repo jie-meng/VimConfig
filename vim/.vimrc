@@ -85,8 +85,15 @@ set tabstop=4
 set expandtab
 set shiftwidth=4
 
+augroup FileTypeIndent
+    autocmd!
+    autocmd FileType javascript,typescript,yaml,yml,json setlocal tabstop=2 shiftwidth=2
+    autocmd FileType python,dockerfile setlocal tabstop=4 shiftwidth=4
+augroup END
+
 "" tagbar
-nnoremap <Leader><F12> :TagbarOpenAutoClose<CR>
+" nnoremap <Leader><F12> :TagbarOpenAutoClose<CR>
+nnoremap <Leader><F12> :TagbarToggle<CR>
 
 "" Shifting blocks visually
 nnoremap > >
