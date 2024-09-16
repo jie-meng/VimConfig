@@ -418,6 +418,25 @@ let g:lsp_diagnostics_virtual_text_enabled = 1
 let g:lsp_diagnostics_virtual_text_prefix = "<✗> "
 let g:lsp_diagnostics_virtual_text_insert_mode_enabled = 0
 
+"" Customize the highlight groups for diagnostics signs
+highlight LspDiagnosticsSignError guifg=#FFFFFF guibg=#FF0000 ctermfg=15 ctermbg=1
+highlight LspDiagnosticsSignWarning guifg=#FFFFFF guibg=#FFA500 ctermfg=15 ctermbg=214
+highlight LspDiagnosticsSignInformation guifg=#FFFFFF guibg=#0000FF ctermfg=15 ctermbg=4
+highlight LspDiagnosticsSignHint guifg=#FFFFFF guibg=#00FF00 ctermfg=15 ctermbg=2
+
+"" Customize the highlight groups for diagnostics virtual text
+highlight LspDiagnosticsVirtualTextError guifg=#FFFFFF guibg=#FF0000 ctermfg=15 ctermbg=1
+highlight LspDiagnosticsVirtualTextWarning guifg=#FFFFFF guibg=#FFA500 ctermfg=15 ctermbg=214
+highlight LspDiagnosticsVirtualTextInformation guifg=#FFFFFF guibg=#0000FF ctermfg=15 ctermbg=4
+highlight LspDiagnosticsVirtualTextHint guifg=#FFFFFF guibg=#00FF00 ctermfg=15 ctermbg=2
+
+"" Ensure the highlight groups are correctly linked
+highlight link LspErrorVirtualText LspDiagnosticsVirtualTextError
+highlight link LspWarningVirtualText LspDiagnosticsVirtualTextWarning
+highlight link LspInformationVirtualText LspDiagnosticsVirtualTextInformation
+highlight link LspHintVirtualText LspDiagnosticsVirtualTextHint
+
+
 " vim-lsp-settings
 "" https://github.com/mattn/vim-lsp-settings
 "" While editing a file with a supported filetype, :LspInstallServer server-name, if server-name not given, default server for the language will be used.
