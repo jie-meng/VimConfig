@@ -256,28 +256,28 @@ let NERDTreeRespectWildIgnore=1
 
 "" <vim-fugitive>
 function! s:git_status_to_quickfix()
-  " Get the output of git status --porcelain
+  "" Get the output of git status --porcelain
   let l:git_status = system('git status --porcelain')
 
-  " Split the output into lines
+  "" Split the output into lines
   let l:lines = split(l:git_status, "\n")
 
-  " Initialize an empty list for Quickfix entries
+  "" Initialize an empty list for Quickfix entries
   let l:quickfix_list = []
 
-  " Process each line
+  "" Process each line
   for l:line in l:lines
     if l:line =~ '^\s*$'
       continue
     endif
 
-    " Extract the status part
+    "" Extract the status part
     let l:status = matchstr(l:line, '^\s*\zs\S\+')
 
-    " Extract the file path (ignoring the status part)
+    "" Extract the file path (ignoring the status part)
     let l:filepath = matchstr(l:line, '\v\S+\s+\zs.*')
 
-    " Create a Quickfix entry
+    "" Create a Quickfix entry
     call add(l:quickfix_list, {
           \ 'filename': l:filepath,
           \ 'lnum': 1,
@@ -286,23 +286,36 @@ function! s:git_status_to_quickfix()
           \ })
   endfor
 
-  " Populate the Quickfix list with the entries
+  "" Populate the Quickfix list with the entries
   call setqflist(l:quickfix_list, 'r')
 
-  " Open the Quickfix window
+  "" Open the Quickfix window
   copen
 endfunction
 
 "" Command to call the function
 command! GitQuickfix call s:git_status_to_quickfix()
 
+"" Custom function to perform 'git reset HEAD' on the current file and run Gdiff
+function! s:git_reset_and_diff()
+    "" Get the path of the current file
+    let l:current_file = expand('%')
+    "" Execute 'git reset HEAD' on the current file
+    execute 'silent !git reset HEAD ' . l:current_file
+    "" Refresh the buffer
+    edit!
+    "" Run Gdiff
+    Gdiff
+endfunction
+
 " nnoremap <Leader>gs :Git status<CR>
-nnoremap <leader>gs :GitQuickfix<CR>
+" nnoremap <Leader>gd :Gdiff<CR>
 nnoremap <Leader>gc :Git commit<CR>
 nnoremap <Leader>gb :Git blame<CR>
 nnoremap <Leader>gm :Git move<CR>
 nnoremap <Leader>gr :Git delete<CR>
-nnoremap <Leader>gd :Gdiff<CR>
+nnoremap <leader>gs :GitQuickfix<CR>
+nnoremap <Leader>gd :call <SID>git_reset_and_diff()<CR>
 
 "" <vim-gitgutter>
 nmap ]t <Plug>(GitGutterNextHunk)
