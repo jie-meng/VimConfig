@@ -296,26 +296,19 @@ endfunction
 "" Command to call the function
 command! GitQuickfix call s:git_status_to_quickfix()
 
-"" Custom function to perform 'git reset HEAD' on the current file and run Gdiff
-function! s:git_reset_and_diff()
-    "" Get the path of the current file
-    let l:current_file = expand('%')
-    "" Execute 'git reset HEAD' on the current file
-    execute 'silent !git reset HEAD ' . l:current_file
-    "" Refresh the buffer
-    edit!
-    "" Run Gdiff
-    Gdiff
+function! s:git_diff_head_and_split()
+    " use horizontal split open Gdiff HEAD
+    execute 'leftabove vertical Gdiff HEAD'
 endfunction
 
 " nnoremap <Leader>gs :Git status<CR>
-" nnoremap <Leader>gd :Gdiff<CR>
+" nnoremap <Leader>gd :Gdiff HEAD<CR>
 nnoremap <Leader>gc :Git commit<CR>
 nnoremap <Leader>gb :Git blame<CR>
 nnoremap <Leader>gm :Git move<CR>
 nnoremap <Leader>gr :Git delete<CR>
 nnoremap <leader>gs :GitQuickfix<CR>
-nnoremap <Leader>gd :call <SID>git_reset_and_diff()<CR>
+nnoremap <Leader>gd :call <SID>git_diff_head_and_split()<CR>
 
 "" <vim-gitgutter>
 nmap ]t <Plug>(GitGutterNextHunk)
