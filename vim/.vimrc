@@ -201,6 +201,7 @@ Plug 'aklt/plantuml-syntax'
 Plug 'will133/vim-dirdiff'
 Plug 'tyru/open-browser.vim'
 Plug 'weirongxu/plantuml-previewer.vim'
+Plug 'vim-test/vim-test'
 
 "" lint
 Plug 'scrooloose/syntastic'
@@ -455,7 +456,7 @@ highlight link LspInformationVirtualText LspDiagnosticsVirtualTextInformation
 highlight link LspHintVirtualText LspDiagnosticsVirtualTextHint
 
 
-" vim-lsp-settings
+"" <vim-lsp-settings>
 "" https://github.com/mattn/vim-lsp-settings
 "" While editing a file with a supported filetype, :LspInstallServer server-name, if server-name not given, default server for the language will be used.
 "" :LspUninstallServer server-name
@@ -465,4 +466,11 @@ map <space>ae :Copilot enable<CR>
 map <space>ad :Copilot disable<CR>
 map <space>as :Copilot status<CR>
 map <space>ap :Copilot panel<CR>
+
+"" <vim-test>
+nmap <silent> <space>tn :TestNearest<CR>
+nmap <silent> <space>tf :TestFile<CR>
+nmap <silent> <space>ts :TestSuite<CR>
+nmap <silent> <space>tl :TestLast<CR>
+nmap <silent> <space>tv :TestVisit<CR>
 
