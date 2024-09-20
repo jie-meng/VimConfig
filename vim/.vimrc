@@ -474,3 +474,6 @@ nmap <silent> <space>ts :TestSuite<CR>
 nmap <silent> <space>tl :TestLast<CR>
 nmap <silent> <space>tv :TestVisit<CR>
 
+"" npx prettier --write
+command! PrettierFormat execute 'silent !npx prettier --write ' . expand('%:p') | edit!
+nnoremap <Leader>pf :PrettierFormat<CR>
