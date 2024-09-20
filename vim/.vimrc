@@ -164,7 +164,7 @@ Plug 'easymotion/vim-easymotion'
 Plug 'skwp/greplace.vim'
 Plug 'arthurxavierx/vim-caser'
 Plug 'scrooloose/nerdcommenter'
-Plug 'jiangmiao/auto-pairs'
+" Plug 'jiangmiao/auto-pairs'
 
 "" git
 Plug 'tpope/vim-fugitive'
@@ -304,27 +304,34 @@ endfunction
 
 " nnoremap <Leader>gs :Git status<CR>
 " nnoremap <Leader>gd :Gdiff HEAD<CR>
-nnoremap <Leader>gc :Git commit<CR>
-nnoremap <Leader>gb :Git blame<CR>
-nnoremap <Leader>gm :Git move<CR>
-nnoremap <Leader>gr :Git delete<CR>
-nnoremap <leader>gs :GitQuickfix<CR>
-nnoremap <Leader>gd :call <SID>git_diff_head_and_split()<CR>
+nnoremap <space>gc :Git commit<CR>
+nnoremap <space>gb :Git blame<CR>
+nnoremap <space>gm :Git move<CR>
+nnoremap <space>gr :Git delete<CR>
+nnoremap <space>gs :GitQuickfix<CR>
+nnoremap <space>gd :call <SID>git_diff_head_and_split()<CR>
 
 "" <vim-gitgutter>
-nmap ]t <Plug>(GitGutterNextHunk)
-nmap [t <Plug>(GitGutterPrevHunk)
+nmap g] <Plug>(GitGutterNextHunk)
+nmap g[ <Plug>(GitGutterPrevHunk)
 
 "" <fzf>
 set rtp+=/usr/local/opt/fzf
 
 nnoremap <space>fg :GFiles<CR>
 nnoremap <space>ff :Files<CR>
-nnoremap <space>e :Buffers<CR>
-nnoremap <space>h :History<CR>
-nnoremap <space>t :Tags<CR>
-nnoremap <space>gs :Ag <Space>
-nnoremap <space>gc :Ag <C-R><C-W><CR>
+nnoremap <space>fe :Buffers<CR>
+nnoremap <space>fh :History<CR>
+nnoremap <space>ft :Tags<CR>
+nnoremap <space>fs :Ag <Space>
+nnoremap <space>fc :Ag <C-R><C-W><CR>
+
+"" <vim-test>
+nmap <space>tn :TestNearest<CR>
+nmap <space>tf :TestFile<CR>
+nmap <space>ts :TestSuite<CR>
+nmap <space>tl :TestLast<CR>
+nmap <space>tv :TestVisit<CR>
 
 "" <vim-airline/vim-airline>
 "" smarter tab line
@@ -435,7 +442,7 @@ endif
 let g:lsp_diagnostics_highlights_enabled = 1
 let g:lsp_diagnostics_virtual_text_enabled = 1
 let g:lsp_diagnostics_virtual_text_prefix = "<✗> "
-let g:lsp_diagnostics_virtual_text_insert_mode_enabled = 0
+" let g:lsp_diagnostics_virtual_text_insert_mode_enabled = 0
 
 "" Customize the highlight groups for diagnostics signs
 highlight LspDiagnosticsSignError guifg=#FFFFFF guibg=#FF0000 ctermfg=15 ctermbg=1
@@ -467,13 +474,38 @@ map <space>ad :Copilot disable<CR>
 map <space>as :Copilot status<CR>
 map <space>ap :Copilot panel<CR>
 
-"" <vim-test>
-nmap <silent> <space>tn :TestNearest<CR>
-nmap <silent> <space>tf :TestFile<CR>
-nmap <silent> <space>ts :TestSuite<CR>
-nmap <silent> <space>tl :TestLast<CR>
-nmap <silent> <space>tv :TestVisit<CR>
+"" format code
+command! PrettierFormat call s:FormatWithPrettier()
+command! Autopep8Format call s:FormatWithAutopep8()
 
-"" npx prettier --write
-command! PrettierFormat execute 'silent !npx prettier --write ' . expand('%:p') | edit!
-nnoremap <Leader>pf :PrettierFormat<CR>
+" Function to format with Prettier
+function! s:FormatWithPrettier()
+  let l:current_file = expand('%:p')
+  call system('npx prettier --write ' . l:current_file)
+  edit!
+endfunction
+
+" Function to format with Autopep8
+function! s:FormatWithAutopep8()
+  let l:current_file = expand('%:p')
+  call system('autopep8 --in-place --aggressive --aggressive ' . l:current_file)
+  edit!
+endfunction
+
+" Create FormatCode function
+function! FormatCode()
+  " Get the current file type
+  let l:filetype = &filetype
+
+  " Execute the appropriate formatting command based on the file type
+  if l:filetype == 'javascript' || l:filetype == 'typescript' || l:filetype == 'typescriptreact' || l:filetype == 'css' || l:filetype == 'scss' || l:filetype == 'html'
+    call s:FormatWithPrettier()
+  elseif l:filetype == 'python'
+    call s:FormatWithAutopep8()
+  else
+    echo "Unsupported file type: " . l:filetype
+  endif
+endfunction
+
+"" Map <Leader>pf to call the FormatCode function
+nnoremap <Leader>fc :call FormatCode()<CR>
