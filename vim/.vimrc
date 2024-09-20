@@ -164,7 +164,6 @@ Plug 'easymotion/vim-easymotion'
 Plug 'skwp/greplace.vim'
 Plug 'arthurxavierx/vim-caser'
 Plug 'scrooloose/nerdcommenter'
-" Plug 'jiangmiao/auto-pairs'
 
 "" git
 Plug 'tpope/vim-fugitive'
@@ -298,7 +297,7 @@ endfunction
 command! GitQuickfix call s:git_status_to_quickfix()
 
 function! s:git_diff_head_and_split()
-    " use horizontal split open Gdiff HEAD
+    " Use vertical split to open Gdiff HEAD
     execute 'leftabove vertical Gdiff HEAD'
 endfunction
 
