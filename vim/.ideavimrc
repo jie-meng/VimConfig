@@ -2,7 +2,7 @@
 """ Basic configuration
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" global
+"" global
 filetype on
 syntax on
 
@@ -16,18 +16,19 @@ set hlsearch
 set nocompatible
 set backspace=indent,eol,start
 set smartindent
+set wildignore+=*.pyc,*.o,*.obj,*.exe,*.class,*.DS_Store,*.meta
 "" if hidden is not set, TextEdit might fail.
 set hidden
-""" set ignorecase
+" set ignorecase
 
-" For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
+"" For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
 if (has('nvim'))
   let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
 endif
 
-" For Neovim > 0.1.5 and Vim > patch 7.4.1799 - https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162
-" Based on Vim patch 7.4.1770 (`guicolors` option) - https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd
-" https://github.com/neovim/neovim/wiki/Following-HEAD#20160511
+"" For Neovim > 0.1.5 and Vim > patch 7.4.1799 - https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162
+"" Based on Vim patch 7.4.1770 (`guicolors` option) - https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd
+"" https://github.com/neovim/neovim/wiki/Following-HEAD#20160511
 if (has('termguicolors'))
   set termguicolors
 endif
@@ -35,12 +36,22 @@ endif
 "" remap C-p to C-i, because C-i sometimes override by other shortcuts
 nnoremap <C-p> <C-i>
 
+"" split window
+nnoremap <Space>vs :vsplit<Enter>
+nnoremap <Space>hs :split<Enter>
+
+"" vimdiff
+nnoremap <Space>ds :diffthis<Enter>
+
 "" filetype extension
 "" java
 au BufNewFile,BufRead *.java,*.jav,*.aidl setf java
 
-"" quick edit vimrc
-map <Leader><F2> :e ~/.vimrc<CR>
+let $MYVIMRC = expand('~/.vimrc')
+"" quick edit .vimrc
+map <Leader><F2> :e $MYVIMRC<CR>
+"" quick reload .vimrc
+nnoremap <leader>sv :source $MYVIMRC<CR>
 
 "" change buffer
 map <Leader>[ :bp<Enter>
@@ -74,8 +85,11 @@ set tabstop=4
 set expandtab
 set shiftwidth=4
 
-"" tagbar
-nnoremap <Leader><F12> :TagbarOpenAutoClose<CR>
+augroup FileTypeIndent
+    autocmd!
+    autocmd FileType javascript,typescript,yaml,yml,json setlocal tabstop=2 shiftwidth=2
+    autocmd FileType python,dockerfile setlocal tabstop=4 shiftwidth=4
+augroup END
 
 "" Shifting blocks visually
 nnoremap > >>
@@ -112,9 +126,16 @@ au WinLeave * set nocursorline nocursorcolumn
 au WinEnter * set cursorline cursorcolumn
 set cursorline cursorcolumn
 
-"" close quickfix by type 'q'
-:autocmd FileType qf nnoremap <buffer>q :cclose<CR>
+augroup QuickFixPosition
+    autocmd!
+    autocmd FileType qf wincmd J
+augroup END
 
+"" close quickfix by type 'q' and return the cursor to the editor window
+:autocmd FileType qf nnoremap <buffer>q :cclose<CR>:wincmd p<CR>
+
+"" close quickfix after selection and return the cursor to the editor window
+" :autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>:wincmd p<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ ideavim configuration

@@ -92,7 +92,7 @@ augroup FileTypeIndent
 augroup END
 
 "" Shifting blocks visually
-nnoremap > >
+nnoremap > >>
 nnoremap < <<
 vnoremap > >gv
 vnoremap < <gv
