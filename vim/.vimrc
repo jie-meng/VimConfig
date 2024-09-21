@@ -91,10 +91,6 @@ augroup FileTypeIndent
     autocmd FileType python,dockerfile setlocal tabstop=4 shiftwidth=4
 augroup END
 
-"" tagbar
-" nnoremap <Leader><F12> :TagbarOpenAutoClose<CR>
-nnoremap <Leader><F12> :TagbarToggle<CR>
-
 "" Shifting blocks visually
 nnoremap > >
 nnoremap < <<
@@ -158,7 +154,6 @@ Plug 'xolox/vim-misc'
 "" search
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
-Plug 'easymotion/vim-easymotion'
 
 "" edit
 Plug 'skwp/greplace.vim'
@@ -171,13 +166,11 @@ Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/gv.vim'
 
 "" color
-" Plug 'flazz/vim-colorschemes'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'rubberduck203/aosp-vim'
 Plug 'skammer/vim-css-color'
 
 "" complete
-Plug 'vim-scripts/AutoComplPop'
 Plug 'ervandew/supertab'
 Plug 'honza/vim-snippets'
 Plug 'prabirshrestha/vim-lsp'
@@ -188,22 +181,14 @@ Plug 'github/copilot.vim'
 
 "" language
 Plug 'sheerun/vim-polyglot'
-Plug 'moll/vim-node'
 Plug 'kannokanno/previm'
-Plug 'othree/javascript-libraries-syntax.vim'
 Plug 'ap/vim-css-color'
-Plug 'hail2u/vim-css3-syntax'
 Plug 'vim-scripts/a.vim'
-Plug 'aklt/plantuml-syntax'
 
 "" tools
 Plug 'will133/vim-dirdiff'
-Plug 'tyru/open-browser.vim'
 Plug 'weirongxu/plantuml-previewer.vim'
 Plug 'vim-test/vim-test'
-
-"" lint
-Plug 'scrooloose/syntastic'
 
 call plug#end()
 
@@ -253,6 +238,9 @@ let g:NERDTreeChDirMode = 2
 autocmd VimEnter * NERDTree | wincmd p
 "" wildignore
 let NERDTreeRespectWildIgnore=1
+
+"" <tagbar>
+nnoremap <Leader><F12> :TagbarToggle<CR>
 
 "" <vim-fugitive>
 function! s:git_status_to_quickfix()
