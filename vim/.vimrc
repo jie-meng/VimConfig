@@ -315,11 +315,12 @@ nnoremap <space>fs :Ag <Space>
 nnoremap <space>fc :Ag <C-R><C-W><CR>
 
 "" <vim-test>
-let test#javascript#runner = 'jest'
+let g:test#preserve_screen = 1
+let g:test#javascript#runner = 'jest'
 if has('mac')
-  let test#strategy = 'iterm'
+  let g:test#strategy = 'iterm'
 else
-  let test#strategy = 'basic'
+  let g:test#strategy = 'basic'
 endif
 
 nmap <space>tn :TestNearest<CR>
