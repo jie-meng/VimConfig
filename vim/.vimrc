@@ -188,6 +188,7 @@ Plug 'vim-scripts/a.vim'
 "" tools
 Plug 'will133/vim-dirdiff'
 Plug 'weirongxu/plantuml-previewer.vim'
+Plug 'tpope/vim-dispatch'
 Plug 'vim-test/vim-test'
 
 call plug#end()
@@ -314,6 +315,13 @@ nnoremap <space>fs :Ag <Space>
 nnoremap <space>fc :Ag <C-R><C-W><CR>
 
 "" <vim-test>
+let test#javascript#runner = 'jest'
+if has('mac')
+  let test#strategy = 'iterm'
+else
+  let test#strategy = 'basic'
+endif
+
 nmap <space>tn :TestNearest<CR>
 nmap <space>tf :TestFile<CR>
 nmap <space>ts :TestSuite<CR>
