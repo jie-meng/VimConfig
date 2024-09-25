@@ -137,6 +137,48 @@ augroup END
 "" close quickfix after selection and return the cursor to the editor window
 " :autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>:wincmd p<CR>
 
+"" global functions
+function! CopyToClipboard(text)
+    if empty(a:text)
+        echo "No text to copy."
+        return
+    endif
+
+    let l:escaped_text = shellescape(a:text)
+
+    if has('clipboard')
+        let @+ = a:text
+        let l:copy_success = 1
+    elseif has('mac')
+        call system('echo ' . l:escaped_text . ' | pbcopy')
+        let l:copy_success = v:shell_error == 0
+    elseif has('unix')
+        " Try different Linux clipboard tools
+        if executable('xclip')
+            call system('echo ' . l:escaped_text . ' | xclip -selection clipboard')
+            let l:copy_success = v:shell_error == 0
+        elseif executable('xsel')
+            call system('echo ' . l:escaped_text . ' | xsel --clipboard --input')
+            let l:copy_success = v:shell_error == 0
+        elseif executable('wl-copy')
+            call system('echo ' . l:escaped_text . ' | wl-copy')
+            let l:copy_success = v:shell_error == 0
+        else
+            let l:copy_success = 0
+        endif
+    elseif has('win32') || has('win64')
+        call system('echo ' . l:escaped_text . ' | clip')
+        let l:copy_success = v:shell_error == 0
+    else
+        let l:copy_success = 0
+    endif
+
+    if l:copy_success
+        echo "Copied to clipboard: " . a:text
+    else
+        echo "Unable to copy to clipboard. Unsupported system or missing clipboard tool."
+    endif
+endfunction
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """ Plugin configuration
@@ -330,49 +372,7 @@ nmap <space>tf :TestFile<CR>
 nmap <space>ts :TestSuite<CR>
 nmap <space>tl :TestLast<CR>
 nmap <space>tv :TestVisit<CR>
-nmap <space>tc :call CopyLastTestCommand()<CR>
-
-function! CopyLastTestCommand()
-    if empty(g:last_test_command)
-        echo "No last test command available."
-        return
-    endif
-
-    let l:escaped_cmd = shellescape(g:last_test_command)
-
-    if has('clipboard')
-        let @+ = g:last_test_command
-        let l:copy_success = 1
-    elseif has('mac')
-        call system('echo ' . l:escaped_cmd . ' | pbcopy')
-        let l:copy_success = v:shell_error == 0
-    elseif has('unix')
-        "" Try different Linux clipboard tools
-        if executable('xclip')
-            call system('echo ' . l:escaped_cmd . ' | xclip -selection clipboard')
-            let l:copy_success = v:shell_error == 0
-        elseif executable('xsel')
-            call system('echo ' . l:escaped_cmd . ' | xsel --clipboard --input')
-            let l:copy_success = v:shell_error == 0
-        elseif executable('wl-copy')
-            call system('echo ' . l:escaped_cmd . ' | wl-copy')
-            let l:copy_success = v:shell_error == 0
-        else
-            let l:copy_success = 0
-        endif
-    elseif has('win32') || has('win64')
-        call system('echo ' . l:escaped_cmd . ' | clip')
-        let l:copy_success = v:shell_error == 0
-    else
-        let l:copy_success = 0
-    endif
-
-    if l:copy_success
-        echo "Copied to clipboard: " . g:last_test_command
-    else
-        echo "Unable to copy to clipboard. Unsupported system or missing clipboard tool."
-    endif
-endfunction
+nmap <space>tc :call CopyToClipboard(get(g:, 'last_test_command', ''))<CR>
 
 "" <vim-airline/vim-airline>
 "" smarter tab line
