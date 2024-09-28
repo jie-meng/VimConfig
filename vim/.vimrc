@@ -81,14 +81,13 @@ vnoremap ∆ :m '>+1<CR>gv=gv
 vnoremap ˚ :m '<-2<CR>gv=gv
 
 "" tab spaces
-set tabstop=4
 set expandtab
+set tabstop=4
 set shiftwidth=4
 
 augroup FileTypeIndent
     autocmd!
     autocmd FileType javascript,typescript,yaml,yml,json setlocal tabstop=2 shiftwidth=2
-    autocmd FileType python,dockerfile setlocal tabstop=4 shiftwidth=4
 augroup END
 
 "" Shifting blocks visually
@@ -428,7 +427,7 @@ let g:NERDDefaultAlign = 'left'
 "" <prabirshrestha/asyncomplete>
 "" To enable preview window
 let g:asyncomplete_auto_popup = 1
-let g:asyncomplete_auto_completeopt = 0
+let g:asyncomplete_auto_completeopt = 1
 set completeopt=menuone,noinsert,noselect,preview
 
 "" To auto close preview window when completion is done.
@@ -482,6 +481,9 @@ let g:lsp_diagnostics_highlights_enabled = 1
 let g:lsp_diagnostics_virtual_text_enabled = 1
 let g:lsp_diagnostics_virtual_text_prefix = "<✗> "
 " let g:lsp_diagnostics_virtual_text_insert_mode_enabled = 0
+
+"" enhance performance
+let g:lsp_diagnostics_delay = 500
 
 "" Customize the highlight groups for diagnostics signs
 highlight LspDiagnosticsSignError guifg=#FFFFFF guibg=#FF0000 ctermfg=15 ctermbg=1
