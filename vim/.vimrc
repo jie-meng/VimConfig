@@ -21,6 +21,16 @@ set wildignore+=*.pyc,*.o,*.obj,*.exe,*.class,*.DS_Store,*.meta
 set hidden
 " set ignorecase
 
+"" performance enhancement
+"" disable swap, backup, writebackup
+set noswapfile
+set nobackup
+set nowritebackup
+"" decrease screen refresh frequency
+set lazyredraw
+"" decrease statusbar refresh frequency
+set updatetime=300
+
 "" For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
 if (has('nvim'))
   let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
@@ -480,10 +490,8 @@ endif
 let g:lsp_diagnostics_highlights_enabled = 1
 let g:lsp_diagnostics_virtual_text_enabled = 1
 let g:lsp_diagnostics_virtual_text_prefix = "<✗> "
-" let g:lsp_diagnostics_virtual_text_insert_mode_enabled = 0
-
-"" enhance performance
-let g:lsp_diagnostics_delay = 500
+let g:lsp_diagnostics_virtual_text_insert_mode_enabled = 0
+let g:lsp_diagnostics_delay = 2000
 
 "" Customize the highlight groups for diagnostics signs
 highlight LspDiagnosticsSignError guifg=#FFFFFF guibg=#FF0000 ctermfg=15 ctermbg=1
