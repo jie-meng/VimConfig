@@ -246,6 +246,7 @@ call plug#end()
 
 "" <colorscheme>
 colorscheme gruvbox
+" colorscheme molokai
 " colorscheme deus
 " colorscheme ayu
 
@@ -385,9 +386,11 @@ nmap <space>tc :call CopyToClipboard(get(g:, 'last_test_command', ''))<CR>
 
 "" <vim-airline/vim-airline>
 "" smarter tab line
-let g:airline#extensions#tabline#enabled = 1
+" https://github.com/vim-airline/vim-airline/issues/421
+let g:airline_extensions = []
+" let g:airline#extensions#tabline#enabled = 1
 "" configure the formatting of filenames
-let g:airline#extensions#tabline#fnamemod = ':t'
+" let g:airline#extensions#tabline#fnamemod = ':t'
 
 "" <pangloss/vim-javascript>
 let g:javascript_plugin_jsdoc = 1
@@ -491,7 +494,7 @@ let g:lsp_diagnostics_highlights_enabled = 1
 let g:lsp_diagnostics_virtual_text_enabled = 1
 let g:lsp_diagnostics_virtual_text_prefix = "<✗> "
 let g:lsp_diagnostics_virtual_text_insert_mode_enabled = 0
-let g:lsp_diagnostics_delay = 2000
+let g:lsp_diagnostics_delay = 3000
 
 "" Customize the highlight groups for diagnostics signs
 highlight LspDiagnosticsSignError guifg=#FFFFFF guibg=#FF0000 ctermfg=15 ctermbg=1
