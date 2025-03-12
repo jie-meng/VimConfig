@@ -229,6 +229,7 @@ Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'github/copilot.vim'
+Plug 'Exafunction/codeium.vim'
 
 "" language
 Plug 'sheerun/vim-polyglot'
@@ -386,7 +387,6 @@ nmap <space>tc :call CopyToClipboard(get(g:, 'last_test_command', ''))<CR>
 
 "" <vim-airline/vim-airline>
 "" smarter tab line
-" https://github.com/vim-airline/vim-airline/issues/421
 let g:airline_extensions = []
 " let g:airline#extensions#tabline#enabled = 1
 "" configure the formatting of filenames
@@ -521,10 +521,17 @@ highlight link LspHintVirtualText LspDiagnosticsVirtualTextHint
 "" :LspUninstallServer server-name
 
 "" <github/copilot.vim>
+let b:copilot_enabled = v:true
+
 map <space>ae :Copilot enable<CR>
 map <space>ad :Copilot disable<CR>
 map <space>as :Copilot status<CR>
 map <space>ap :Copilot panel<CR>
+map <space>au :Copilot setup<CR>
+map <space>ao :Copilot signout<CR>
+
+"" <Exafunction/codeium.vim>
+let g:codeium_enabled = v:false
 
 "" format code
 command! PrettierFormat call s:FormatWithPrettier()
