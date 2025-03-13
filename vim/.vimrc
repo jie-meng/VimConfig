@@ -229,7 +229,7 @@ Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'github/copilot.vim'
-Plug 'Exafunction/codeium.vim'
+" Plug 'Exafunction/codeium.vim'
 
 "" language
 Plug 'sheerun/vim-polyglot'
@@ -531,7 +531,7 @@ map <space>au :Copilot setup<CR>
 map <space>ao :Copilot signout<CR>
 
 "" <Exafunction/codeium.vim>
-let g:codeium_enabled = v:false
+" let g:codeium_enabled = v:false
 
 "" format code
 command! PrettierFormat call s:FormatWithPrettier()
