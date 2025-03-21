@@ -243,6 +243,9 @@ Plug 'weirongxu/plantuml-previewer.vim'
 Plug 'tpope/vim-dispatch'
 Plug 'vim-test/vim-test'
 
+"" framework
+Plug 'normen/vim-pio'
+
 call plug#end()
 
 "" <colorscheme>
