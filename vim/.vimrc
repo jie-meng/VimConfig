@@ -493,11 +493,13 @@ if executable('ccls')
 endif
 
 "" disable highlighting error
-let g:lsp_diagnostics_highlights_enabled = 1
-let g:lsp_diagnostics_virtual_text_enabled = 1
+let g:lsp_diagnostics_enabled = 1
+let g:lsp_diagnostics_echo_cursor = 1
+let g:lsp_diagnostics_highlights_enabled = 0
+let g:lsp_diagnostics_virtual_text_enabled = 0
 let g:lsp_diagnostics_virtual_text_prefix = "<✗> "
 let g:lsp_diagnostics_virtual_text_insert_mode_enabled = 0
-let g:lsp_diagnostics_delay = 3000
+let g:lsp_diagnostics_delay = 2000
 
 "" Customize the highlight groups for diagnostics signs
 highlight LspDiagnosticsSignError guifg=#FFFFFF guibg=#FF0000 ctermfg=15 ctermbg=1
