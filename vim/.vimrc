@@ -478,17 +478,20 @@ augroup lsp_install
 augroup END
 
 "" vim-lsp register cpp server
-if executable('ccls')
+if executable('clangd')
   au User lsp_setup call lsp#register_server({
-        \ 'name': 'ccls',
-        \ 'cmd': {server_info->['ccls']},
-        \ 'root_uri':{server_info->lsp#utils#path_to_uri(
-        \	lsp#utils#find_nearest_parent_file_directory(
-        \		lsp#utils#get_buffer_path(),
-        \		['.ccls', 'compile_commands.json', '.git/']
-        \	))},
-        \ 'initialization_options': {},
-        \ 'allowlist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+        \ 'name': 'clangd',
+        \ 'cmd': {server_info->['clangd', '--background-index', '--compile-commands-dir=.']},
+        \ 'root_uri': {server_info->lsp#utils#path_to_uri(
+        \   lsp#utils#find_nearest_parent_file_directory(
+        \     lsp#utils#get_buffer_path(),
+        \     ['compile_commands.json', '.clangd', '.git/', 'CMakeLists.txt']
+        \   )
+        \ )},
+        \ 'allowlist': [
+        \   'c', 'cpp', 'objc', 'objcpp',
+        \   'cc', 'cxx', 'h', 'hpp', 'hxx'
+        \ ],
         \ })
 endif
 
