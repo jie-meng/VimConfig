@@ -242,6 +242,7 @@ Plug 'will133/vim-dirdiff'
 Plug 'weirongxu/plantuml-previewer.vim'
 Plug 'tpope/vim-dispatch'
 Plug 'vim-test/vim-test'
+Plug 'rhysd/vim-clang-format'
 
 "" framework
 Plug 'normen/vim-pio'
@@ -576,3 +577,8 @@ endfunction
 
 "" Map <Leader>pf to call the FormatCode function
 nnoremap <Leader>fc :call FormatCode()<CR>
+
+"" vim-clang-format
+let g:clang_format#detect_style_file = 1
+let g:clang_format#auto_format = 1
+nnoremap <Leader>cf :ClangFormat<CR>
