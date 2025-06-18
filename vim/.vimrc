@@ -91,9 +91,12 @@ vnoremap ∆ :m '>+1<CR>gv=gv
 vnoremap ˚ :m '<-2<CR>gv=gv
 
 "" tab spaces
-set expandtab
 set tabstop=4
 set shiftwidth=4
+set expandtab
+set smarttab
+set autoindent
+set smartindent
 
 augroup FileTypeIndent
     autocmd!
@@ -229,7 +232,7 @@ Plug 'mattn/vim-lsp-settings'
 Plug 'prabirshrestha/asyncomplete.vim'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'github/copilot.vim'
-" Plug 'Exafunction/codeium.vim'
+" Plug 'Exafunction/windsurf.vim', { 'branch': 'main' }
 
 "" language
 Plug 'sheerun/vim-polyglot'
@@ -530,7 +533,7 @@ highlight link LspHintVirtualText LspDiagnosticsVirtualTextHint
 "" :LspUninstallServer server-name
 
 "" <github/copilot.vim>
-let b:copilot_enabled = v:true
+"" let b:copilot_enabled = v:true
 
 map <space>ae :Copilot enable<CR>
 map <space>ad :Copilot disable<CR>
@@ -539,7 +542,7 @@ map <space>ap :Copilot panel<CR>
 map <space>au :Copilot setup<CR>
 map <space>ao :Copilot signout<CR>
 
-"" <Exafunction/codeium.vim>
+"" <Exafunction/windsurf.vim>
 " let g:codeium_enabled = v:false
 
 "" format code
