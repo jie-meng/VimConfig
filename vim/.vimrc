@@ -268,8 +268,6 @@ colorscheme gruvbox
 " :highlight PmenuThumb ctermbg=DarkMagenta guibg=DarkMagenta
 
 "" <scrooloose/nerdtree>
-"" open a NERDTree automatically when vim starts up
-autocmd vimenter * NERDTree | wincmd p
 "" close vim if the only window left open is a NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif " close vim if the only window left open is a NERDTree
 "" open a NERDTree automatically when vim starts up if no files were specified

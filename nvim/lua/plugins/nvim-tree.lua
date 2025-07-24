@@ -17,6 +17,7 @@ return {
 
     require("nvim-tree").setup({
       sort_by = "case_sensitive",
+      hijack_cursor = false, -- Don't move cursor to tree when opening
       view = {
         width = 40,
         side = "left",
@@ -91,6 +92,9 @@ return {
 
       -- open the tree
       require("nvim-tree.api").tree.open()
+      
+      -- Move focus back to the main window
+      vim.cmd("wincmd p")
     end
 
     vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
@@ -100,6 +104,19 @@ return {
       callback = function(data)
         if vim.fn.argc() == 0 and not vim.g.in_pager_mode then
           require("nvim-tree.api").tree.open()
+          -- Move focus back to the main window after opening tree
+          vim.schedule(function()
+            vim.cmd("wincmd p")
+          end)
+        end
+      end
+    })
+
+    -- Close nvim-tree if it's the last window
+    vim.api.nvim_create_autocmd("BufEnter", {
+      callback = function()
+        if vim.fn.winnr('$') == 1 and vim.bo.filetype == "NvimTree" then
+          vim.cmd("quit")
         end
       end
     })

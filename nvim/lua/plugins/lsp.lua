@@ -19,9 +19,8 @@ return {
           "ts_ls",
           "pyright",
           "clangd",
-          "rust_analyzer",
-          "gopls",
         },
+        automatic_installation = false, -- Don't auto-install servers
       })
 
       local lspconfig = require("lspconfig")
@@ -98,8 +97,9 @@ return {
           },
           filetypes = { "c", "cpp", "objc", "objcpp", "cc", "cxx" },
         },
-        rust_analyzer = {},
-        gopls = {},
+        -- Optional servers (install manually via :Mason if needed)
+        -- rust_analyzer = {},
+        -- gopls = {},
       }
 
       for server, config in pairs(servers) do
