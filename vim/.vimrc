@@ -291,6 +291,8 @@ let g:NERDTreeWinSize = 40
 
 "" search dir
 let g:NERDTreeChDirMode = 2
+"" startup cursor in editing area
+autocmd VimEnter * NERDTree | wincmd p
 "" wildignore
 let NERDTreeRespectWildIgnore=1
 
