@@ -67,9 +67,6 @@ nnoremap <leader>sv :source $MYVIMRC<CR>
 map <Leader>[ :bp<Enter>
 map <Leader>] :bn<Enter>
 
-"" Disable swap
-set noswapfile
-
 "" enable clipboard
 :inoremap <C-v> <ESC>"+pa
 :vnoremap <C-c> "+y
@@ -222,7 +219,6 @@ Plug 'junegunn/gv.vim'
 "" color
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'rubberduck203/aosp-vim'
-Plug 'skammer/vim-css-color'
 
 "" complete
 Plug 'ervandew/supertab'
@@ -295,8 +291,6 @@ let g:NERDTreeWinSize = 40
 
 "" search dir
 let g:NERDTreeChDirMode = 2
-"" startup cursor in editing area
-autocmd VimEnter * NERDTree | wincmd p
 "" wildignore
 let NERDTreeRespectWildIgnore=1
 
@@ -513,18 +507,6 @@ highlight LspDiagnosticsSignError guifg=#FFFFFF guibg=#FF0000 ctermfg=15 ctermbg
 highlight LspDiagnosticsSignWarning guifg=#FFFFFF guibg=#FFA500 ctermfg=15 ctermbg=214
 highlight LspDiagnosticsSignInformation guifg=#FFFFFF guibg=#0000FF ctermfg=15 ctermbg=4
 highlight LspDiagnosticsSignHint guifg=#FFFFFF guibg=#00FF00 ctermfg=15 ctermbg=2
-
-"" Customize the highlight groups for diagnostics virtual text
-highlight LspDiagnosticsVirtualTextError guifg=#FFFFFF guibg=#FF0000 ctermfg=15 ctermbg=1
-highlight LspDiagnosticsVirtualTextWarning guifg=#FFFFFF guibg=#FFA500 ctermfg=15 ctermbg=214
-highlight LspDiagnosticsVirtualTextInformation guifg=#FFFFFF guibg=#0000FF ctermfg=15 ctermbg=4
-highlight LspDiagnosticsVirtualTextHint guifg=#FFFFFF guibg=#00FF00 ctermfg=15 ctermbg=2
-
-"" Ensure the highlight groups are correctly linked
-highlight link LspErrorVirtualText LspDiagnosticsVirtualTextError
-highlight link LspWarningVirtualText LspDiagnosticsVirtualTextWarning
-highlight link LspInformationVirtualText LspDiagnosticsVirtualTextInformation
-highlight link LspHintVirtualText LspDiagnosticsVirtualTextHint
 
 
 "" <vim-lsp-settings>
