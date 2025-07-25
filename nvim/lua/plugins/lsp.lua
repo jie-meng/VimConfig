@@ -39,6 +39,20 @@ return {
         vim.keymap.set("n", "<space>f", function()
           vim.lsp.buf.format({ async = true })
         end, vim.tbl_extend("force", opts, { desc = "Format" }))
+
+        -- Auto show diagnostics in status line when cursor moves
+        vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+          buffer = bufnr,
+          callback = function()
+            local line = vim.api.nvim_win_get_cursor(0)[1] - 1
+            local diagnostics = vim.diagnostic.get(bufnr, { lnum = line })
+            if #diagnostics > 0 then
+              local diag = diagnostics[1]
+              local severity = vim.diagnostic.severity[diag.severity]
+              vim.api.nvim_echo({ { string.format("[%s] %s", severity, diag.message), "DiagnosticSign" .. severity } }, false, {})
+            end
+          end,
+        })
       end
 
       -- Configure diagnostics (same as vim config)
