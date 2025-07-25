@@ -125,10 +125,10 @@ map <Leader>rr :!ctags -R --exclude=.git --exclude=node_modules --exclude=log *<
 inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
 
 "" resize window
-map <Leader>= :vertical resize +10<Enter>
-map <Leader>- :vertical resize -10<Enter>
-map <Leader>. :resize +10<Enter>
-map <Leader>, :resize -10<Enter>
+map <space>. :vertical resize +10<Enter>
+map <space>, :vertical resize -10<Enter>
+map <space>= :resize +10<Enter>
+map <space>- :resize -10<Enter>
 
 "" hightline current line and column
 au WinLeave * set nocursorline nocursorcolumn

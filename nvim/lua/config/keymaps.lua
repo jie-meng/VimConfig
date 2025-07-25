@@ -57,10 +57,10 @@ keymap.set("i", "<CR>", function()
 end, { expr = true, desc = "Smart enter" })
 
 -- Resize window
-keymap.set("n", "<Leader>=", ":vertical resize +10<CR>", { desc = "Increase width" })
-keymap.set("n", "<Leader>-", ":vertical resize -10<CR>", { desc = "Decrease width" })
-keymap.set("n", "<Leader>.", ":resize +10<CR>", { desc = "Increase height" })
-keymap.set("n", "<Leader>,", ":resize -10<CR>", { desc = "Decrease height" })
+keymap.set("n", "<Leader>.", ":vertical resize +10<CR>", { desc = "Increase width" })
+keymap.set("n", "<Leader>,", ":vertical resize -10<CR>", { desc = "Decrease width" })
+keymap.set("n", "<Leader>=", ":resize +10<CR>", { desc = "Increase height" })
+keymap.set("n", "<Leader>-", ":resize -10<CR>", { desc = "Decrease height" })
 
 -- Better window navigation
 keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
