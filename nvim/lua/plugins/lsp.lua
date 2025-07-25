@@ -11,16 +11,9 @@ return {
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
-      -- Setup mason
       require("mason").setup()
       require("mason-lspconfig").setup({
-        ensure_installed = {
-          "lua_ls",
-          "ts_ls",
-          "pyright",
-          "clangd",
-        },
-        automatic_installation = false, -- Don't auto-install servers
+        automatic_enable = false,
       })
 
       local lspconfig = require("lspconfig")
@@ -72,7 +65,7 @@ return {
         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
       end
 
-      -- Setup language servers
+      -- Setup language servers (manual control)
       local servers = {
         lua_ls = {
           settings = {
@@ -97,9 +90,6 @@ return {
           },
           filetypes = { "c", "cpp", "objc", "objcpp", "cc", "cxx" },
         },
-        -- Optional servers (install manually via :Mason if needed)
-        -- rust_analyzer = {},
-        -- gopls = {},
       }
 
       for server, config in pairs(servers) do
