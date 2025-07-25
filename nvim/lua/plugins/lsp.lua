@@ -40,16 +40,33 @@ return {
           vim.lsp.buf.format({ async = true })
         end, vim.tbl_extend("force", opts, { desc = "Format" }))
 
-        -- Auto show diagnostics in status line when cursor moves
-        vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+        -- Auto show diagnostics in status line when cursor is on diagnostic position
+        vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
           buffer = bufnr,
           callback = function()
-            local line = vim.api.nvim_win_get_cursor(0)[1] - 1
+            local cursor = vim.api.nvim_win_get_cursor(0)
+            local line = cursor[1] - 1
+            local col = cursor[2]
+
+            -- Get diagnostics for current line
             local diagnostics = vim.diagnostic.get(bufnr, { lnum = line })
-            if #diagnostics > 0 then
-              local diag = diagnostics[1]
-              local severity = vim.diagnostic.severity[diag.severity]
-              vim.api.nvim_echo({ { string.format("[%s] %s", severity, diag.message), "DiagnosticSign" .. severity } }, false, {})
+            local current_diag = nil
+
+            -- Find diagnostic that contains the cursor position
+            for _, diag in ipairs(diagnostics) do
+              if col >= diag.col and col <= diag.end_col then
+                current_diag = diag
+                break
+              end
+            end
+
+            -- Show diagnostic message if cursor is on a diagnostic
+            if current_diag then
+              local severity = vim.diagnostic.severity[current_diag.severity]
+              vim.api.nvim_echo({ { string.format("[%s] %s", severity, current_diag.message), "DiagnosticSign" .. severity } }, false, {})
+            else
+              -- Clear the command line when not on a diagnostic
+              vim.api.nvim_echo({ { "", "Normal" } }, false, {})
             end
           end,
         })
