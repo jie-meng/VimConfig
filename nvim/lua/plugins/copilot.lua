@@ -5,6 +5,7 @@
 return {
   {
     "github/copilot.vim",
+    lazy = false,
     config = function()
       -- Disable default tab mapping to avoid conflicts
       vim.g.copilot_no_tab_map = true
