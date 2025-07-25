@@ -109,4 +109,13 @@ return {
       { "<space>gh", ":DiffviewFileHistory<CR>", desc = "File history" },
     },
   },
+  {
+    "junegunn/gv.vim",
+    dependencies = "tpope/vim-fugitive",
+    keys = {
+      { "<space>gl", ":GV<CR>", desc = "Git log (all commits)" },
+      { "<space>gL", ":GV!<CR>", desc = "Git log (current file)" },
+      { "<space>gf", ":GV?<CR>", desc = "Git log (fill quickfix)" },
+    },
+  },
 }
