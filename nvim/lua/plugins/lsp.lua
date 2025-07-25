@@ -70,6 +70,31 @@ return {
         vim.keymap.set("n", "]g", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
         vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover" }))
         vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, vim.tbl_extend("force", opts, { desc = "Show diagnostic" }))
+        vim.keymap.set("n", "<space>y", function()
+          local cursor = vim.api.nvim_win_get_cursor(0)
+          local line = cursor[1] - 1
+          local col = cursor[2]
+          local diagnostics = vim.diagnostic.get(bufnr, { lnum = line })
+          
+          -- Find diagnostic at cursor position
+          local current_diag = nil
+          for _, diag in ipairs(diagnostics) do
+            if col >= diag.col and col <= diag.end_col then
+              current_diag = diag
+              break
+            end
+          end
+          
+          if current_diag then
+            -- Copy the full diagnostic message to clipboard
+            vim.fn.setreg('+', current_diag.message)
+            vim.fn.setreg('"', current_diag.message)  -- Also set default register
+            local severity = vim.diagnostic.severity[current_diag.severity]
+            vim.notify(string.format("Copied [%s] diagnostic to clipboard", severity), vim.log.levels.INFO)
+          else
+            vim.notify("No diagnostic found at cursor position", vim.log.levels.WARN)
+          end
+        end, vim.tbl_extend("force", opts, { desc = "Copy diagnostic message" }))
         vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename" }))
         vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
         vim.keymap.set("n", "<space>f", function()
