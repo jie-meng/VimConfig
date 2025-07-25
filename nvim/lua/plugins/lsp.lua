@@ -21,6 +21,41 @@ return {
 
       local capabilities = cmp_nvim_lsp.default_capabilities()
 
+      -- Setup quickfix window behavior globally (like .vimrc)
+      local function setup_quickfix_keymaps()
+        -- Find the first normal buffer window (editor window)
+        local function find_editor_window()
+          for _, win in ipairs(vim.api.nvim_list_wins()) do
+            local buf = vim.api.nvim_win_get_buf(win)
+            local buftype = vim.api.nvim_buf_get_option(buf, 'buftype')
+            if buftype == '' then
+              return win
+            end
+          end
+          return nil
+        end
+
+        -- Close quickfix and return to editor window
+        local function close_and_return()
+          local editor_win = find_editor_window()
+          vim.cmd("cclose")
+          if editor_win and vim.api.nvim_win_is_valid(editor_win) then
+            vim.api.nvim_set_current_win(editor_win)
+          else
+            vim.cmd("wincmd p")
+          end
+        end
+
+        -- Set up key mappings for quickfix window
+        vim.keymap.set("n", "q", close_and_return, { buffer = true, silent = true })
+        vim.keymap.set("n", "<Esc>", close_and_return, { buffer = true, silent = true })
+      end
+
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "qf",
+        callback = setup_quickfix_keymaps,
+      })
+
       local on_attach = function(client, bufnr)
         local opts = { buffer = bufnr, silent = true }
 
