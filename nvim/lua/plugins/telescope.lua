@@ -22,7 +22,7 @@ return {
     { "<space>fh", ":Telescope oldfiles<CR>", desc = "Find recent files" },
     { "<space>ft", ":Telescope tags<CR>", desc = "Find tags" },
     { "<space>fs", ":Telescope live_grep<CR>", desc = "Live grep" },
-    { "<space>fc", ":Telescope grep_string<CR>", desc = "Grep current word" },
+    { "<space>fw", ":Telescope grep_string<CR>", desc = "Grep current word" },
   },
   config = function()
     local telescope = require("telescope")

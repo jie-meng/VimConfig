@@ -3,56 +3,47 @@
 -- ============================================================================
 
 return {
-  -- Main Copilot plugin
+  -- Official Copilot plugin
   {
-    "zbirenbaum/copilot.lua",
+    "github/copilot.vim",
     lazy = false,
-    cmd = "Copilot",
-    event = "InsertEnter",
     config = function()
-      require("copilot").setup({
-        panel = {
-          enabled = true,
-          auto_refresh = false,
-          keymap = {
-            jump_prev = "[[",
-            jump_next = "]]",
-            accept = "<CR>",
-            refresh = "gr",
-            open = "<M-CR>"
-          },
-          layout = {
-            position = "bottom", -- | top | left | right
-            ratio = 0.4
-          },
-        },
-        suggestion = {
-          enabled = true,
-          auto_trigger = true,
-          debounce = 75,
-          keymap = {
-            accept = "<Tab>",
-            accept_word = false,
-            accept_line = false,
-            next = "<C-j>",
-            prev = "<C-k>",
-            dismiss = "<C-l>",
-          },
-        },
-        filetypes = {
-          yaml = false,
-          markdown = false,
-          help = false,
-          gitcommit = false,
-          gitrebase = false,
-          hgcommit = false,
-          svn = false,
-          cvs = false,
-          ["."] = false,
-        },
-        copilot_node_command = 'node', -- Node.js version must be > 18.x
-        server_opts_overrides = {},
-      })
+      -- Copilot keymaps
+      vim.g.copilot_no_tab_map = true
+      vim.g.copilot_assume_mapped = true
+      vim.g.copilot_tab_fallback = ""
+      
+      -- Custom keymaps for Copilot
+      vim.keymap.set("i", "<Tab>", function()
+        if vim.fn["copilot#Accept"]("") ~= "" then
+          return vim.fn["copilot#Accept"]("")
+        else
+          return "<Tab>"
+        end
+      end, { expr = true, replace_keycodes = false })
+      
+      vim.keymap.set("i", "<C-j>", "<Plug>(copilot-next)", { desc = "Next Copilot suggestion" })
+      vim.keymap.set("i", "<C-k>", "<Plug>(copilot-previous)", { desc = "Previous Copilot suggestion" })
+      vim.keymap.set("i", "<C-l>", "<Plug>(copilot-dismiss)", { desc = "Dismiss Copilot suggestion" })
+      
+      -- Disable Copilot for specific filetypes
+      vim.g.copilot_filetypes = {
+        ["*"] = false,
+        ["javascript"] = true,
+        ["typescript"] = true,
+        ["lua"] = true,
+        ["rust"] = true,
+        ["c"] = true,
+        ["cpp"] = true,
+        ["go"] = true,
+        ["python"] = true,
+        ["ruby"] = true,
+        ["java"] = true,
+        ["c_sharp"] = true,
+        ["php"] = true,
+        ["shell"] = true,
+        ["vim"] = true,
+      }
     end,
   },
   
@@ -62,13 +53,29 @@ return {
     branch = "main",
     lazy = false,
     dependencies = {
-      { "zbirenbaum/copilot.lua" }, 
+      { "github/copilot.vim" }, 
       { "nvim-lua/plenary.nvim" }, 
     },
     config = function()
       require("CopilotChat").setup({
         debug = false, -- Enable debugging
-        -- See Configuration section for rest
+        model = 'gpt-4.1',
+        agent = 'copilot', -- Chat agent to use
+        chat_autocomplete = true, -- Enable chat autocompletion
+        remember_as_sticky = true, 
+        window = {
+          layout = 'vertical', -- 'vertical', 'horizontal', 'float', 'replace', or a function that returns the layout
+          width = 0.33, -- fractional width of parent, or absolute width in columns when > 1
+          height = 0.5, -- fractional height of parent, or absolute height in rows when > 1
+          -- Options below only apply to floating windows
+          relative = 'editor', -- 'editor', 'win', 'cursor', 'mouse'
+          border = 'single', -- 'none', single', 'double', 'rounded', 'solid', 'shadow'
+          row = nil, -- row position of the window, default is centered
+          col = nil, -- column position of the window, default is centered
+          title = 'Copilot Chat', -- title of chat window
+          footer = nil, -- footer of chat window
+          zindex = 1, -- determines if window is on top or below other floating windows
+        },
       })
     end,
     keys = {
@@ -81,6 +88,14 @@ return {
       { "<space>cd", ":CopilotChatDocs<CR>", desc = "Generate docs" },
       { "<space>cr", ":CopilotChatReview<CR>", desc = "Review code" },
       { "<space>cs", ":CopilotChatCommit<CR>", desc = "Generate commit message" },
+            -- Model management
+      { "<space>cm", ":CopilotChatModels<CR>", desc = "Switch Copilot Chat model" },
+      { "<space>cM", function()
+        local chat = require("CopilotChat")
+        local config = chat.config or {}
+        local current_model = config.model or "unknown"
+        print("Current Copilot Chat model: " .. current_model)
+      end, desc = "Show current Copilot Chat model" },
 
       -- Panel commands (keeping original functionality)
       { "<space>ae", ":Copilot enable<CR>", desc = "Enable Copilot" },

@@ -366,7 +366,7 @@ nnoremap <space>fe :Buffers<CR>
 nnoremap <space>fh :History<CR>
 nnoremap <space>ft :Tags<CR>
 nnoremap <space>fs :Ag <Space>
-nnoremap <space>fc :Ag <C-R><C-W><CR>
+nnoremap <space>fw :Ag <C-R><C-W><CR>
 
 "" <vim-test>
 function! CustomStrategy(cmd)
