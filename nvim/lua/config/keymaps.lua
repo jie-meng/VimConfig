@@ -47,6 +47,12 @@ keymap.set("n", "<", "<<", { desc = "Unindent line" })
 keymap.set("v", ">", ">gv", { desc = "Indent selection" })
 keymap.set("v", "<", "<gv", { desc = "Unindent selection" })
 
+-- Tab for indenting in normal and visual mode
+keymap.set("n", "<Tab>", ">>", { desc = "Indent line" })
+keymap.set("n", "<S-Tab>", "<<", { desc = "Unindent line" })
+keymap.set("v", "<Tab>", ">gv", { desc = "Indent selection" })
+keymap.set("v", "<S-Tab>", "<gv", { desc = "Unindent selection" })
+
 -- Terminal
 keymap.set("n", "<F2>", ":terminal<CR>", { desc = "Open terminal" })
 keymap.set("t", "<F3>", "<C-\\><C-n>", { desc = "Exit terminal mode" })

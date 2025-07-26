@@ -8,19 +8,14 @@ return {
     "github/copilot.vim",
     lazy = false,
     config = function()
-      -- Copilot keymaps
-      vim.g.copilot_no_tab_map = true
-      vim.g.copilot_assume_mapped = true
-      vim.g.copilot_tab_fallback = ""
-      
       -- Custom keymaps for Copilot
-      vim.keymap.set("i", "<Tab>", function()
-        if vim.fn["copilot#Accept"]("") ~= "" then
-          return vim.fn["copilot#Accept"]("")
-        else
-          return "<Tab>"
-        end
-      end, { expr = true, replace_keycodes = false })
+      -- Use the default copilot tab mapping with fallback
+      vim.g.copilot_no_tab_map = false
+      vim.g.copilot_assume_mapped = false
+      vim.g.copilot_tab_fallback = "\t"
+      
+      -- Add shift-tab for unindent in insert mode
+      vim.keymap.set("i", "<S-Tab>", "<C-d>", { desc = "Unindent" })
       
       vim.keymap.set("i", "<C-j>", "<Plug>(copilot-next)", { desc = "Next Copilot suggestion" })
       vim.keymap.set("i", "<C-k>", "<Plug>(copilot-previous)", { desc = "Previous Copilot suggestion" })
