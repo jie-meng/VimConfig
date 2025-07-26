@@ -10,6 +10,9 @@ return {
     -- Set split direction to open below current window (like vim's splitbelow)
     vim.opt.splitbelow = true
     
+    -- Store terminal window height
+    local terminal_height = 15  -- Default height
+    
     -- Helper function to find existing terminal buffer
     local function find_terminal_buffer()
       for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -72,7 +75,7 @@ return {
     -- Helper function to create new terminal with environment
     local function create_new_terminal()
       vim.cmd("split")
-      vim.api.nvim_win_set_height(0, 11)  -- Set height to 11 rows
+      vim.api.nvim_win_set_height(0, terminal_height)  -- Use stored height
       
       local env_type, env_path = detect_environment()
       local activation_cmd = get_activation_command(env_type, env_path)
@@ -95,7 +98,7 @@ return {
     local function show_existing_terminal(term_buf)
       vim.cmd("split")
       vim.api.nvim_win_set_buf(0, term_buf)
-      vim.api.nvim_win_set_height(0, 11)  -- Set height to 11 rows
+      vim.api.nvim_win_set_height(0, terminal_height)  -- Use stored height
       vim.cmd("startinsert")  -- Enter insert mode automatically
     end
     
@@ -107,7 +110,8 @@ return {
         local term_win = find_terminal_window(term_buf)
         
         if term_win then
-          -- Terminal is visible, close it
+          -- Terminal is visible, save height before closing
+          terminal_height = vim.api.nvim_win_get_height(term_win)
           vim.api.nvim_win_close(term_win, false)
         else
           -- Terminal exists but not visible, show it
@@ -136,6 +140,8 @@ return {
     -- F2 in terminal mode: Close terminal directly
     vim.keymap.set("t", "<F2>", function()
       local term_win = vim.api.nvim_get_current_win()
+      -- Save height before closing
+      terminal_height = vim.api.nvim_win_get_height(term_win)
       vim.api.nvim_win_close(term_win, false)
     end, { desc = "Close terminal" })
     
@@ -217,6 +223,15 @@ return {
         pattern = "term://*",
         callback = function()
           vim.cmd("startinsert")
+        end
+      })
+      
+      -- Reset terminal height when terminal buffer is deleted (Ctrl-D)
+      vim.api.nvim_create_autocmd("BufDelete", {
+        group = terminal_group,
+        pattern = "term://*",
+        callback = function()
+          terminal_height = 11  -- Reset to default height
         end
       })
     end
