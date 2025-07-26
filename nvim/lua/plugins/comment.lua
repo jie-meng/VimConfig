@@ -5,16 +5,9 @@
 return {
   "numToStr/Comment.nvim",
   keys = {
-    -- Add vim-like shortcuts similar to nerdcommenter
-    { "<Leader>ci", "gcc", desc = "Comment/uncomment line", remap = true },
-    { "<Leader>ci", "gc", desc = "Comment/uncomment selection", mode = "v", remap = true },
-    { "<Leader>cu", "gcc", desc = "Uncomment line", remap = true },
-    { "<Leader>cu", "gc", desc = "Uncomment selection", mode = "v", remap = true },
-    { "<Leader>cc", "gcc", desc = "Comment line", remap = true },
-    { "<Leader>cc", "gc", desc = "Comment selection", mode = "v", remap = true },
-    -- Block comment shortcuts
-    { "<Leader>cb", "gbc", desc = "Block comment/uncomment", remap = true },
-    { "<Leader>cb", "gb", desc = "Block comment selection", mode = "v", remap = true },
+    -- Use same shortcut as .vimrc: \c<space> for line comment toggle
+    { "\\c<space>", "gcc", desc = "Toggle line comment", remap = true },
+    { "\\c<space>", "gc", desc = "Toggle line comment", mode = "v", remap = true },
   },
   config = function()
     require("Comment").setup({
@@ -26,24 +19,20 @@ return {
       ignore = nil,
       -- LHS of toggle mappings in NORMAL mode
       toggler = {
-        line = "gcc", -- Line-comment toggle keymap
-        block = "gbc", -- Block-comment toggle keymap
+        line = "gcc", -- Line-comment toggle keymap (used by \c<space>)
+        block = nil, -- Disable block comment toggle
       },
       -- LHS of operator-pending mappings in NORMAL and VISUAL mode
       opleader = {
-        line = "gc", -- Line-comment keymap
-        block = "gb", -- Block-comment keymap
+        line = "gc", -- Line-comment keymap (used by \c<space> in visual mode)
+        block = nil, -- Disable block comment
       },
-      -- LHS of extra mappings
-      extra = {
-        above = "gcO", -- Add comment on the line above
-        below = "gco", -- Add comment on the line below
-        eol = "gcA", -- Add comment at the end of line
-      },
+      -- Disable extra mappings
+      extra = {},
       -- Enable keybindings
       mappings = {
-        basic = true, -- Operator-pending mapping; `gcc` `gbc` `gc[count]{motion}` `gb[count]{motion}`
-        extra = true, -- Extra mapping; `gco`, `gcO`, `gcA`
+        basic = true, -- Enable basic mappings for gcc and gc
+        extra = false, -- Disable extra mappings
       },
       -- Function to call before (un)comment
       pre_hook = nil,
