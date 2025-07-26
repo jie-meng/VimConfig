@@ -64,6 +64,24 @@ return {
         vim.keymap.set("n", "gi", vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
         vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "Go to references" }))
         vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, vim.tbl_extend("force", opts, { desc = "Go to type definition" }))
+        
+        -- Global word search in project
+        vim.keymap.set("n", "gR", function()
+          local word = vim.fn.expand("<cword>")
+          if word == "" then
+            vim.notify("No word under cursor", vim.log.levels.WARN)
+            return
+          end
+          
+          -- Use Telescope's grep_string with word boundaries
+          require("telescope.builtin").grep_string({
+            search = word,
+            word_match = "-w", -- Use word boundaries (equivalent to \b in regex)
+            prompt_title = "Global Word Search: " .. word,
+            use_regex = false,
+          })
+        end, vim.tbl_extend("force", opts, { desc = "Global word search" }))
+        
         vim.keymap.set("n", "gs", vim.lsp.buf.document_symbol, vim.tbl_extend("force", opts, { desc = "Document symbols" }))
         vim.keymap.set("n", "gS", vim.lsp.buf.workspace_symbol, vim.tbl_extend("force", opts, { desc = "Workspace symbols" }))
         vim.keymap.set("n", "[g", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
