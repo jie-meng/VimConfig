@@ -22,9 +22,8 @@ require("lazy").setup("plugins", {
   },
   install = { colorscheme = { "gruvbox" } },
   checker = { 
-    enabled = true,
-    notify = true,  -- Show notification when updates are available
-    frequency = 3600, -- Check every hour
+    enabled = false,  -- Disable automatic update checking
+    notify = false,   -- No notifications for updates
   },
   performance = {
     rtp = {
@@ -37,29 +36,6 @@ require("lazy").setup("plugins", {
       },
     },
   },
-})
-
--- Auto-update prompt and keymaps
-vim.api.nvim_create_autocmd("User", {
-  pattern = "LazyCheck",
-  callback = function()
-    -- Show a user-friendly update prompt
-    vim.defer_fn(function()
-      local lazy = require("lazy")
-      local updates = lazy.stats().updates
-      if updates > 0 then
-        local choice = vim.fn.confirm(
-          string.format("Found %d plugin updates. Update now?", updates),
-          "&Yes\n&No\n&Show details", 1
-        )
-        if choice == 1 then
-          vim.cmd("Lazy update")
-        elseif choice == 3 then
-          vim.cmd("Lazy")
-        end
-      end
-    end, 1000) -- Wait 1 second after startup
-  end,
 })
 
 -- Quick update keymaps
