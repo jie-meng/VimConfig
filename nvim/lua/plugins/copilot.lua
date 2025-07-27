@@ -17,9 +17,15 @@ return {
       -- Add shift-tab for unindent in insert mode
       vim.keymap.set("i", "<S-Tab>", "<C-d>", { desc = "Unindent" })
       
+      -- Copilot suggestion navigation
       vim.keymap.set("i", "<C-j>", "<Plug>(copilot-next)", { desc = "Next Copilot suggestion" })
       vim.keymap.set("i", "<C-k>", "<Plug>(copilot-previous)", { desc = "Previous Copilot suggestion" })
       vim.keymap.set("i", "<C-l>", "<Plug>(copilot-dismiss)", { desc = "Dismiss Copilot suggestion" })
+      
+      -- Accept suggestions
+      vim.keymap.set("i", "<C-y>", "<Plug>(copilot-accept)", { desc = "Accept Copilot suggestion" })
+      vim.keymap.set("i", "<M-l>", "<Plug>(copilot-accept-word)", { desc = "Accept Copilot word" })
+      vim.keymap.set("i", "<M-j>", "<Plug>(copilot-accept-line)", { desc = "Accept Copilot line" })
       
       -- Disable Copilot for specific filetypes
       vim.g.copilot_filetypes = {
@@ -57,7 +63,14 @@ return {
         model = 'gpt-4.1',
         agent = 'copilot', -- Chat agent to use
         chat_autocomplete = true, -- Enable chat autocompletion
-        remember_as_sticky = true, 
+        remember_as_sticky = true,
+        temperature = 0.1,
+        show_help = true,
+        highlight_selection = true,
+        highlight_headers = true,
+        auto_follow_cursor = true,
+        auto_insert_mode = false,
+        clear_chat_on_new_prompt = false,
         window = {
           layout = 'vertical', -- 'vertical', 'horizontal', 'float', 'replace', or a function that returns the layout
           width = 0.33, -- fractional width of parent, or absolute width in columns when > 1
@@ -70,6 +83,45 @@ return {
           title = 'Copilot Chat', -- title of chat window
           footer = nil, -- footer of chat window
           zindex = 1, -- determines if window is on top or below other floating windows
+        },
+        mappings = {
+          complete = {
+            insert = '<Tab>',
+          },
+          close = {
+            normal = 'q',
+            insert = '<C-c>',
+          },
+          reset = {
+            normal = '<C-l>',
+            insert = '<C-l>',
+          },
+          submit_prompt = {
+            normal = '<CR>',
+            insert = '<C-s>',
+          },
+          accept_diff = {
+            normal = '<C-y>',
+            insert = '<C-y>',
+          },
+          jump_to_diff = {
+            normal = 'gj',
+          },
+          show_diff = {
+            normal = 'gd',
+          },
+          yank_diff = {
+            normal = 'gy',
+          },
+          show_info = {
+            normal = 'gi',
+          },
+          show_context = {
+            normal = 'gc',
+          },
+          show_help = {
+            normal = 'gh',
+          },
         },
       })
     end,
