@@ -29,7 +29,18 @@ return {
     config = function()
       require("nvim-autopairs").setup({
         disable_filetype = { "TelescopePrompt", "vim" },
+        fast_wrap = {},
+        map_cr = true,
+        pairs_map = {
+          ["'"] = "'",
+          ['"'] = '"',
+          -- intentionally omit backtick
+        },
+        ignored_next_char = [=[[%w%%%'%["%.]]=],
       })
+      -- Remove backtick from rules
+      local npairs = require("nvim-autopairs")
+      npairs.get_rule('`'):with_pair(function() return false end)
     end,
   },
 
