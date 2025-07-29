@@ -35,6 +35,7 @@ else
     brew install neovim
 fi
 
+
 # Install essential dependencies
 echo -e "${GREEN}Installing essential dependencies...${NC}"
 
@@ -54,6 +55,14 @@ fi
 if ! command -v fzf &> /dev/null; then
     echo -e "${YELLOW}Installing fzf (for fuzzy search)...${NC}"
     brew install fzf
+fi
+
+# Nerd Font (for icons in nvim-tree/telescope)
+echo -e "${GREEN}Installing Nerd Font (JetBrainsMono)...${NC}"
+if [[ "$OSTYPE" == "darwin" ]]; then
+    brew tap homebrew/cask-fonts
+    brew install --cask font-jetbrains-mono-nerd-font
+    echo -e "${YELLOW}Please set your terminal font to 'JetBrainsMono Nerd Font' for best icon support.${NC}"
 fi
 
 # Create config directory

@@ -63,6 +63,7 @@ else
     echo -e "${YELLOW}fd is already installed.${NC}"
 fi
 
+
 # Install fzf
 echo -e "${GREEN}Installing fzf (for fuzzy search)...${NC}"
 if ! command -v fzf &> /dev/null; then
@@ -70,6 +71,18 @@ if ! command -v fzf &> /dev/null; then
     ~/.fzf/install --all
 else
     echo -e "${YELLOW}fzf is already installed.${NC}"
+fi
+
+# Nerd Font (for icons in nvim-tree/telescope)
+echo -e "${GREEN}Installing Nerd Font (JetBrainsMono)...${NC}"
+if ! fc-list | grep -qi 'JetBrainsMono Nerd Font'; then
+    wget -O /tmp/JetBrainsMono.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip
+    mkdir -p ~/.local/share/fonts/JetBrainsMonoNerdFont
+    unzip -o /tmp/JetBrainsMono.zip -d ~/.local/share/fonts/JetBrainsMonoNerdFont
+    fc-cache -fv
+    echo -e "${YELLOW}Please set your terminal font to 'JetBrainsMono Nerd Font' for best icon support.${NC}"
+else
+    echo -e "${YELLOW}JetBrainsMono Nerd Font is already installed.${NC}"
 fi
 
 # Ensure ~/.local/bin is in PATH
