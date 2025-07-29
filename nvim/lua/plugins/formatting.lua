@@ -16,7 +16,7 @@ return {
       c_cpp = {
         filetypes = { "c", "cpp" },
         formatter = "clang_format",
-        auto_format_on_save = true,
+        auto_format_on_save = false,
         formatter_args = { "--style=file", "--fallback-style=Google", "--assume-filename=$FILENAME" },
       },
       -- Add more language configurations here in the future
