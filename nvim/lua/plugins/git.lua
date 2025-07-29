@@ -105,7 +105,7 @@ return {
     "sindrets/diffview.nvim",
     dependencies = "nvim-lua/plenary.nvim",
     keys = {
-      { "<space>gv", ":DiffviewOpen<CR>", desc = "Open diffview" },
+      { "<space>go", ":DiffviewOpen<CR>", desc = "Open diffview" },
       { "<space>gh", ":DiffviewFileHistory<CR>", desc = "File history" },
     },
   },
@@ -113,8 +113,8 @@ return {
     "junegunn/gv.vim",
     dependencies = "tpope/vim-fugitive",
     keys = {
-      { "<space>gl", ":GV<CR>", desc = "Git log (all commits)" },
-      { "<space>gL", ":GV!<CR>", desc = "Git log (current file)" },
+      { "<space>gv", ":GV<CR>", desc = "Git log (all commits)" },
+      { "<space>gV", ":GV!<CR>", desc = "Git log (current file)" },
       { "<space>gf", ":GV?<CR>", desc = "Git log (fill quickfix)" },
     },
   },
