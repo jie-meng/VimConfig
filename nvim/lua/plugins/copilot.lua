@@ -54,7 +54,7 @@ return {
     branch = "main",
     lazy = false,
     dependencies = {
-      { "github/copilot.vim" }, 
+      { "zbirenbaum/copilot.vim" }, 
       { "nvim-lua/plenary.nvim" }, 
     },
     config = function()
