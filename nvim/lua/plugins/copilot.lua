@@ -128,16 +128,29 @@ return {
     keys = {
       -- Chat commands
       { "<space>cc", ":CopilotChat<CR>", desc = "Open Copilot Chat" },
+      { "<space>ck", function()
+        local current_file = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
+        require("CopilotChat").open({ window = { layout = 'vertical', width = 0.33 } })
+        vim.defer_fn(function()
+          local bufnr = vim.fn.bufnr("copilot-chat")
+          if bufnr ~= -1 and current_file ~= "" then
+            local file_ref = "#file:" .. current_file .. " "
+            local line_count = vim.api.nvim_buf_line_count(bufnr)
+            vim.api.nvim_buf_set_lines(bufnr, line_count, line_count, false, {file_ref})
+            vim.api.nvim_win_set_cursor(0, {line_count + 1, #file_ref})
+          end
+        end, 100)
+      end, desc = "Open Copilot Chat (with current file)" },
       { "<space>ce", ":CopilotChatExplain<CR>", desc = "Explain code" },
       { "<space>ct", ":CopilotChatTests<CR>", desc = "Generate tests" },
-      { "<space>cf", ":CopilotChatFix<CR>", desc = "Fix code" },
+      { "<space>cF", ":CopilotChatFix<CR>", desc = "Fix code" },
       { "<space>co", ":CopilotChatOptimize<CR>", desc = "Optimize code" },
       { "<space>cd", ":CopilotChatDocs<CR>", desc = "Generate docs" },
       { "<space>cr", ":CopilotChatReview<CR>", desc = "Review code" },
       { "<space>cs", ":CopilotChatCommit<CR>", desc = "Generate commit message" },
       
       -- File picker for chat - select files with Telescope
-      { "<space>cF", function()
+      { "<space>cf", function()
         require("telescope.builtin").find_files({
           prompt_title = "Select Files for Copilot Chat",
           case_mode = "ignore_case",  -- Ignore case when searching
