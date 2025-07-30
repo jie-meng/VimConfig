@@ -98,7 +98,22 @@ return {
       { "<space>gm", ":Git move<CR>", desc = "Git move" },
       { "<space>gr", ":Git delete<CR>", desc = "Git delete" },
       { "<space>gs", ":Git<CR>", desc = "Git status" },
-      { "<space>gd", ":Gvdiffsplit HEAD<CR>", desc = "Git diff HEAD" },
+      { "<space>gd", function()
+        local git_root = nil
+        local handle = io.popen("git rev-parse --show-toplevel 2>/dev/null")
+        if handle then
+          git_root = handle:read("*l")
+          handle:close()
+        end
+        if git_root and git_root ~= "" then
+          local cur_dir = vim.fn.getcwd()
+          vim.cmd("cd " .. git_root)
+          vim.cmd("Gvdiffsplit HEAD")
+          vim.cmd("cd " .. cur_dir)
+        else
+          vim.notify("Not a git repository (no .git found)", vim.log.levels.WARN)
+        end
+      end, desc = "Git diff HEAD (safe in subdir)" },
     },
   },
   {
