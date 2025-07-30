@@ -123,6 +123,7 @@ map <Leader>rr :!ctags -R --exclude=.git --exclude=node_modules --exclude=log *<
 
 "" disable auto-insert-line after RETURN on a autocomplete-list"
 inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
+inoremap <expr> <C-l> pumvisible() ? "\<C-e>" : "\<C-l>"
 
 "" resize window
 map <space>. :vertical resize +10<Enter>

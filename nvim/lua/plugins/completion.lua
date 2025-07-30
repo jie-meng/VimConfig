@@ -38,11 +38,9 @@ return {
         ["<C-f>"] = cmp.mapping.scroll_docs(4),
         ["<C-Space>"] = cmp.mapping.complete(),
         ["<C-e>"] = cmp.mapping.abort(),
-        ["<Esc>"] = cmp.mapping(function(fallback)
+        ["<C-l>"] = cmp.mapping(function()
           if cmp.visible() then
             cmp.close()
-          else
-            fallback()
           end
         end, { "i" }),
         ["<CR>"] = cmp.mapping.confirm({ select = false }),
