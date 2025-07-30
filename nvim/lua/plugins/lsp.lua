@@ -217,7 +217,7 @@ return {
             "clangd",
             "--background-index",
             "--compile-commands-dir=.",
-            "--query-driver=" .. home .. "/.espressif/tools/xtensa-esp-elf/*/xtensa-esp-elf/bin/xtensa-esp32s3-elf-*"
+            "--query-driver=" .. home .. "/.espressif/tools/*/*/bin/*"
           },
           filetypes = { "c", "cpp", "objc", "objcpp", "cc", "cxx" },
         },
