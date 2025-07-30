@@ -127,7 +127,7 @@ return {
     end,
     keys = {
       -- Chat commands
-      { "<space>cc", ":CopilotChat<CR>", desc = "Open Copilot Chat" },
+      { "<space>cc", ":CopilotChat<CR>", mode = {"n", "v"}, desc = "Open Copilot Chat" },
       { "<space>ck", function()
         local current_file = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
         require("CopilotChat").open({ window = { layout = 'vertical', width = 0.33 } })
@@ -141,11 +141,11 @@ return {
           end
         end, 100)
       end, desc = "Open Copilot Chat (with current file)" },
-      { "<space>ce", ":CopilotChatExplain<CR>", desc = "Explain code" },
-      { "<space>ct", ":CopilotChatTests<CR>", desc = "Generate tests" },
-      { "<space>cf", ":CopilotChatFix<CR>", desc = "Fix code" },
-      { "<space>co", ":CopilotChatOptimize<CR>", desc = "Optimize code" },
-      { "<space>cd", ":CopilotChatDocs<CR>", desc = "Generate docs" },
+      { "<space>ce", ":CopilotChatExplain<CR>", mode = {"v"}, desc = "Explain code" },
+      { "<space>ct", ":CopilotChatTests<CR>", mode = {"v"}, desc = "Generate tests" },
+      { "<space>cf", ":CopilotChatFix<CR>", mode = {"v"}, desc = "Fix code" },
+      { "<space>co", ":CopilotChatOptimize<CR>", mode = {"v"}, desc = "Optimize code" },
+      { "<space>cd", ":CopilotChatDocs<CR>", mode = {"v"}, desc = "Generate docs" },
       { "<space>cr", ":CopilotChatReview<CR>", desc = "Review code" },
       { "<space>cs", ":CopilotChatCommit<CR>", desc = "Generate commit message" },
       
