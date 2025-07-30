@@ -143,14 +143,14 @@ return {
       end, desc = "Open Copilot Chat (with current file)" },
       { "<space>ce", ":CopilotChatExplain<CR>", desc = "Explain code" },
       { "<space>ct", ":CopilotChatTests<CR>", desc = "Generate tests" },
-      { "<space>cF", ":CopilotChatFix<CR>", desc = "Fix code" },
+      { "<space>cf", ":CopilotChatFix<CR>", desc = "Fix code" },
       { "<space>co", ":CopilotChatOptimize<CR>", desc = "Optimize code" },
       { "<space>cd", ":CopilotChatDocs<CR>", desc = "Generate docs" },
       { "<space>cr", ":CopilotChatReview<CR>", desc = "Review code" },
       { "<space>cs", ":CopilotChatCommit<CR>", desc = "Generate commit message" },
       
       -- File picker for chat - select files with Telescope
-      { "<space>cf", function()
+      { "<space>cF", function()
         require("telescope.builtin").find_files({
           prompt_title = "Select Files for Copilot Chat",
           case_mode = "ignore_case",  -- Ignore case when searching
