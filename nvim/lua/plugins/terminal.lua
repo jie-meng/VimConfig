@@ -199,14 +199,14 @@ return {
     local function setup_terminal_autocmds()
       local terminal_group = vim.api.nvim_create_augroup("Terminal", { clear = true })
       
-      -- Start in insert mode when entering terminal
+      -- Start in insert mode only when opening a new terminal
       vim.api.nvim_create_autocmd("TermOpen", {
         group = terminal_group,
         callback = function()
           vim.cmd("startinsert")
         end
       })
-      
+
       -- Remove line numbers and other UI elements in terminal
       vim.api.nvim_create_autocmd("TermOpen", {
         group = terminal_group,
@@ -216,16 +216,7 @@ return {
           vim.opt_local.signcolumn = "no"
         end
       })
-      
-      -- Auto enter insert mode when switching to terminal window
-      vim.api.nvim_create_autocmd("BufEnter", {
-        group = terminal_group,
-        pattern = "term://*",
-        callback = function()
-          vim.cmd("startinsert")
-        end
-      })
-      
+
       -- Reset terminal height when terminal buffer is deleted (Ctrl-D)
       vim.api.nvim_create_autocmd("BufDelete", {
         group = terminal_group,
