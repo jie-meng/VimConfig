@@ -80,7 +80,7 @@ return {
   {
     "tpope/vim-fugitive",
     config = function()
-      -- Configure Git status window size (1/3 of screen height)
+      -- Configure Git status window size (1/3 of screen height) and q to close, return to last normal buffer
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "fugitive",
         callback = function()
@@ -89,6 +89,27 @@ return {
           vim.cmd("resize " .. height)
           -- Move to bottom
           vim.cmd("wincmd J")
+          -- Map q to close fugitive window and return to last normal buffer
+          vim.keymap.set("n", "q", function()
+            -- Find the first normal buffer window (not NERDTree, not fugitive, not quickfix)
+            local wins = vim.api.nvim_list_wins()
+            local fallback = nil
+            for _, win in ipairs(wins) do
+              local buf = vim.api.nvim_win_get_buf(win)
+              local ft = vim.api.nvim_buf_get_option(buf, 'filetype')
+              local bt = vim.api.nvim_buf_get_option(buf, 'buftype')
+              if bt == '' and ft ~= 'nerdtree' and ft ~= 'fugitive' and ft ~= 'qf' then
+                fallback = win
+                break
+              end
+            end
+            vim.cmd("close")
+            if fallback and vim.api.nvim_win_is_valid(fallback) then
+              vim.api.nvim_set_current_win(fallback)
+            else
+              vim.cmd("wincmd p")
+            end
+          end, { buffer = true, silent = true })
         end,
       })
     end,
