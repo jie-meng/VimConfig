@@ -8,15 +8,15 @@ local keymap = vim.keymap
 keymap.set("n", "<C-p>", "<C-i>", { desc = "Jump forward" })
 
 -- Split window
-keymap.set("n", "<Space>vs", ":vsplit<CR>", { desc = "Vertical split" })
-keymap.set("n", "<Space>hs", ":split<CR>", { desc = "Horizontal split" })
+keymap.set("n", "<Space>sv", ":vsplit<CR>", { desc = "Vertical split" })
+keymap.set("n", "<Space>sh", ":split<CR>", { desc = "Horizontal split" })
 
 -- Vimdiff
 keymap.set("n", "<Space>ds", ":diffthis<CR>", { desc = "Diff this" })
 
 -- Quick edit and reload config
 keymap.set("n", "<Leader><F2>", ":e ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
-keymap.set("n", "<Leader>sv", ":source ~/.config/nvim/init.lua<CR>", { desc = "Reload config" })
+keymap.set("n", "<Leader>si", ":source ~/.config/nvim/init.lua<CR>", { desc = "Reload config" })
 
 -- Change buffer
 keymap.set("n", "<Leader>[", ":bp<CR>", { desc = "Previous buffer" })

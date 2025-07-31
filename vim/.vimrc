@@ -47,8 +47,8 @@ endif
 nnoremap <C-p> <C-i>
 
 "" split window
-nnoremap <Space>vs :vsplit<Enter>
-nnoremap <Space>hs :split<Enter>
+nnoremap <Space>sv :vsplit<Enter>
+nnoremap <Space>sh :split<Enter>
 
 "" vimdiff
 nnoremap <Space>ds :diffthis<Enter>

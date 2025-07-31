@@ -39,8 +39,8 @@ This is a modern Lua-based Neovim configuration migrated from the original Vim c
 Maintains the same key mappings as the original Vim configuration:
 
 ### Basic Operations
-- `<Space>vs` - Vertical split window
-- `<Space>hs` - Horizontal split window
+- `<Space>sv` - Vertical split window
+- `<Space>sh` - Horizontal split window
 - `<Leader>[` / `<Leader>]` - Switch buffers
 - `mb` / `me` - Move to beginning/end of line
 - `∆` / `˚` (Alt+J/K) - Move lines
