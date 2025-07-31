@@ -147,6 +147,29 @@ return {
       { "<space>co", ":CopilotChatOptimize<CR>", mode = {"v"}, desc = "Optimize code" },
       { "<space>cd", ":CopilotChatDocs<CR>", mode = {"v"}, desc = "Generate docs" },
       { "<space>cr", ":CopilotChatReview<CR>", desc = "Review code" },
+      { "<space>cR", function()
+        -- Get git diff
+        local diff = vim.fn.system("git diff")
+        if not diff or diff == "" then
+          vim.notify("No git diff found", vim.log.levels.WARN)
+          return
+        end
+        local prompt = diff .. "\nPlease review the above git diff, point out any potential issues and explain them.\n"
+        require("CopilotChat").open({ window = { layout = 'vertical', width = 0.33 } })
+        vim.defer_fn(function()
+          local bufnr = vim.fn.bufnr("copilot-chat")
+          if bufnr ~= -1 then
+            local line_count = vim.api.nvim_buf_line_count(bufnr)
+            local lines = {}
+            for s in prompt:gmatch("([^\n]*)\n?") do
+              table.insert(lines, s)
+            end
+            if #lines > 0 and lines[#lines] == "" then table.remove(lines, #lines) end
+            vim.api.nvim_buf_set_lines(bufnr, line_count, line_count, false, lines)
+            vim.api.nvim_win_set_cursor(0, {line_count + #lines, #(lines[#lines] or "")})
+          end
+        end, 100)
+      end, desc = "Review current git diff with Copilot" },
       { "<space>cs", ":CopilotChatCommit<CR>", desc = "Generate commit message" },
       
       -- File picker for chat - select files with Telescope
