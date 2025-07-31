@@ -149,7 +149,7 @@ return {
       { "<space>cr", ":CopilotChatReview<CR>", desc = "Review code" },
       { "<space>cR", function()
         -- Get git diff
-        local diff = vim.fn.system("git diff")
+        local diff = vim.fn.system("git diff --cached")
         if not diff or diff == "" then
           vim.notify("No git diff found", vim.log.levels.WARN)
           return
