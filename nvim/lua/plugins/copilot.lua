@@ -6,7 +6,7 @@ return {
   -- Official Copilot plugin
   {
     "github/copilot.vim",
-    lazy = false,
+    lazy = true,
     config = function()
       -- Custom keymaps for Copilot
       -- Use the default copilot tab mapping with fallback
@@ -246,10 +246,14 @@ return {
       end, desc = "Show current Copilot Chat model" },
 
       -- Panel commands (keeping original functionality)
+      -- To signin, you need to enable, setup and auth
       { "<space>ae", ":Copilot enable<CR>", desc = "Enable Copilot" },
+      { "<space>au", ":Copilot setup<CR>", desc = "Copilot setup" },
+      { "<space>aa", ":Copilot auth<CR>", desc = "Copilot auth" },
+      { "<space>ao", ":Copilot signout<CR>", desc = "Copilot sign out" },
+      { "<space>ap", ":Copilot panel<CR>", desc = "Copilot panel" },
       { "<space>ad", ":Copilot disable<CR>", desc = "Disable Copilot" },
       { "<space>as", ":Copilot status<CR>", desc = "Copilot status" },
-      { "<space>ap", ":Copilot panel<CR>", desc = "Copilot panel" },
     },
   },
 }
