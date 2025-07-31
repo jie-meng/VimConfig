@@ -118,56 +118,6 @@ return {
         vim.keymap.set("n", "<space>f", function()
           vim.lsp.buf.format({ async = true })
         end, vim.tbl_extend("force", opts, { desc = "Format" }))
-
-        -- Auto show diagnostics in status line when cursor is on diagnostic position
-        local diagnostic_timer = nil
-        vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-          buffer = bufnr,
-          callback = function()
-            -- Cancel previous timer if exists
-            if diagnostic_timer then
-              vim.fn.timer_stop(diagnostic_timer)
-            end
-            
-            -- Set a short delay to avoid too frequent updates
-            diagnostic_timer = vim.fn.timer_start(100, function()
-              local cursor = vim.api.nvim_win_get_cursor(0)
-              local line = cursor[1] - 1
-              local col = cursor[2]
-
-              -- Get diagnostics for current line
-              local diagnostics = vim.diagnostic.get(bufnr, { lnum = line })
-              local current_diag = nil
-
-              -- Find diagnostic that contains the cursor position
-              for _, diag in ipairs(diagnostics) do
-                if col >= diag.col and col <= diag.end_col then
-                  current_diag = diag
-                  break
-                end
-              end
-
-              -- Show diagnostic message if cursor is on a diagnostic
-              if current_diag then
-                local severity = vim.diagnostic.severity[current_diag.severity]
-                local message = current_diag.message
-                
-                -- Only show short messages to avoid "Press ENTER" prompt
-                local max_length = 80 -- Fixed short length
-                if #message <= max_length then
-                  vim.api.nvim_echo({ { string.format("[%s] %s", severity, message), "DiagnosticSign" .. severity } }, false, {})
-                else
-                  -- For long messages, just show severity and truncated version
-                  local short_msg = string.sub(message, 1, max_length - 20) .. "... (use <space>e for full)"
-                  vim.api.nvim_echo({ { string.format("[%s] %s", severity, short_msg), "DiagnosticSign" .. severity } }, false, {})
-                end
-              else
-                -- Clear the command line when not on a diagnostic
-                vim.api.nvim_echo({ { "", "Normal" } }, false, {})
-              end
-            end)
-          end,
-        })
       end
 
       -- Configure diagnostics (same as vim config)
