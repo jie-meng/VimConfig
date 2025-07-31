@@ -135,6 +135,15 @@ return {
           vim.notify("Not a git repository (no .git found)", vim.log.levels.WARN)
         end
       end, desc = "Git diff HEAD (safe in subdir)" },
+      { "<space>gy", function()
+        local diff = vim.fn.system("git diff --cached")
+        if not diff or diff == "" then
+          vim.notify("No staged git diff found", vim.log.levels.WARN)
+          return
+        end
+        vim.fn.setreg('+', diff)
+        vim.notify("Staged git diff copied to clipboard", vim.log.levels.INFO)
+      end, desc = "Copy staged git diff to clipboard" },
     },
   },
   {
