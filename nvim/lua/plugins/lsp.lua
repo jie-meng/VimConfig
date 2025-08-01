@@ -166,9 +166,7 @@ return {
           cmd = {
             "clangd",
             "--background-index",
-            "--completion-style=detailed",
             "--compile-commands-dir=.",
-            "--query-driver=/usr/bin/*," .. home .. "/.espressif/tools/*/*/*/bin/*"
           },
           filetypes = { "c", "cpp", "objc", "objcpp", "cc", "cxx" },
         },
