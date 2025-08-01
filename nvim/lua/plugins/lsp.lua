@@ -168,7 +168,7 @@ return {
             "--background-index",
             "--completion-style=detailed",
             "--compile-commands-dir=.",
-            "--query-driver=/usr/bin/c*," .. home .. "/.espressif/tools/*/*/*/bin/*"
+            "--query-driver=/usr/bin/*," .. home .. "/.espressif/tools/*/*/*/bin/*"
           },
           filetypes = { "c", "cpp", "objc", "objcpp", "cc", "cxx" },
         },
