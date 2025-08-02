@@ -6,8 +6,8 @@ return {
   "numToStr/Comment.nvim",
   keys = {
     -- Use same shortcut as .vimrc: <Leader>c<space> for line comment toggle
-    { "<Leader>c<space>", "gcc", desc = "Toggle line comment", remap = true },
-    { "<Leader>c<space>", "gc", desc = "Toggle line comment", mode = "v", remap = true },
+    { "<Leader>c<space>", "gcc", desc = "Toggle line comment", mode="n", remap = true },
+    { "<Leader>c<space>", "gc", desc = "Toggle comment", mode = "v", remap = true },
   },
   config = function()
     require("Comment").setup({
