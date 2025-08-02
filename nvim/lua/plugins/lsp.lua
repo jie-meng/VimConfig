@@ -166,7 +166,7 @@ return {
           cmd = {
             "clangd",
             "--background-index",
-            "--compile-commands-dir=.",
+            "--compile-commands-dir=.vim",
           },
           filetypes = { "c", "cpp", "objc", "objcpp", "cc", "cxx" },
         },
