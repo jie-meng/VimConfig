@@ -44,7 +44,7 @@ local plugin_map = {
   ayu          = "ayu",
 }
 
-function M.apply_theme(idx)
+function M.apply_theme(idx, silent)
   local entry = M.themes[idx] or M.themes[1]
   -- Ensure theme plugin is loaded
   local plugin_name = plugin_map[entry.name]
@@ -57,7 +57,7 @@ function M.apply_theme(idx)
     vim.notify("Theme '" .. entry.name .. "' not installed, skipping...", vim.log.levels.WARN)
     local next_idx = idx % #M.themes + 1
     if next_idx ~= idx then
-      return M.apply_theme(next_idx)
+      return M.apply_theme(next_idx, silent)
     else
       return
     end
@@ -76,17 +76,19 @@ function M.apply_theme(idx)
     })
   end
   write_theme_idx(idx)
-  vim.notify("Theme: " .. entry.name)
+  if not silent then
+    vim.notify("Theme: " .. entry.name)
+  end
 end
 
 function M.next_theme()
   local idx = M.current_idx % #M.themes + 1
-  M.apply_theme(idx)
+  M.apply_theme(idx, false)
 end
 
 function M.prev_theme()
   local idx = (M.current_idx - 2) % #M.themes + 1
-  M.apply_theme(idx)
+  M.apply_theme(idx, false)
 end
 
 -- 4. Keymap bindings
@@ -97,7 +99,7 @@ end
 
 -- 5. Auto-apply last theme on startup
 vim.schedule(function()
-  M.apply_theme(M.current_idx)
+  M.apply_theme(M.current_idx, true)
 end)
 setup_keymaps()
 
