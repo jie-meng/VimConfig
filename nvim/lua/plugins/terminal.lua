@@ -11,7 +11,7 @@ return {
     vim.opt.splitbelow = true
     
     -- Store terminal window height
-    local terminal_height = 15  -- Default height
+    local terminal_height = 20  -- Default height
     
     -- Helper function to find existing terminal buffer
     local function find_terminal_buffer()

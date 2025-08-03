@@ -172,7 +172,7 @@ return {
             "--completion-style=detailed",
             "--function-arg-placeholders",
             "--fallback-style=google",
-            "--query-driver=/usr/bin/clang*,/usr/bin/g*,/usr/local/bin/clang*,/usr/local/bin/g*," .. home .. "/.espressif/tools/esp-clang/*/esp-clang/bin/*", 
+            "--query-driver=/usr/bin/clang*,/usr/bin/g*,/usr/local/bin/clang*,/usr/local/bin/g*," .. home .. "/.espressif/tools/**", 
           },
           filetypes = { "c", "cpp", "objc", "objcpp", "cc", "cxx" },
         },
