@@ -137,6 +137,17 @@ return {
         vim.keymap.set("n", "<space>f", function()
           vim.lsp.buf.format({ async = true })
         end, vim.tbl_extend("force", opts, { desc = "Format" }))
+
+        -- Format on save
+        if client.supports_method and client.supports_method("textDocument/formatting") then
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            group = vim.api.nvim_create_augroup("LspFormatOnSave", { clear = false }),
+            buffer = bufnr,
+            callback = function()
+              vim.lsp.buf.format({ async = false })
+            end,
+          })
+        end
       end
 
       -- Configure diagnostics (same as vim config)
