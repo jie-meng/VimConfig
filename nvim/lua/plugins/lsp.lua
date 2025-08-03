@@ -11,6 +11,17 @@ return {
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
+      -- <Esc> closes diagnostic float in normal mode
+      vim.keymap.set("n", "<Esc>", function()
+        -- Try to close diagnostic float for current window only
+        local win = vim.api.nvim_get_current_win()
+        for _, float in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+          local config = vim.api.nvim_win_get_config(float)
+          if config.relative ~= "" and config.win == win then
+            vim.api.nvim_win_close(float, true)
+          end
+        end
+      end, { desc = "Close diagnostic float" })
       require("mason").setup()
       require("mason-lspconfig").setup({
         automatic_enable = false,
@@ -56,6 +67,22 @@ return {
         callback = setup_quickfix_keymaps,
       })
 
+      -- Auto close diagnostic float on WinLeave (when switching window/file)
+      vim.api.nvim_create_autocmd("WinLeave", {
+        callback = function()
+          -- Close diagnostic float for the window being left
+          local win = vim.api.nvim_get_current_win()
+          pcall(function()
+            for _, float in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+              local config = vim.api.nvim_win_get_config(float)
+              if config.relative ~= "" and config.win == win then
+                vim.api.nvim_win_close(float, true)
+              end
+            end
+          end)
+        end,
+      })
+
       local on_attach = function(client, bufnr)
         local opts = { buffer = bufnr, silent = true }
 
@@ -91,26 +118,18 @@ return {
         vim.keymap.set("n", "<space>y", function()
           local cursor = vim.api.nvim_win_get_cursor(0)
           local line = cursor[1] - 1
-          local col = cursor[2]
           local diagnostics = vim.diagnostic.get(bufnr, { lnum = line })
-          
-          -- Find diagnostic at cursor position
-          local current_diag = nil
-          for _, diag in ipairs(diagnostics) do
-            if col >= diag.col and col <= diag.end_col then
-              current_diag = diag
-              break
+          if #diagnostics > 0 then
+            local messages = {}
+            for _, diag in ipairs(diagnostics) do
+              table.insert(messages, diag.message)
             end
-          end
-          
-          if current_diag then
-            -- Copy the full diagnostic message to clipboard
-            vim.fn.setreg('+', current_diag.message)
-            vim.fn.setreg('"', current_diag.message)  -- Also set default register
-            local severity = vim.diagnostic.severity[current_diag.severity]
-            vim.notify(string.format("Copied [%s] diagnostic to clipboard", severity), vim.log.levels.INFO)
+            local all = table.concat(messages, "\n")
+            vim.fn.setreg('+', all)
+            vim.fn.setreg('"', all)
+            vim.notify(string.format("Copied %d diagnostics to clipboard", #diagnostics), vim.log.levels.INFO)
           else
-            vim.notify("No diagnostic found at cursor position", vim.log.levels.WARN)
+            vim.notify("No diagnostic found at cursor line", vim.log.levels.WARN)
           end
         end, vim.tbl_extend("force", opts, { desc = "Copy diagnostic message" }))
         vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename" }))
