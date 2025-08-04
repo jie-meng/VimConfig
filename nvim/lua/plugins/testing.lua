@@ -128,28 +128,36 @@ local function build_go_test_cmd(mode)
   end
 end
 
--- Find the nearest UT_TEST_SUITE above the cursor
+
+-- Find the nearest UT_TEST_SUITE above the cursor (support multiline, skip commented lines)
 local function find_nearest_custom_cpp_test_suite()
   local cursor = vim.api.nvim_win_get_cursor(0)
   local cur_line = cursor[1]
+  local acc = ""
   for i = cur_line, 1, -1 do
     local line = vim.fn.getline(i)
-    -- Match UT_TEST_SUITE(testfile, ...)
-    local suite_name = line:match('UT_TEST_SUITE%s*%(%s*([%w_]+)')
+    if line:match("^%s*//") then acc = "" goto continue end
+    acc = line .. " " .. acc
+    local suite_name = acc:match('UT_TEST_SUITE%s*%(%s*([%w_]+)')
     if suite_name then return suite_name end
+    ::continue::
   end
   return nil
 end
 
--- Find the nearest UT_TEST above the cursor
+
+-- Find the nearest UT_TEST above the cursor (support multiline, skip commented lines)
 local function find_nearest_custom_cpp_test()
   local cursor = vim.api.nvim_win_get_cursor(0)
   local cur_line = cursor[1]
+  local acc = ""
   for i = cur_line, 1, -1 do
     local line = vim.fn.getline(i)
-    -- Match UT_TEST(testfile, testcase)
-    local suite_name, test_name = line:match('UT_TEST%s*%(%s*([%w_]+)%s*,%s*([%w_]+)')
+    if line:match("^%s*//") then acc = "" goto continue end
+    acc = line .. " " .. acc
+    local suite_name, test_name = acc:match('UT_TEST%s*%(%s*([%w_]+)%s*,%s*([%w_]+)')
     if suite_name and test_name then return suite_name, test_name end
+    ::continue::
   end
   return nil, nil
 end
