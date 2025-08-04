@@ -123,6 +123,60 @@ local function build_go_test_cmd(mode)
   end
 end
 
+-- Find the nearest UT_TEST_SUITE above the cursor
+local function find_nearest_custom_cpp_test_suite()
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local cur_line = cursor[1]
+  for i = cur_line, 1, -1 do
+    local line = vim.fn.getline(i)
+    -- Match UT_TEST_SUITE(testfile, ...)
+    local suite_name = line:match('UT_TEST_SUITE%s*%(%s*([%w_]+)')
+    if suite_name then return suite_name end
+  end
+  return nil
+end
+
+-- Find the nearest UT_TEST above the cursor
+local function find_nearest_custom_cpp_test()
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local cur_line = cursor[1]
+  for i = cur_line, 1, -1 do
+    local line = vim.fn.getline(i)
+    -- Match UT_TEST(testfile, testcase)
+    local suite_name, test_name = line:match('UT_TEST%s*%(%s*([%w_]+)%s*,%s*([%w_]+)')
+    if suite_name and test_name then return suite_name, test_name end
+  end
+  return nil, nil
+end
+
+-- Build custom C++ test command for different modes
+local function build_custom_cpp_test_cmd(mode)
+  local cwd = vim.fn.getcwd()
+  if mode == "nearest" then
+    local suite_name, test_name = find_nearest_custom_cpp_test()
+    if suite_name and test_name then
+      return string.format("cd %s && python tools.py test --filter=\"%s.%s\"", cwd, suite_name, test_name)
+    else
+      -- If no UT_TEST found, try to find UT_TEST_SUITE and run all tests in that suite
+      local suite_name = find_nearest_custom_cpp_test_suite()
+      if suite_name then
+        return string.format("cd %s && python tools.py test --filter=\"%s.*\"", cwd, suite_name)
+      else
+        return string.format("cd %s && python tools.py test", cwd)
+      end
+    end
+  elseif mode == "file" then
+    local suite_name = find_nearest_custom_cpp_test_suite()
+    if suite_name then
+      return string.format("cd %s && python tools.py test --filter=\"%s.*\"", cwd, suite_name)
+    else
+      return string.format("cd %s && python tools.py test", cwd)
+    end
+  elseif mode == "suite" then
+    return string.format("cd %s && python tools.py test", cwd)
+  end
+end
+
 -- Build test command for the current buffer and mode
 local function build_test_command(mode)
   if vim.bo.filetype == "python" then
@@ -131,6 +185,8 @@ local function build_test_command(mode)
     return build_js_test_cmd(mode)
   elseif vim.bo.filetype == "go" then
     return build_go_test_cmd(mode)
+  elseif vim.bo.filetype == "cpp" or vim.bo.filetype == "c" or vim.bo.filetype == "cxx" or vim.bo.filetype == "cc" or vim.bo.filetype == "c++" then
+    return build_custom_cpp_test_cmd(mode)
   else
     print("No test command configured for filetype: " .. vim.bo.filetype)
     return nil
