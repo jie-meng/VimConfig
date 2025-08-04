@@ -480,7 +480,17 @@ augroup END
 if executable('clangd')
   au User lsp_setup call lsp#register_server({
         \ 'name': 'clangd',
-        \ 'cmd': {server_info->['clangd', '--background-index', '--compile-commands-dir=.']},
+        \ 'cmd': {server_info->[
+        \   'clangd',
+        \   '--compile-commands-dir=.',
+        \   '--background-index',
+        \   '--clang-tidy',
+        \   '--header-insertion=iwyu',
+        \   '--completion-style=detailed',
+        \   '--function-arg-placeholders',
+        \   '--fallback-style=google',
+        \   '--query-driver=/usr/bin/clang*,/usr/bin/g*,/usr/local/bin/clang*,/usr/local/bin/g*,' . expand('$HOME') . '/.espressif/tools/**',
+        \ ]},
         \ 'root_uri': {server_info->lsp#utils#path_to_uri(
         \   lsp#utils#find_nearest_parent_file_directory(
         \     lsp#utils#get_buffer_path(),
