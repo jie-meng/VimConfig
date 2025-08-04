@@ -44,8 +44,10 @@ local plugin_map = {
   ayu          = "ayu",
 }
 
-function M.apply_theme(idx, silent)
+
+function M.apply_theme(idx, silent, tried)
   local entry = M.themes[idx] or M.themes[1]
+  tried = tried or {}
   -- Ensure theme plugin is loaded
   local plugin_name = plugin_map[entry.name]
   if plugin_name then
@@ -55,12 +57,16 @@ function M.apply_theme(idx, silent)
   local ok = pcall(vim.cmd.colorscheme, entry.name)
   if not ok then
     vim.notify("Theme '" .. entry.name .. "' not installed, skipping...", vim.log.levels.WARN)
-    local next_idx = idx % #M.themes + 1
-    if next_idx ~= idx then
-      return M.apply_theme(next_idx, silent)
-    else
-      return
+    tried[idx] = true
+    -- Try the next theme that hasn't been tried yet
+    for i = 1, #M.themes do
+      if not tried[i] then
+        return M.apply_theme(i, silent, tried)
+      end
     end
+    -- All themes have been tried, show error message
+    vim.notify("No available colorscheme found! Please install a theme plugin.", vim.log.levels.ERROR)
+    return
   end
   M.current_idx = idx
   -- Sync lualine theme
