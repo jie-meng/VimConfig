@@ -2,6 +2,9 @@
 -- Testing - replaces vim-test
 -- ============================================================================
 
+-- Store last test command in memory
+local last_test_command = nil
+
 -- Find or show the terminal buffer, split and show if hidden
 local function get_or_show_terminal()
   local term_bufnr, term_winnr = nil, nil
@@ -50,6 +53,8 @@ end
 local function send_to_terminal(command)
   local job_id, _ = get_or_show_terminal()
   if not job_id then return end
+  -- Store the command for later use with <space>tl
+  last_test_command = command
   vim.api.nvim_chan_send(job_id, command .. "\n")
   vim.cmd("startinsert")
 end
@@ -220,26 +225,12 @@ return {
         if cmd then send_to_terminal(cmd) end
       end, desc = "Test suite" },
     { "<space>tl", function() 
-        print("Last test command not implemented for terminal mode")
-      end, desc = "Test last" },
-    { "<space>tv", function() require("neotest").output_panel.toggle() end, desc = "Test output" },
-    { "<space>tc", function()
-        local last_cmd = require("neotest").state.last_run_command
-        if last_cmd then
-          vim.fn.setreg("+", last_cmd)
-          print("Copied to clipboard: " .. last_cmd)
+        if last_test_command then
+          send_to_terminal(last_test_command)
         else
-          print("No test command to copy")
+          print("No previous test command found")
         end
-      end, desc = "Copy test command" },
-    { "<space>tt", function()
-        local last_cmd = require("neotest").state.last_run_command
-        if not last_cmd then
-          print("No test command to send")
-          return
-        end
-        send_to_terminal(last_cmd)
-      end, desc = "Send test command to existing terminal" },
+      end, desc = "Test last" },
   },
   config = function()
     require("neotest").setup({
