@@ -75,6 +75,8 @@ keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
 -- Clear search highlight
 keymap.set("n", "<Esc>", ":noh<CR>", { desc = "Clear search highlight" })
 
--- Better up/down
-keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+
+-- Disable F1~F12 in insert mode (prevent <F1> etc from being inserted)
+for i = 1, 12 do
+  keymap.set("i", "<F" .. i .. ">", "<Nop>", { desc = "Disable F" .. i .. " in insert mode" })
+end
