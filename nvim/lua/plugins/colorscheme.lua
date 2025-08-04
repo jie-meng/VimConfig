@@ -93,8 +93,8 @@ end
 
 -- 4. Keymap bindings
 local function setup_keymaps()
-  vim.keymap.set("n", "<space>tn", M.next_theme, { desc = "Next theme" })
-  vim.keymap.set("n", "<space>tp", M.prev_theme, { desc = "Prev theme" })
+  vim.keymap.set("n", "<leader>+", M.next_theme, { desc = "Next theme" })
+  vim.keymap.set("n", "<leader>_", M.prev_theme, { desc = "Prev theme" })
 end
 
 -- 5. Auto-apply last theme on startup
