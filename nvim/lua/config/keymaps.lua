@@ -55,6 +55,27 @@ keymap.set("v", "<S-Tab>", "<gv", { desc = "Unindent selection" })
 keymap.set("n", "<F2>", ":terminal<CR>", { desc = "Open terminal" })
 keymap.set("t", "<F3>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
+-- F4 in normal mode: Toggle quickfix window
+keymap.set("n", "<F4>", function()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.fn.getwininfo(win)[1].quickfix == 1 then
+      vim.cmd("cclose")
+      return
+    end
+  end
+  vim.cmd("copen")
+end, { desc = "Toggle quickfix window" })
+
+keymap.set("n", "<F4>", function()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.fn.getwininfo(win)[1].quickfix == 1 then
+      vim.cmd("cclose")
+      return
+    end
+  end
+  vim.cmd("copen")
+end, { desc = "Toggle quickfix window" })
+
 -- Disable auto-insert-line after RETURN on autocomplete
 keymap.set("i", "<CR>", function()
     return vim.fn.pumvisible() == 1 and "<C-Y>" or "<CR>"
@@ -75,8 +96,7 @@ keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
 -- Clear search highlight
 keymap.set("n", "<Esc>", ":noh<CR>", { desc = "Clear search highlight" })
 
-
--- Disable F1~F12 in insert mode (prevent <F1> etc from being inserted)
+-- Disable F1-F12 in insert mode
 for i = 1, 12 do
   keymap.set("i", "<F" .. i .. ">", "<Nop>", { desc = "Disable F" .. i .. " in insert mode" })
 end
