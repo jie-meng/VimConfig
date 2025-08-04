@@ -1,5 +1,5 @@
 -- ============================================================================
--- Testing - replaces vim-test
+-- Testing Configuration - Custom test runners for different languages
 -- ============================================================================
 
 -- Store last test command in memory
@@ -128,7 +128,6 @@ local function build_go_test_cmd(mode)
   end
 end
 
-
 -- Find the nearest UT_TEST_SUITE above the cursor (support multiline, skip commented lines)
 local function find_nearest_custom_cpp_test_suite()
   local cursor = vim.api.nvim_win_get_cursor(0)
@@ -144,7 +143,6 @@ local function find_nearest_custom_cpp_test_suite()
   end
   return nil
 end
-
 
 -- Find the nearest UT_TEST above the cursor (support multiline, skip commented lines)
 local function find_nearest_custom_cpp_test()
@@ -206,75 +204,26 @@ local function build_test_command(mode)
   end
 end
 
-return {
-  "nvim-neotest/neotest",
-  event = "VeryLazy",
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-    "antoinemadec/FixCursorHold.nvim",
-    "nvim-treesitter/nvim-treesitter",
-    "nvim-neotest/nvim-nio", -- required by neotest
-    -- Test adapters
-    "nvim-neotest/neotest-python",
-    "nvim-neotest/neotest-jest",
-    "nvim-neotest/neotest-go",
-  },
-  keys = {
-    { "<space>tn", function()
-        local cmd = build_test_command("nearest")
-        if cmd then send_to_terminal(cmd) end
-      end, desc = "Test nearest" },
-    { "<space>tf", function()
-        local cmd = build_test_command("file")
-        if cmd then send_to_terminal(cmd) end
-      end, desc = "Test file" },
-    { "<space>ts", function()
-        local cmd = build_test_command("suite")
-        if cmd then send_to_terminal(cmd) end
-      end, desc = "Test suite" },
-    { "<space>tl", function() 
-        if last_test_command then
-          send_to_terminal(last_test_command)
-        else
-          print("No previous test command found")
-        end
-      end, desc = "Test last" },
-  },
-  config = function()
-    require("neotest").setup({
-      adapters = {
-        require("neotest-python")({
-          dap = { justMyCode = false },
-          runner = "pytest",
-        }),
-        require("neotest-jest")({
-          jestCommand = "npm test --",
-          jestConfigFile = "custom.jest.config.ts",
-          env = { CI = true },
-          cwd = function(path)
-            return vim.fn.getcwd()
-          end,
-        }),
-        require("neotest-go"),
-      },
-      output = {
-        enabled = false, -- totally disable neotest terminal output
-        open_on_run = false,
-      },
-      output_panel = {
-        enabled = true,
-        open = "botright 15new",
-      },
-      quickfix = {
-        enabled = false,
-        open = false,
-      },
-      status = {
-        enabled = false,
-        signs = false,
-        virtual_text = false,
-      },
-      icons = {},
-    })
-  end,
-}
+-- Set up keymaps for testing
+vim.keymap.set("n", "<space>tn", function()
+  local cmd = build_test_command("nearest")
+  if cmd then send_to_terminal(cmd) end
+end, { desc = "Test nearest" })
+
+vim.keymap.set("n", "<space>tf", function()
+  local cmd = build_test_command("file")
+  if cmd then send_to_terminal(cmd) end
+end, { desc = "Test file" })
+
+vim.keymap.set("n", "<space>ts", function()
+  local cmd = build_test_command("suite")
+  if cmd then send_to_terminal(cmd) end
+end, { desc = "Test suite" })
+
+vim.keymap.set("n", "<space>tl", function()
+  if last_test_command then
+    send_to_terminal(last_test_command)
+  else
+    print("No previous test command found")
+  end
+end, { desc = "Test last" })
