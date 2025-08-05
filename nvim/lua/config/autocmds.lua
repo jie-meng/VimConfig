@@ -1,9 +1,13 @@
--- ============================================================================
--- Autocmds Configuration
--- ============================================================================
 
 local autocmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
+
+-- Always disable auto comment on new line for all buffers
+autocmd("BufEnter", {
+  callback = function()
+    vim.opt_local.formatoptions:remove({"c", "r", "o"})
+  end,
+})
 
 -- File type specific indentation
 augroup("FileTypeIndent", { clear = true })
