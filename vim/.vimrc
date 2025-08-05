@@ -95,10 +95,14 @@ set smarttab
 set autoindent
 set smartindent
 
+
 augroup FileTypeIndent
     autocmd!
     autocmd FileType javascript,typescript,yaml,yml,json setlocal tabstop=2 shiftwidth=2
 augroup END
+
+"" Always disable auto comment on new line for all buffers
+autocmd BufEnter * setlocal formatoptions-=cro
 
 "" Shifting blocks visually
 nnoremap > >>
