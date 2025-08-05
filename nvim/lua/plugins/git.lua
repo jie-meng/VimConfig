@@ -80,12 +80,12 @@ return {
   {
     "tpope/vim-fugitive",
     config = function()
-      -- Configure Git status window size (1/3 of screen height) and q to close, return to last normal buffer
+      -- Configure Git status window size (1/4 of screen height) and q to close, return to last normal buffer
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "fugitive",
         callback = function()
-          -- Resize the window to 1/3 of screen height
-          local height = math.floor(vim.o.lines * 0.33)
+          -- Resize the window to 1/4 of screen height
+          local height = math.floor(vim.o.lines * 0.25)
           vim.cmd("resize " .. height)
           -- Move to bottom
           vim.cmd("wincmd J")
