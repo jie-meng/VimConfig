@@ -405,7 +405,7 @@ elseif has('unix')
 endif
 
 "" <weirongxu/plantuml-previewer.vim>
-map <Leader>m :PrevimOpen<CR>
+map <Leader>mp :PrevimOpen<CR>
 map <Leader>po :PlantumlOpen<CR>
 nnoremap <Leader>ps :PlantumlSave <Space>
 

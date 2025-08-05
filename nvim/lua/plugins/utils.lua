@@ -118,7 +118,8 @@ return {
     ft = { "markdown" },
     build = function() vim.fn["mkdp#util#install"]() end,
     keys = {
-      { "<Leader>m", ":MarkdownPreviewToggle<CR>", desc = "Markdown preview" },
+      { "<Leader>mp", ":MarkdownPreviewToggle<CR>", ft = "markdown", desc = "Markdown preview" },
+      { "<Leader>mb", function() vim.fn["mkdp#util#install"]() end, ft = "markdown", desc = "Build markdown-preview" },
     },
     config = function()
       if vim.fn.has("macunix") == 1 then
