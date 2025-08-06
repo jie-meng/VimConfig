@@ -286,8 +286,8 @@ return {
           },
           filetypes = { "c", "cpp", "objc", "objcpp", "cc", "cxx" },
         },
-        jdtls = {},                    -- Java
-        kotlin_language_server = {},   -- Kotlin  
+        -- jdtls = {},                    -- Java
+        -- kotlin_language_server = {},   -- Kotlin  
       }
 
       -- Setup all language servers
