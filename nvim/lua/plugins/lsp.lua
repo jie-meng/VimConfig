@@ -261,7 +261,6 @@ return {
         },
         jdtls = {},                    -- Java
         kotlin_language_server = {},   -- Kotlin  
-        metals = {},                   -- Scala
       }
 
       -- Setup all language servers
