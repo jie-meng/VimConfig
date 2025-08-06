@@ -206,6 +206,9 @@ return {
           },
           filetypes = { "c", "cpp", "objc", "objcpp", "cc", "cxx" },
         },
+        jdtls = {}, -- Java
+        kotlin_language_server = {}, -- Kotlin
+        metals = {}, -- Scala
       }
 
       for server, config in pairs(servers) do
