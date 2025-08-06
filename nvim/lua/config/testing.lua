@@ -144,7 +144,162 @@ local function build_custom_cpp_test_cmd(mode)
   end
 end
 
--- Build test command for the current buffer and mode
+-- Detect if the project is Gradle or Maven
+local function detect_build_tool()
+  local cwd = vim.fn.getcwd()
+  if vim.fn.filereadable(cwd .. "/gradlew") == 1 then
+    return "gradle"
+  elseif vim.fn.filereadable(cwd .. "/pom.xml") == 1 then
+    return "maven"
+  else
+    return nil
+  end
+end
+
+-- Find the nearest Kotlin/Java test class name
+local function find_nearest_kotlin_java_test_class()
+  -- Only consider as test class if @Test appears in the file
+  local has_test = false
+  local total_lines = vim.fn.line('$')
+  for i = 1, total_lines do
+    local line = vim.fn.getline(i)
+    if line:match("@Test") then
+      has_test = true
+      break
+    end
+  end
+  if not has_test then
+    return nil
+  end
+  -- Find package name
+  local package_name = nil
+  for i = 1, total_lines do
+    local line = vim.fn.getline(i)
+    local pkg = line:match("^%s*package%s+([%w%.]+)")
+    if pkg then
+      package_name = pkg
+      break
+    end
+  end
+  -- Find the nearest class definition above cursor
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  for i = cursor[1], 1, -1 do
+    local line = vim.fn.getline(i)
+    local class_name = line:match("class%s+([%w_]+)")
+    if class_name then
+      if package_name then
+        return package_name .. "." .. class_name
+      else
+        return class_name
+      end
+    end
+  end
+  return nil
+end
+
+-- Find the nearest Kotlin/Java test method name (support @Test and method definition on separate lines)
+local function find_nearest_kotlin_java_test_method()
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local acc = ""
+  local test_line = nil
+  
+  -- First, find the nearest @Test annotation above cursor
+  for i = cursor[1], 1, -1 do
+    local line = vim.fn.getline(i)
+    if line:match("^%s*@Test") then
+      test_line = i
+      break
+    end
+  end
+  
+  if not test_line then
+    return nil
+  end
+  
+  -- Then, search downward from @Test to find method name
+  local total_lines = vim.fn.line('$')
+  for i = test_line, total_lines do
+    local line = vim.fn.getline(i)
+    
+    -- Skip commented lines
+    if line:match("^%s*//") then
+      acc = ""
+      goto continue
+    end
+    
+    -- Skip @Test line itself
+    if line:match("^%s*@Test") then
+      acc = ""
+      goto continue
+    end
+    
+    -- Accumulate lines and look for method name
+    acc = acc .. " " .. line
+    
+    -- Match method name patterns:
+    -- 1. Kotlin backtick method: fun `method name`(
+    -- 2. Kotlin normal method: fun methodName(
+    -- 3. Java method: public/private/protected void/type methodName(
+    local method_name = acc:match("fun%s+`([^`]+)`%s*%(") or  -- Kotlin backtick method
+                       acc:match("fun%s+([%w_]+)%s*%(") or    -- Kotlin normal method
+                       acc:match("void%s+([%w_]+)%s*%(") or   -- Java void method
+                       acc:match("public%s+void%s+([%w_]+)%s*%(") or   -- Java public void method
+                       acc:match("private%s+void%s+([%w_]+)%s*%(") or  -- Java private void method
+                       acc:match("protected%s+void%s+([%w_]+)%s*%(") or -- Java protected void method
+                       acc:match("%s+([%w_]+)%s*%(%s*%)%s*{") or  -- Method with () { pattern
+                       acc:match("%s+([%w_]+)%s*%(") -- Simple method pattern
+    
+    if method_name then
+      return method_name
+    end
+    
+    ::continue::
+  end
+  return nil
+end
+
+-- Build test command for Kotlin/Java
+local function build_kotlin_java_test_cmd(mode)
+  local build_tool = detect_build_tool()
+  if not build_tool then
+    print("No Gradle or Maven build tool detected.")
+    return nil
+  end
+
+  local class_name = find_nearest_kotlin_java_test_class()
+  if not class_name then
+    print("No test class found.")
+    return nil
+  end
+
+  if mode == "nearest" then
+    local method_name = find_nearest_kotlin_java_test_method()
+    if not method_name then
+      print("No test method found.")
+      return nil
+    end
+
+    if build_tool == "gradle" then
+      return string.format("./gradlew test --tests \"%s.%s\"", class_name, method_name)
+    elseif build_tool == "maven" then
+      return string.format("mvn test -Dtest=%s#%s", class_name, method_name)
+    end
+  elseif mode == "file" then
+    if build_tool == "gradle" then
+      return string.format("./gradlew test --tests \"%s\"", class_name)
+    elseif build_tool == "maven" then
+      return string.format("mvn test -Dtest=%s", class_name)
+    end
+  elseif mode == "suite" then
+    if build_tool == "gradle" then
+      return "./gradlew test"
+    elseif build_tool == "maven" then
+      return "mvn test"
+    end
+  end
+end
+
+-- Extend build_test_command to support Kotlin/Java
 local function build_test_command(mode)
   if vim.bo.filetype == "python" then
     return build_python_test_cmd(mode)
@@ -154,6 +309,8 @@ local function build_test_command(mode)
     return build_go_test_cmd(mode)
   elseif vim.bo.filetype == "cpp" or vim.bo.filetype == "c" or vim.bo.filetype == "cxx" or vim.bo.filetype == "cc" or vim.bo.filetype == "c++" then
     return build_custom_cpp_test_cmd(mode)
+  elseif vim.bo.filetype == "java" or vim.bo.filetype == "kotlin" then
+    return build_kotlin_java_test_cmd(mode)
   else
     print("No test command configured for filetype: " .. vim.bo.filetype)
     return nil
