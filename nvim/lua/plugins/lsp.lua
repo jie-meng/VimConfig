@@ -184,8 +184,8 @@ return {
           vim.lsp.buf.format({ async = true })
         end, vim.tbl_extend("force", opts, { desc = "Format" }))
 
-        -- Project sync keymap for Gradle/Maven
-        vim.keymap.set("n", "<space>sp", function()
+        -- Project sync keymap for Gradle/Maven/Makefile
+        vim.keymap.set("n", "<space>ms", function()
           local terminal_utils = require("config.terminal")
           local cwd = vim.fn.getcwd()
           local cmd, desc
@@ -203,7 +203,7 @@ return {
           terminal_utils.send_to_terminal(cmd)
         end, vim.tbl_extend("force", opts, { desc = "Sync project dependencies (Gradle/Maven)" }))
 
-        -- Build project for Java/Kotlin (auto-detect Gradle/Maven)
+        -- Build project (auto-detect Gradle/Maven/Makefile)
         vim.keymap.set("n", "<space>mb", function()
           local cwd = vim.fn.getcwd()
           local terminal_utils = require("config.terminal")
@@ -212,13 +212,15 @@ return {
             cmd = "./gradlew build"
           elseif vim.fn.filereadable(cwd .. "/pom.xml") == 1 then
             cmd = "mvn clean install"
+          elseif vim.fn.filereadable(cwd .. "/Makefile") == 1 then
+            cmd = "make"
           else
-            vim.notify("No Gradle or Maven build file found", vim.log.levels.WARN)
+            vim.notify("No Gradle, Maven or Makefile build file found", vim.log.levels.WARN)
             return
           end
           vim.notify("Building project...", vim.log.levels.INFO)
           terminal_utils.send_to_terminal(cmd)
-        end, vim.tbl_extend("force", opts, { desc = "Build project (Gradle/Maven)" }))
+        end, vim.tbl_extend("force", opts, { desc = "Build project (Gradle/Maven/Makefile)" }))
 
         -- Organize imports (LSP code action)
         vim.keymap.set("n", "<space>mo", function()
