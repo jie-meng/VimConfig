@@ -184,6 +184,25 @@ return {
           vim.lsp.buf.format({ async = true })
         end, vim.tbl_extend("force", opts, { desc = "Format" }))
 
+        -- Project sync keymap for Gradle/Maven
+        vim.keymap.set("n", "<space>sp", function()
+          local terminal_utils = require("config.terminal")
+          local cwd = vim.fn.getcwd()
+          local cmd, desc
+          if vim.fn.filereadable(cwd .. "/gradlew") == 1 or vim.fn.filereadable(cwd .. "/gradlew.bat") == 1 then
+            cmd = "./gradlew --refresh-dependencies"
+            desc = "Gradle"
+          elseif vim.fn.filereadable(cwd .. "/pom.xml") == 1 then
+            cmd = "mvn dependency:resolve"
+            desc = "Maven"
+          else
+            vim.notify("No Gradle wrapper or Maven file found in project root", vim.log.levels.WARN)
+            return
+          end
+          vim.notify("Syncing project dependencies with " .. desc .. "...", vim.log.levels.INFO)
+          terminal_utils.send_to_terminal(cmd)
+        end, vim.tbl_extend("force", opts, { desc = "Sync project dependencies (Gradle/Maven)" }))
+
         -- Setup conditional format on save
         format_on_save(client, bufnr)
       end
