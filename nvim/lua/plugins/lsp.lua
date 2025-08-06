@@ -203,6 +203,31 @@ return {
           terminal_utils.send_to_terminal(cmd)
         end, vim.tbl_extend("force", opts, { desc = "Sync project dependencies (Gradle/Maven)" }))
 
+        -- Build project for Java/Kotlin (auto-detect Gradle/Maven)
+        vim.keymap.set("n", "<space>mb", function()
+          local cwd = vim.fn.getcwd()
+          local terminal_utils = require("config.terminal")
+          local cmd
+          if vim.fn.filereadable(cwd .. "/gradlew") == 1 then
+            cmd = "./gradlew build"
+          elseif vim.fn.filereadable(cwd .. "/pom.xml") == 1 then
+            cmd = "mvn clean install"
+          else
+            vim.notify("No Gradle or Maven build file found", vim.log.levels.WARN)
+            return
+          end
+          vim.notify("Building project...", vim.log.levels.INFO)
+          terminal_utils.send_to_terminal(cmd)
+        end, vim.tbl_extend("force", opts, { desc = "Build project (Gradle/Maven)" }))
+
+        -- Organize imports (LSP code action)
+        vim.keymap.set("n", "<space>mo", function()
+          vim.lsp.buf.code_action({
+            context = { only = { "source.organizeImports" } },
+            apply = true,
+          })
+        end, vim.tbl_extend("force", opts, { desc = "Organize imports" }))
+
         -- Setup conditional format on save
         format_on_save(client, bufnr)
       end
