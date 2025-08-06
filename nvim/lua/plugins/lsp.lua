@@ -11,17 +11,7 @@ return {
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
-      -- <Esc> closes diagnostic float in normal mode
-      vim.keymap.set("n", "<Esc>", function()
-        -- Try to close diagnostic float for current window only
-        local win = vim.api.nvim_get_current_win()
-        for _, float in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-          local config = vim.api.nvim_win_get_config(float)
-          if config.relative ~= "" and config.win == win then
-            vim.api.nvim_win_close(float, true)
-          end
-        end
-      end, { desc = "Close diagnostic float" })
+      -- Initialize Mason and LSP
       require("mason").setup()
       require("mason-lspconfig").setup({
         automatic_enable = false,
@@ -32,9 +22,53 @@ return {
 
       local capabilities = cmp_nvim_lsp.default_capabilities()
 
-      -- Setup quickfix window behavior globally (like .vimrc)
+      -- Format on save with multi-language, multi-condition support
+      local function format_on_save(client, bufnr)
+        if not (client.supports_method and client.supports_method("textDocument/formatting")) then
+          return
+        end
+
+        local util = require("lspconfig.util")
+        
+        -- List of condition functions, each returns true/false
+        local format_conditions = {}
+
+        -- clangd: only if .clang-format exists in project root
+        table.insert(format_conditions, function()
+          if client.name ~= "clangd" then return false end
+          local root_dir = util.root_pattern(".clang-format")(vim.api.nvim_buf_get_name(bufnr))
+          return root_dir and vim.fn.filereadable(root_dir .. "/.clang-format") == 1
+        end)
+
+        -- Add more language-specific conditions here, e.g.:
+        -- table.insert(format_conditions, function()
+        --   if client.name ~= "jdtls" then return false end
+        --   local root_dir = util.root_pattern("pom.xml", "build.gradle")(vim.api.nvim_buf_get_name(bufnr))
+        --   return root_dir ~= nil
+        -- end)
+
+        -- Enable format on save if any condition is met
+        local should_format = false
+        for _, condition in ipairs(format_conditions) do
+          if condition() then
+            should_format = true
+            break
+          end
+        end
+
+        if should_format then
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            group = vim.api.nvim_create_augroup("LspFormatOnSave", { clear = false }),
+            buffer = bufnr,
+            callback = function()
+              vim.lsp.buf.format({ async = false })
+            end,
+          })
+        end
+      end
+
+      -- Utility functions for window management
       local function setup_quickfix_keymaps()
-        -- Find the first normal buffer window (editor window)
         local function find_editor_window()
           for _, win in ipairs(vim.api.nvim_list_wins()) do
             local buf = vim.api.nvim_win_get_buf(win)
@@ -46,7 +80,6 @@ return {
           return nil
         end
 
-        -- Close quickfix and return to editor window
         local function close_and_return()
           local editor_win = find_editor_window()
           vim.cmd("cclose")
@@ -57,20 +90,28 @@ return {
           end
         end
 
-        -- Set up key mappings for quickfix window
         vim.keymap.set("n", "q", close_and_return, { buffer = true, silent = true })
         vim.keymap.set("n", "<Esc>", close_and_return, { buffer = true, silent = true })
       end
+
+      -- Global keymaps and autocmds
+      vim.keymap.set("n", "<Esc>", function()
+        local win = vim.api.nvim_get_current_win()
+        for _, float in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+          local config = vim.api.nvim_win_get_config(float)
+          if config.relative ~= "" and config.win == win then
+            vim.api.nvim_win_close(float, true)
+          end
+        end
+      end, { desc = "Close diagnostic float" })
 
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "qf",
         callback = setup_quickfix_keymaps,
       })
 
-      -- Auto close diagnostic float on WinLeave (when switching window/file)
       vim.api.nvim_create_autocmd("WinLeave", {
         callback = function()
-          -- Close diagnostic float for the window being left
           local win = vim.api.nvim_get_current_win()
           pcall(function()
             for _, float in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
@@ -83,27 +124,26 @@ return {
         end,
       })
 
-      local on_attach = function(client, bufnr)
+      -- LSP attach function
+      local function on_attach(client, bufnr)
         local opts = { buffer = bufnr, silent = true }
 
-        -- Key mappings (same as vim config)
+        -- Navigation keymaps
         vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", opts, { desc = "Go to definition" }))
         vim.keymap.set("n", "gi", vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
         vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "Go to references" }))
         vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, vim.tbl_extend("force", opts, { desc = "Go to type definition" }))
         
-        -- Global word search in project
+        -- Search keymaps
         vim.keymap.set("n", "gR", function()
           local word = vim.fn.expand("<cword>")
           if word == "" then
             vim.notify("No word under cursor", vim.log.levels.WARN)
             return
           end
-          
-          -- Use Telescope's grep_string with word boundaries
           require("telescope.builtin").grep_string({
             search = word,
-            word_match = "-w", -- Use word boundaries (equivalent to \b in regex)
+            word_match = "-w",
             prompt_title = "Global Word Search: " .. word,
             use_regex = false,
           })
@@ -111,10 +151,14 @@ return {
         
         vim.keymap.set("n", "gs", vim.lsp.buf.document_symbol, vim.tbl_extend("force", opts, { desc = "Document symbols" }))
         vim.keymap.set("n", "gS", vim.lsp.buf.workspace_symbol, vim.tbl_extend("force", opts, { desc = "Workspace symbols" }))
+        
+        -- Diagnostic keymaps
         vim.keymap.set("n", "[g", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
         vim.keymap.set("n", "]g", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
         vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover" }))
         vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, vim.tbl_extend("force", opts, { desc = "Show diagnostic" }))
+        
+        -- Diagnostic copy keymap
         vim.keymap.set("n", "<space>y", function()
           local cursor = vim.api.nvim_win_get_cursor(0)
           local line = cursor[1] - 1
@@ -132,27 +176,21 @@ return {
             vim.notify("No diagnostic found at cursor line", vim.log.levels.WARN)
           end
         end, vim.tbl_extend("force", opts, { desc = "Copy diagnostic message" }))
+        
+        -- Action keymaps
         vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename" }))
         vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
         vim.keymap.set("n", "<space>f", function()
           vim.lsp.buf.format({ async = true })
         end, vim.tbl_extend("force", opts, { desc = "Format" }))
 
-        -- Format on save
-        if client.supports_method and client.supports_method("textDocument/formatting") then
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            group = vim.api.nvim_create_augroup("LspFormatOnSave", { clear = false }),
-            buffer = bufnr,
-            callback = function()
-              vim.lsp.buf.format({ async = false })
-            end,
-          })
-        end
+        -- Setup conditional format on save
+        format_on_save(client, bufnr)
       end
 
-      -- Configure diagnostics (same as vim config)
+      -- Diagnostic configuration
       vim.diagnostic.config({
-        virtual_text = false, -- Disable virtual text
+        virtual_text = false,
         signs = true,
         underline = true,
         update_in_insert = false,
@@ -167,26 +205,22 @@ return {
         },
       })
 
-      -- Configure signs
+      -- Diagnostic signs
       local signs = { Error = "✗", Warn = "⚠", Hint = "💡", Info = "ℹ" }
       for type, icon in pairs(signs) do
         local hl = "DiagnosticSign" .. type
         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
       end
 
-      -- Setup language servers (manual control)
+      -- Language server configurations
       local home = os.getenv("HOME")
       local servers = {
         lua_ls = {
           settings = {
             Lua = {
               runtime = { version = "LuaJIT" },
-              diagnostics = {
-                globals = { "vim" },
-              },
-              workspace = {
-                library = vim.api.nvim_get_runtime_file("", true),
-              },
+              diagnostics = { globals = { "vim" } },
+              workspace = { library = vim.api.nvim_get_runtime_file("", true) },
             },
           },
         },
@@ -194,7 +228,7 @@ return {
         pyright = {},
         clangd = {
           cmd = {
-           "clangd",
+            "clangd",
             "--compile-commands-dir=.",
             "--background-index",
             "--clang-tidy",
@@ -202,15 +236,16 @@ return {
             "--completion-style=detailed",
             "--function-arg-placeholders",
             "--fallback-style=google",
-            "--query-driver=/usr/bin/clang*,/usr/bin/g*,/usr/local/bin/clang*,/usr/local/bin/g*," .. home .. "/.espressif/tools/**", 
+            "--query-driver=/usr/bin/clang*,/usr/bin/g*,/usr/local/bin/clang*,/usr/local/bin/g*," .. home .. "/.espressif/tools/**",
           },
           filetypes = { "c", "cpp", "objc", "objcpp", "cc", "cxx" },
         },
-        jdtls = {}, -- Java
-        kotlin_language_server = {}, -- Kotlin
-        metals = {}, -- Scala
+        jdtls = {},                    -- Java
+        kotlin_language_server = {},   -- Kotlin  
+        metals = {},                   -- Scala
       }
 
+      -- Setup all language servers
       for server, config in pairs(servers) do
         lspconfig[server].setup(vim.tbl_deep_extend("force", {
           capabilities = capabilities,
