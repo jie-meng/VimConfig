@@ -154,7 +154,7 @@ return {
           vim.notify("No git diff found", vim.log.levels.WARN)
           return
         end
-        local prompt = diff .. "\nPlease review the above git diff, point out any potential issues and explain them.\n"
+        local prompt = diff .. "\nPlease review the above git diff, point out any potential issues and explain them, Also generate a commit message.\n"
         require("CopilotChat").open({ window = { layout = 'vertical', width = 0.33 } })
         vim.defer_fn(function()
           local bufnr = vim.fn.bufnr("copilot-chat")
