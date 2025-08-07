@@ -61,6 +61,27 @@ opt.incsearch = true
 opt.ignorecase = true
 opt.smartcase = true
 
+local im_select_path = 'im-select'
+-- Auto switch input method to English (cross-platform, only if im-select is available)
+local english_input = nil
+if vim.fn.has('mac') == 1 then
+  english_input = 'com.apple.keylayout.ABC' -- macOS English input method ID
+elseif vim.fn.has('win32') == 1 then
+  english_input = '1033' -- Windows English input method (US English)
+elseif vim.fn.has('unix') == 1 then
+  english_input = 'xkb:us::eng' -- Common Linux English input method
+end
+
+if vim.fn.executable(im_select_path) == 1 and english_input then
+  vim.api.nvim_create_autocmd('InsertLeave', {
+    pattern = '*',
+    callback = function()
+      vim.fn.system(im_select_path .. ' ' .. english_input)
+    end,
+    desc = 'Switch to English input method when entering normal mode',
+  })
+end
+
 -- ============================================================================
 -- TreeSitter Invalid end_col Error Fix
 -- ============================================================================

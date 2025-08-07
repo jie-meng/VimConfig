@@ -65,6 +65,15 @@ if [[ "$OSTYPE" == "darwin" ]]; then
     echo -e "${YELLOW}Please set your terminal font to 'JetBrainsMono Nerd Font' for best icon support.${NC}"
 fi
 
+# Install im-select for input method switching
+echo -e "${GREEN}Installing im-select (for input method switching)...${NC}"
+if ! command -v im-select &> /dev/null; then
+    brew tap daipeihust/tap
+    brew install im-select
+else
+    echo -e "${YELLOW}im-select is already installed.${NC}"
+fi
+
 # Create config directory
 echo -e "${GREEN}Creating Neovim config directory...${NC}"
 mkdir -p ~/.config/nvim
