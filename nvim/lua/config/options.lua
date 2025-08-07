@@ -57,7 +57,14 @@ opt.mouse = "a"
 opt.number = true
 opt.relativenumber = false
 
--- Search
 opt.incsearch = true
 opt.ignorecase = true
 opt.smartcase = true
+
+-- Disable TreeSitter highlight to fix this bug
+-- https://stackoverflow.com/questions/70373650/how-to-solve-treesitter-highlighter-error-executing-lua-problem-in-neovim-confi
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function()
+    vim.cmd("TSDisable highlight")
+  end,
+})
