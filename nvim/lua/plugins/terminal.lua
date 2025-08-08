@@ -72,14 +72,34 @@ return {
       return nil
     end
     
+    -- Helper function: jump to the bottom-most main editor window (not treeview, not terminal)
+    local function goto_bottom_editor_window()
+      local editor_wins = {}
+      for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+        local bt = vim.api.nvim_buf_get_option(buf, "buftype")
+        if bt == "" and ft ~= "NvimTree" and ft ~= "neo-tree" and ft ~= "DiffviewFiles" then
+          table.insert(editor_wins, win)
+        end
+      end
+      if #editor_wins > 0 then
+        -- Select the bottom editor window
+        vim.api.nvim_set_current_win(editor_wins[#editor_wins])
+        return true
+      end
+      return false
+    end
+
     -- Helper function to create new terminal with environment
     local function create_new_terminal()
+      goto_bottom_editor_window()
       vim.cmd("split")
       vim.api.nvim_win_set_height(0, terminal_height)  -- Use stored height
-      
+
       local env_type, env_path = detect_environment()
       local activation_cmd = get_activation_command(env_type, env_path)
-      
+
       if activation_cmd then
         vim.cmd("terminal")
         -- Send activation command after terminal opens
@@ -90,12 +110,13 @@ return {
         -- No special environment, create normal terminal
         vim.cmd("terminal " .. vim.o.shell)
       end
-      
+
       vim.cmd("startinsert")  -- Enter insert mode automatically
     end
-    
+
     -- Helper function to show existing terminal
     local function show_existing_terminal(term_buf)
+      goto_bottom_editor_window()
       vim.cmd("split")
       vim.api.nvim_win_set_buf(0, term_buf)
       vim.api.nvim_win_set_height(0, terminal_height)  -- Use stored height
