@@ -26,6 +26,8 @@ keymap.set("n", "<Leader>]", ":bn<CR>", { desc = "Next buffer" })
 keymap.set("i", "<C-v>", "<ESC>\"+pa", { desc = "Paste from clipboard" })
 keymap.set("v", "<C-c>", "\"+y", { desc = "Copy to clipboard" })
 keymap.set("v", "<C-d>", "\"+d", { desc = "Cut to clipboard" })
+keymap.set("n", "y", "\"+y", { desc = "Yank to system clipboard" })
+keymap.set("v", "y", "\"+y", { desc = "Yank to system clipboard" })
 
 -- Move
 keymap.set("n", "mb", "^", { desc = "Move to beginning of line" })
