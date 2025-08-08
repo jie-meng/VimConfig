@@ -82,7 +82,12 @@ return {
     dependencies = "nvim-lua/plenary.nvim",
     keys = {
       { "<space>go", ":DiffviewOpen<CR>", desc = "Open diffview" },
-      { "<space>gf", ":DiffviewFileHistory<CR>", desc = "File history" },
+      { "<space>gv", ":DiffviewFileHistory<CR>", desc = "File history" },
+      { "<space>gf", ":DiffviewFileHistory %<CR>", desc = "File history (current file)" },
+      { "<space>gp", function()
+        local dir = vim.fn.expand('%:p:h')
+        vim.api.nvim_feedkeys(":DiffviewFileHistory " .. dir, "n", false)
+      end, desc = "File history (current directory, editable)" },
     },
   },
   {
