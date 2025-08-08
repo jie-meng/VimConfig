@@ -37,6 +37,7 @@ keymap.set("n", "md", "<C-f>M", { desc = "Page down and center cursor" })
 keymap.set("v", "mu", "<C-b>M", { desc = "Page up and center cursor" })
 keymap.set("v", "md", "<C-f>M", { desc = "Page down and center cursor" })
 keymap.set("n", "mq", ":q<CR>", { desc = "Quit" })
+keymap.set("n", "mx", ":qa!<CR>", { desc = "Quit all" })
 
 -- Alt + J/K move line (Mac symbols: ∆ = Alt+J, ˚ = Alt+K)
 keymap.set("n", "∆", ":m .+1<CR>==", { desc = "Move line down" })

@@ -93,13 +93,18 @@ return {
       local actions = require("diffview.actions")
       require("diffview").setup({
         keymaps = {
+          view = {
+            { "n", "q", "<Cmd>DiffviewClose<CR>", { desc = "Close diffview" } },
+          },
           file_panel = {
-            { "n", "mu", actions.scroll_view(-0.25), { desc = "Scroll the view up" } },
-            { "n", "md", actions.scroll_view(0.25),  { desc = "Scroll the view down" } },
+            { "n", "q", "<Cmd>DiffviewClose<CR>", { desc = "Close diffview" } },
+            { "n", "u", actions.scroll_view(-0.25), { desc = "Scroll the view up" } },
+            { "n", "d", actions.scroll_view(0.25),  { desc = "Scroll the view down" } },
           },
           file_history_panel = {
-            { "n", "mu", actions.scroll_view(-0.25), { desc = "Scroll the view up" } },
-            { "n", "md", actions.scroll_view(0.25),  { desc = "Scroll the view down" } },
+            { "n", "q", "<Cmd>DiffviewClose<CR>", { desc = "Close diffview" } },
+            { "n", "u", actions.scroll_view(-0.25), { desc = "Scroll the view up" } },
+            { "n", "d", actions.scroll_view(0.25),  { desc = "Scroll the view down" } },
           },
         },
       })
