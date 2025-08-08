@@ -123,17 +123,32 @@ return {
       vim.cmd("startinsert")  -- Enter insert mode automatically
     end
     
+    -- Store previous window and cursor position
+    local prev_win = nil
+    local prev_cursor = nil
+
     -- Main toggle terminal function
     local function toggle_terminal()
+      -- Always record current window and cursor before opening/showing terminal
+      prev_win = vim.api.nvim_get_current_win()
+      prev_cursor = vim.api.nvim_win_get_cursor(prev_win)
+
       local term_buf = find_terminal_buffer()
-      
+
       if term_buf then
         local term_win = find_terminal_window(term_buf)
-        
+
         if term_win then
           -- Terminal is visible, save height before closing
           terminal_height = vim.api.nvim_win_get_height(term_win)
           vim.api.nvim_win_close(term_win, false)
+          -- Restore previous window and cursor
+          if prev_win and vim.api.nvim_win_is_valid(prev_win) then
+            vim.api.nvim_set_current_win(prev_win)
+            if prev_cursor then
+              pcall(vim.api.nvim_win_set_cursor, prev_win, prev_cursor)
+            end
+          end
         else
           -- Terminal exists but not visible, show it
           show_existing_terminal(term_buf)
@@ -164,6 +179,13 @@ return {
       -- Save height before closing
       terminal_height = vim.api.nvim_win_get_height(term_win)
       vim.api.nvim_win_close(term_win, false)
+      -- Restore previous window and cursor
+      if prev_win and vim.api.nvim_win_is_valid(prev_win) then
+        vim.api.nvim_set_current_win(prev_win)
+        if prev_cursor then
+          pcall(vim.api.nvim_win_set_cursor, prev_win, prev_cursor)
+        end
+      end
     end, { desc = "Close terminal" })
     
     -- F3: Exit terminal mode to normal mode (like original vim config)
