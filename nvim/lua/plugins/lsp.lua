@@ -153,8 +153,8 @@ return {
         vim.keymap.set("n", "gS", vim.lsp.buf.workspace_symbol, vim.tbl_extend("force", opts, { desc = "Workspace symbols" }))
         
         -- Diagnostic keymaps
-        vim.keymap.set("n", "[g", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
-        vim.keymap.set("n", "]g", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
+        vim.keymap.set("n", "g[", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
+        vim.keymap.set("n", "g]", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
         vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover" }))
         vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, vim.tbl_extend("force", opts, { desc = "Show diagnostic" }))
         
@@ -180,7 +180,7 @@ return {
         -- Action keymaps
         vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename" }))
         vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
-        vim.keymap.set("n", "<space>f", function()
+        vim.keymap.set("n", "<space>cf", function()
           vim.lsp.buf.format({ async = true })
         end, vim.tbl_extend("force", opts, { desc = "Format" }))
 
@@ -222,14 +222,6 @@ return {
           terminal_utils.send_to_terminal(cmd)
         end, vim.tbl_extend("force", opts, { desc = "Build project (Gradle/Maven/Makefile)" }))
 
-        -- Organize imports (LSP code action)
-        vim.keymap.set("n", "<space>mo", function()
-          vim.lsp.buf.code_action({
-            context = { only = { "source.organizeImports" } },
-            apply = true,
-          })
-        end, vim.tbl_extend("force", opts, { desc = "Organize imports" }))
-
         -- Setup conditional format on save
         format_on_save(client, bufnr)
       end
@@ -252,7 +244,7 @@ return {
       })
 
       -- Diagnostic signs
-      local signs = { Error = "✗", Warn = "⚠", Hint = "💡", Info = "ℹ" }
+      local signs = { Error = "✗", Warn = "⚠", Hint = "", Info = "ℹ" }
       for type, icon in pairs(signs) do
         local hl = "DiagnosticSign" .. type
         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
