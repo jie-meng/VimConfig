@@ -159,8 +159,8 @@ return {
     dependencies = "tpope/vim-fugitive",
     keys = {
       { "<space>gv", ":GV<CR>", desc = "Git log (all commits)" },
-      { "<space>gV", ":GV!<CR>", desc = "Git log (current file)" },
-      { "<space>gf", ":GV?<CR>", desc = "Git log (fill quickfix)" },
+      { "<space>gf", ":GV!<CR>", desc = "Git log (current file)" },
+      { "<space>gF", ":GV?<CR>", desc = "Git log (fill quickfix)" },
     },
   },
 }
