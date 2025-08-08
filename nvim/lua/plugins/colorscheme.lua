@@ -81,6 +81,11 @@ function M.apply_theme(idx, silent, tried)
       },
     })
   end
+    -- Enhance diff highlight contrast
+    vim.api.nvim_set_hl(0, "DiffAdd",    { bg = "#335533", bold = true })
+    vim.api.nvim_set_hl(0, "DiffChange", { bg = "#444444", bold = true })
+    vim.api.nvim_set_hl(0, "DiffDelete", { bg = "#553333", bold = true })
+    vim.api.nvim_set_hl(0, "DiffText",   { bg = "#666600", bold = true }) 
   write_theme_idx(idx)
   if not silent then
     vim.notify("Theme: " .. entry.name)
