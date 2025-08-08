@@ -93,8 +93,8 @@ return {
             insert = '<C-c>',
           },
           reset = {
-            normal = '<C-l>',
-            insert = '<C-l>',
+            normal = 'rs',
+            insert = 'rs',
           },
           submit_prompt = {
             normal = '<CR>',
