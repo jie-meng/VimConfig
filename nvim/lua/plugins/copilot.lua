@@ -2,6 +2,10 @@
 -- GitHub Copilot - AI pair programming with Chat support
 -- ============================================================================
 
+-- Define constants for Copilot Chat window layout and width
+local COPILOT_CHAT_WINDOW_LAYOUT = 'vertical'
+local COPILOT_CHAT_WINDOW_WIDTH = 0.33
+
 return {
   -- Official Copilot plugin
   {
@@ -72,8 +76,8 @@ return {
         auto_insert_mode = false,
         clear_chat_on_new_prompt = false,
         window = {
-          layout = 'vertical', -- 'vertical', 'horizontal', 'float', 'replace', or a function that returns the layout
-          width = 0.25, -- fractional width of parent, or absolute width in columns when > 1
+          layout = COPILOT_CHAT_WINDOW_LAYOUT, -- Use constant for layout
+          width = COPILOT_CHAT_WINDOW_WIDTH, -- Use constant for width
           height = 0.5, -- fractional height of parent, or absolute height in rows when > 1
           -- Options below only apply to floating windows
           relative = 'editor', -- 'editor', 'win', 'cursor', 'mouse'
@@ -201,7 +205,7 @@ return {
               
               -- Open CopilotChat with files
               require("CopilotChat").open({
-                window = { layout = 'vertical', width = 0.33 }
+                window = { layout = COPILOT_CHAT_WINDOW_LAYOUT, width = COPILOT_CHAT_WINDOW_WIDTH }
               })
               
               vim.defer_fn(function()
