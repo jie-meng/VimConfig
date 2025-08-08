@@ -89,6 +89,21 @@ return {
         vim.api.nvim_feedkeys(":DiffviewFileHistory " .. dir, "n", false)
       end, desc = "File history (current directory, editable)" },
     },
+    config = function()
+      local actions = require("diffview.actions")
+      require("diffview").setup({
+        keymaps = {
+          file_panel = {
+            { "n", "mu", actions.scroll_view(-0.25), { desc = "Scroll the view up" } },
+            { "n", "md", actions.scroll_view(0.25),  { desc = "Scroll the view down" } },
+          },
+          file_history_panel = {
+            { "n", "mu", actions.scroll_view(-0.25), { desc = "Scroll the view up" } },
+            { "n", "md", actions.scroll_view(0.25),  { desc = "Scroll the view down" } },
+          },
+        },
+      })
+    end,
   },
   {
     "tpope/vim-fugitive",
