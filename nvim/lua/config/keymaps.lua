@@ -27,11 +27,16 @@ keymap.set("i", "<C-v>", "<ESC>\"+pa", { desc = "Paste from clipboard" })
 keymap.set("v", "<C-c>", "\"+y", { desc = "Copy to clipboard" })
 keymap.set("v", "<C-d>", "\"+d", { desc = "Cut to clipboard" })
 
--- Move to beginning and end of line
+-- Move
 keymap.set("n", "mb", "^", { desc = "Move to beginning of line" })
 keymap.set("n", "me", "$", { desc = "Move to end of line" })
 keymap.set("v", "mb", "^", { desc = "Move to beginning of line" })
 keymap.set("v", "me", "$", { desc = "Move to end of line" })
+keymap.set("n", "mu", "<C-b>M", { desc = "Page up and center cursor" })
+keymap.set("n", "md", "<C-f>M", { desc = "Page down and center cursor" })
+keymap.set("v", "mu", "<C-b>M", { desc = "Page up and center cursor" })
+keymap.set("v", "md", "<C-f>M", { desc = "Page down and center cursor" })
+keymap.set("n", "mq", ":q<CR>", { desc = "Quit" })
 
 -- Alt + J/K move line (Mac symbols: ∆ = Alt+J, ˚ = Alt+K)
 keymap.set("n", "∆", ":m .+1<CR>==", { desc = "Move line down" })

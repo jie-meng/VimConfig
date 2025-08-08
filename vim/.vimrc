@@ -78,6 +78,21 @@ nnoremap me $
 vnoremap mb ^
 vnoremap me $
 
+"" page up/down and center cursor
+nnoremap mu <C-b>M
+nnoremap md <C-f>M
+vnoremap mu <C-b>M
+vnoremap md <C-f>M
+
+"" quit
+nnoremap mq :q<CR>
+
+"" Better window navigation
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
 "" Alt + * move line
 "" http://vim.wikia.com/wiki/Moving_lines_up_or_down
 nnoremap ∆ :m .+1<CR>==
