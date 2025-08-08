@@ -78,20 +78,23 @@ return {
     end,
   },
   {
+    "sindrets/diffview.nvim",
+    dependencies = "nvim-lua/plenary.nvim",
+    keys = {
+      { "<space>go", ":DiffviewOpen<CR>", desc = "Open diffview" },
+      { "<space>gf", ":DiffviewFileHistory<CR>", desc = "File history" },
+    },
+  },
+  {
     "tpope/vim-fugitive",
     config = function()
-      -- Configure Git status window size (1/4 of screen height) and q to close, return to last normal buffer
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "fugitive",
         callback = function()
-          -- Resize the window to 1/4 of screen height
           local height = math.floor(vim.o.lines * 0.25)
           vim.cmd("resize " .. height)
-          -- Move to bottom
           vim.cmd("wincmd J")
-          -- Map q to close fugitive window and return to last normal buffer
           vim.keymap.set("n", "q", function()
-            -- Find the first normal buffer window (not NERDTree, not fugitive, not quickfix)
             local wins = vim.api.nvim_list_wins()
             local fallback = nil
             for _, win in ipairs(wins) do
@@ -144,23 +147,6 @@ return {
         vim.fn.setreg('+', diff)
         vim.notify("Staged git diff copied to clipboard", vim.log.levels.INFO)
       end, desc = "Copy staged git diff to clipboard" },
-    },
-  },
-  {
-    "sindrets/diffview.nvim",
-    dependencies = "nvim-lua/plenary.nvim",
-    keys = {
-      { "<space>go", ":DiffviewOpen<CR>", desc = "Open diffview" },
-      { "<space>gh", ":DiffviewFileHistory<CR>", desc = "File history" },
-    },
-  },
-  {
-    "junegunn/gv.vim",
-    dependencies = "tpope/vim-fugitive",
-    keys = {
-      { "<space>gv", ":GV<CR>", desc = "Git log (all commits)" },
-      { "<space>gf", ":GV!<CR>", desc = "Git log (current file)" },
-      { "<space>gF", ":GV?<CR>", desc = "Git log (fill quickfix)" },
     },
   },
 }
