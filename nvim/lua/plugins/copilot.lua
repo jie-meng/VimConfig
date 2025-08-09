@@ -150,6 +150,43 @@ return {
       { "<space>cf", ":CopilotChatFix<CR>", mode = {"v"}, desc = "Fix code" },
       { "<space>co", ":CopilotChatOptimize<CR>", mode = {"v"}, desc = "Optimize code" },
       { "<space>cd", ":CopilotChatDocs<CR>", mode = {"v"}, desc = "Generate docs" },
+      { "<space>cx", function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local cursor = vim.api.nvim_win_get_cursor(0)
+        local line = cursor[1] - 1
+        local diagnostics = vim.diagnostic.get(bufnr, { lnum = line })
+        if #diagnostics == 0 then
+          vim.notify("No diagnostic found at cursor line", vim.log.levels.WARN)
+          return
+        end
+        -- Get context (5 lines before and after)
+        local start_line = math.max(0, line - 5)
+        local end_line = math.min(vim.api.nvim_buf_line_count(bufnr) - 1, line + 5)
+        local context_lines = vim.api.nvim_buf_get_lines(bufnr, start_line, end_line + 1, false)
+        local context_text = table.concat(context_lines, "\n")
+        local diag_msgs = {}
+        for _, diag in ipairs(diagnostics) do
+          table.insert(diag_msgs, diag.message)
+        end
+        local all_diags = table.concat(diag_msgs, "\n")
+        local prompt = "Please analyze the following code snippet and diagnostics, and provide suggestions to fix the issue(s):\n" .. context_text .. "\n\nDiagnostics:\n" .. all_diags
+        require("CopilotChat").open({ window = { layout = COPILOT_CHAT_WINDOW_LAYOUT, width = COPILOT_CHAT_WINDOW_WIDTH } })
+        vim.defer_fn(function()
+          local chat_bufnr = vim.fn.bufnr("copilot-chat")
+          if chat_bufnr ~= -1 then
+            local line_count = vim.api.nvim_buf_line_count(chat_bufnr)
+            local prompt_lines = {}
+            for s in prompt:gmatch("([^\n]*)\n?") do
+              table.insert(prompt_lines, s)
+            end
+            if #prompt_lines > 0 and prompt_lines[#prompt_lines] == "" then
+              table.remove(prompt_lines, #prompt_lines)
+            end
+            vim.api.nvim_buf_set_lines(chat_bufnr, line_count, line_count, false, prompt_lines)
+            vim.api.nvim_win_set_cursor(0, {line_count + #prompt_lines, #(prompt_lines[#prompt_lines] or "")})
+          end
+        end, 100)
+      end, desc = "Analyze diagnostics at current line and send to Copilot Chat" },
       { "<space>cr", ":CopilotChatReview<CR>", desc = "Review code" },
       { "<space>cR", function()
         -- Get git diff
