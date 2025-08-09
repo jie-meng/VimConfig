@@ -547,12 +547,12 @@ highlight LspDiagnosticsSignHint guifg=#FFFFFF guibg=#00FF00 ctermfg=15 ctermbg=
 "" <github/copilot.vim>
 "" let b:copilot_enabled = v:true
 
-map <space>ae :Copilot enable<CR>
-map <space>ad :Copilot disable<CR>
-map <space>as :Copilot status<CR>
-map <space>ap :Copilot panel<CR>
-map <space>au :Copilot setup<CR>
-map <space>ao :Copilot signout<CR>
+map <space>Ce :Copilot enable<CR>
+map <space>Cd :Copilot disable<CR>
+map <space>Cs :Copilot status<CR>
+map <space>Cp :Copilot panel<CR>
+map <space>Cu :Copilot setup<CR>
+map <space>Co :Copilot signout<CR>
 
 "" <Exafunction/windsurf.vim>
 " let g:codeium_enabled = v:false

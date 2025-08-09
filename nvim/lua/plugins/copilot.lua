@@ -251,13 +251,13 @@ return {
 
       -- Panel commands (keeping original functionality)
       -- To signin, you need to enable, setup and auth
-      { "<space>ae", ":Copilot enable<CR>", desc = "Enable Copilot" },
-      { "<space>au", ":Copilot setup<CR>", desc = "Copilot setup" },
-      { "<space>aa", ":Copilot auth<CR>", desc = "Copilot auth" },
-      { "<space>ao", ":Copilot signout<CR>", desc = "Copilot sign out" },
-      { "<space>ap", ":Copilot panel<CR>", desc = "Copilot panel" },
-      { "<space>ad", ":Copilot disable<CR>", desc = "Disable Copilot" },
-      { "<space>as", ":Copilot status<CR>", desc = "Copilot status" },
+      { "<space>Ce", ":Copilot enable<CR>", desc = "Enable Copilot" },
+      { "<space>Cu", ":Copilot setup<CR>", desc = "Copilot setup" },
+      { "<space>Ca", ":Copilot auth<CR>", desc = "Copilot auth" },
+      { "<space>Co", ":Copilot signout<CR>", desc = "Copilot sign out" },
+      { "<space>Cp", ":Copilot panel<CR>", desc = "Copilot panel" },
+      { "<space>Cd", ":Copilot disable<CR>", desc = "Disable Copilot" },
+      { "<space>Cs", ":Copilot status<CR>", desc = "Copilot status" },
     },
   },
 }
