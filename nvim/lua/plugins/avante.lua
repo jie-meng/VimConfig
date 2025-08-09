@@ -94,7 +94,7 @@ local user_opts = {
       remove_file = "d",
       add_file = "@",
       close = { "<Esc>", "q" },
-      close_from_input = nil,
+      close_from_input = nil, -- e.g., { normal = "<Esc>", insert = "<C-d>" }
     },
   },
   hints = { enabled = true },
@@ -118,11 +118,11 @@ local user_opts = {
     },
     edit = {
       border = "rounded",
-      start_insert = true,
+      start_insert = false,
     },
     ask = {
       floating = false,
-      start_insert = true,
+      start_insert = false,
       border = "rounded",
       focus_on_apply = "ours",
     },
