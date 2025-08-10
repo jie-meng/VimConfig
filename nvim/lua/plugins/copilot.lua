@@ -34,9 +34,9 @@ return {
           auto_trigger = true,
           debounce = 75,
           keymap = {
-            accept = "<M-l>",
-            accept_word = false,
-            accept_line = false,
+            accept = "<Tab>",
+            accept_word = "<M-l>",
+            accept_line = "<M-j>",
             next = "<M-]>",
             prev = "<M-[>",
             dismiss = "<C-]>",
@@ -56,7 +56,22 @@ return {
         copilot_node_command = 'node', -- Node.js version must be > 18.x
         server_opts_overrides = {},
       })
+      
+      -- Set up custom highlight for Copilot suggestions
+      vim.api.nvim_set_hl(0, "CopilotSuggestion", { 
+        fg = "#808080", -- Gray color for suggestions
+        italic = true 
+      })
     end,
+      keys = {
+        { "<space>Ce", ":Copilot enable<CR>", desc = "Enable Copilot" },
+        { "<space>Cu", ":Copilot setup<CR>", desc = "Copilot setup" },
+        { "<space>Ca", ":Copilot auth<CR>", desc = "Copilot auth" },
+        { "<space>Co", ":Copilot signout<CR>", desc = "Copilot sign out" },
+        { "<space>Cp", ":Copilot panel<CR>", desc = "Copilot panel" },
+        { "<space>Cd", ":Copilot disable<CR>", desc = "Disable Copilot" },
+        { "<space>Cs", ":Copilot status<CR>", desc = "Copilot status" },
+      },
   },
   
   -- Copilot Chat plugin with built-in copilot functionality
