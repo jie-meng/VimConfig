@@ -82,26 +82,23 @@ if vim.fn.executable(im_select_path) == 1 and english_input then
   })
 end
 
--- ============================================================================
--- TreeSitter Invalid end_col Error Fix
--- ============================================================================
--- HACK: Workaround for TreeSitter highlighter 'Invalid end_col' errors
---
--- This is a known issue in Neovim since 2020 where TreeSitter's highlighter
--- miscalculates column positions in certain edge cases:
--- - When tab characters are used (byte offset vs display column mismatch)
--- - During line deletion/editing (stale position references)
--- - When nodes end at column 0
---
--- The error manifests as a popup loop that can cause data loss by preventing
--- normal editor operations. This wrapper catches and suppresses these specific
--- errors while allowing other errors to propagate normally.
---
--- This is a temporary fix until the upstream issue is resolved in Neovim core.
--- Track progress at: https://github.com/neovim/neovim/issues/29550
---
--- To remove this hack: Delete this entire block when the issue is fixed upstream
 vim.defer_fn(function()
+  -- HACK: Workaround for TreeSitter highlighter 'Invalid end_col' errors
+  -- 
+  -- This is a known issue in Neovim since 2020 where TreeSitter's highlighter
+  -- miscalculates column positions in certain edge cases:
+  -- - When tab characters are used (byte offset vs display column mismatch)
+  -- - During line deletion/editing (stale position references)
+  -- - When nodes end at column 0 (range calculation edge case)
+  --
+  -- The error manifests as a popup loop that can cause data loss by preventing
+  -- normal editor operations. This wrapper catches and suppresses these specific
+  -- errors while allowing other errors to propagate normally.
+  --
+  -- This is a temporary fix until the upstream issue is resolved in Neovim core.
+  -- Track progress at: https://github.com/neovim/neovim/issues/29550
+  --
+  -- To remove this hack: Delete this entire block when the issue is fixed upstream
   local ok, ts_highlight = pcall(require, 'vim.treesitter.highlighter')
   if ok and ts_highlight.new then
     local old_new = ts_highlight.new
@@ -109,20 +106,15 @@ vim.defer_fn(function()
       local highlighter = old_new(...)
       local old_on_line = highlighter.on_line
       highlighter.on_line = function(self, ...)
-        local ok_inner, result = pcall(old_on_line, self, ...)
-        if not ok_inner then
-          local err = tostring(result)
-          if err:match("Invalid end_col") then
-            -- Suppress Invalid end_col errors
-            return
-          else
-            -- Re-raise other errors
-            error(result)
-          end
+        local ok, err = pcall(old_on_line, self, ...)
+        if not ok and err:match("Invalid 'end_col'") then
+          -- Silently ignore the error
+          return
+        elseif not ok then
+          error(err)
         end
-        return result
       end
       return highlighter
     end
-  end
+  end 
 end, 0)
