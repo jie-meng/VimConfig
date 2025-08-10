@@ -35,11 +35,11 @@ return {
           debounce = 75,
           keymap = {
             accept = "<Tab>",
-            accept_word = "<M-l>",
-            accept_line = "<M-j>",
-            next = "<M-]>",
-            prev = "<M-[>",
-            dismiss = "<C-]>",
+            accept_word = false,
+            accept_line = false,
+            next = "<C-.>",
+            prev = "<C-,>",
+            dismiss = "<C-/>",
           },
         },
         filetypes = {
