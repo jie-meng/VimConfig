@@ -85,7 +85,6 @@ return {
     branch = "main", 
     lazy = false,
     dependencies = {
-      { "zbirenbaum/copilot.lua" }, -- Use copilot.lua for completion
       { "nvim-lua/plenary.nvim", branch = "master" }, -- Required dependency
     },
     build = "make tiktoken", -- Optional: for better token counting
