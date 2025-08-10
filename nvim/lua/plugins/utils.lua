@@ -135,25 +135,12 @@ return {
     end,
   },
 
-  -- GitHub Copilot
-  {
-    "github/copilot.vim",
-    keys = {
-      { "<space>ae", ":Copilot enable<CR>", desc = "Copilot enable" },
-      { "<space>ad", ":Copilot disable<CR>", desc = "Copilot disable" },
-      { "<space>as", ":Copilot status<CR>", desc = "Copilot status" },
-      { "<space>ap", ":Copilot panel<CR>", desc = "Copilot panel" },
-      { "<space>au", ":Copilot setup<CR>", desc = "Copilot setup" },
-      { "<space>ao", ":Copilot signout<CR>", desc = "Copilot signout" },
-    },
-  },
-
   -- Global replace - replaces greplace
   {
     "windwp/nvim-spectre",
     keys = {
       { "<space>GS", function() require("spectre").open() end, desc = "Open Spectre" },
-      { "<space>GR", function() require("spectre").open_file_search() end, desc = "Search current file" },
+      { "<space>GF", function() require("spectre").open_file_search() end, desc = "Search current file" },
     },
     config = function()
       require("spectre").setup({

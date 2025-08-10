@@ -131,7 +131,20 @@ return {
     end,
     keys = {
       -- Chat commands
-      { "<space>cc", ":CopilotChat<CR>", mode = {"n", "v"}, desc = "Open Copilot Chat" },
+      { "<space>cc", function()
+        local chat_bufnr = vim.fn.bufnr("copilot-chat")
+        if chat_bufnr ~= -1 then
+          -- If buffer exists, try to close its window
+          for _, win in ipairs(vim.api.nvim_list_wins()) do
+            if vim.api.nvim_win_get_buf(win) == chat_bufnr then
+              vim.api.nvim_win_close(win, true)
+              return
+            end
+          end
+        end
+        -- Otherwise, open Copilot Chat
+        vim.cmd("CopilotChat")
+      end, mode = {"n", "v"}, desc = "Toggle Copilot Chat window" },
       { "<space>ck", function()
         local current_file = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
         require("CopilotChat").open({ window = { layout = 'vertical', width = 0.33 } })
