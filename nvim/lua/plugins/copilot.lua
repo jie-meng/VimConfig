@@ -7,74 +7,73 @@ local COPILOT_CHAT_WINDOW_LAYOUT = 'vertical'
 local COPILOT_CHAT_WINDOW_WIDTH = 0.33
 
 return {
-  -- Official Copilot plugin
+  -- GitHub Copilot for code completion
   {
-    "github/copilot.vim",
-    lazy = true,
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
     config = function()
-      -- Custom keymaps for Copilot
-      -- Use the default copilot tab mapping with fallback
-      vim.g.copilot_no_tab_map = false
-      vim.g.copilot_assume_mapped = false
-      vim.g.copilot_tab_fallback = "\t"
-      
-      -- Add shift-tab for unindent in insert mode
-      vim.keymap.set("i", "<S-Tab>", "<C-d>", { desc = "Unindent" })
-      
-      -- Copilot suggestion navigation
-      vim.keymap.set("i", "<C-j>", "<Plug>(copilot-next)", { desc = "Next Copilot suggestion" })
-      vim.keymap.set("i", "<C-k>", "<Plug>(copilot-previous)", { desc = "Previous Copilot suggestion" })
-      vim.keymap.set("i", "<C-l>", "<Plug>(copilot-dismiss)", { desc = "Dismiss Copilot suggestion" })
-      
-      -- Accept suggestions
-      vim.keymap.set("i", "<C-y>", "<Plug>(copilot-accept)", { desc = "Accept Copilot suggestion" })
-      vim.keymap.set("i", "<M-l>", "<Plug>(copilot-accept-word)", { desc = "Accept Copilot word" })
-      vim.keymap.set("i", "<M-j>", "<Plug>(copilot-accept-line)", { desc = "Accept Copilot line" })
-      
-      -- Disable Copilot for specific filetypes
-      vim.g.copilot_filetypes = {
-        ["*"] = false,
-        ["javascript"] = true,
-        ["typescript"] = true,
-        ["lua"] = true,
-        ["rust"] = true,
-        ["c"] = true,
-        ["cpp"] = true,
-        ["go"] = true,
-        ["python"] = true,
-        ["ruby"] = true,
-        ["java"] = true,
-        ["c_sharp"] = true,
-        ["php"] = true,
-        ["shell"] = true,
-        ["vim"] = true,
-      }
+      require("copilot").setup({
+        panel = {
+          enabled = true,
+          auto_refresh = false,
+          keymap = {
+            jump_prev = "[[",
+            jump_next = "]]",
+            accept = "<CR>",
+            refresh = "gr",
+            open = "<M-CR>"
+          },
+          layout = {
+            position = "bottom", -- | top | left | right
+            ratio = 0.4
+          },
+        },
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          debounce = 75,
+          keymap = {
+            accept = "<M-l>",
+            accept_word = false,
+            accept_line = false,
+            next = "<M-]>",
+            prev = "<M-[>",
+            dismiss = "<C-]>",
+          },
+        },
+        filetypes = {
+          yaml = false,
+          markdown = false,
+          help = false,
+          gitcommit = false,
+          gitrebase = false,
+          hgcommit = false,
+          svn = false,
+          cvs = false,
+          ["."] = false,
+        },
+        copilot_node_command = 'node', -- Node.js version must be > 18.x
+        server_opts_overrides = {},
+      })
     end,
   },
   
-  -- Copilot Chat plugin
+  -- Copilot Chat plugin with built-in copilot functionality
   {
     "CopilotC-Nvim/CopilotChat.nvim",
-    branch = "main",
+    branch = "main", 
     lazy = false,
     dependencies = {
-      { "zbirenbaum/copilot.vim" }, 
-      { "nvim-lua/plenary.nvim" }, 
+      { "zbirenbaum/copilot.lua" }, -- Use copilot.lua for completion
+      { "nvim-lua/plenary.nvim", branch = "master" }, -- Required dependency
     },
+    build = "make tiktoken", -- Optional: for better token counting
     config = function()
       require("CopilotChat").setup({
         debug = false, -- Enable debugging
         model = 'gpt-4.1',
-        agent = 'copilot', -- Chat agent to use
-        chat_autocomplete = true, -- Enable chat autocompletion
-        remember_as_sticky = true,
         temperature = 0.1,
-        show_help = true,
-        highlight_selection = true,
-        highlight_headers = true,
-        auto_follow_cursor = true,
-        auto_insert_mode = false,
-        clear_chat_on_new_prompt = false,
         window = {
           layout = COPILOT_CHAT_WINDOW_LAYOUT, -- Use constant for layout
           width = COPILOT_CHAT_WINDOW_WIDTH, -- Use constant for width
@@ -298,16 +297,6 @@ return {
         local current_model = config.model or "unknown"
         print("Current Copilot Chat model: " .. current_model)
       end, desc = "Show current Copilot Chat model" },
-
-      -- Panel commands (keeping original functionality)
-      -- To signin, you need to enable, setup and auth
-      { "<space>Ce", ":Copilot enable<CR>", desc = "Enable Copilot" },
-      { "<space>Cu", ":Copilot setup<CR>", desc = "Copilot setup" },
-      { "<space>Ca", ":Copilot auth<CR>", desc = "Copilot auth" },
-      { "<space>Co", ":Copilot signout<CR>", desc = "Copilot sign out" },
-      { "<space>Cp", ":Copilot panel<CR>", desc = "Copilot panel" },
-      { "<space>Cd", ":Copilot disable<CR>", desc = "Disable Copilot" },
-      { "<space>Cs", ":Copilot status<CR>", desc = "Copilot status" },
     },
   },
 }
