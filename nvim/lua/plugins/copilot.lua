@@ -6,6 +6,14 @@
 local COPILOT_CHAT_WINDOW_LAYOUT = 'vertical'
 local COPILOT_CHAT_WINDOW_WIDTH = 0.33
 
+-- Function to reset Copilot suggestion highlight
+local function reset_copilot_suggestion_highlight()
+  vim.api.nvim_set_hl(0, "CopilotSuggestion", { 
+    fg = "#808080", -- Gray color for suggestions
+    italic = true 
+  })
+end
+
 return {
   -- GitHub Copilot for code completion
   {
@@ -58,10 +66,7 @@ return {
       })
       
       -- Set up custom highlight for Copilot suggestions
-      vim.api.nvim_set_hl(0, "CopilotSuggestion", { 
-        fg = "#808080", -- Gray color for suggestions
-        italic = true 
-      })
+      reset_copilot_suggestion_highlight()
     end,
       keys = {
         { "<space>Ce", ":Copilot enable<CR>", desc = "Enable Copilot" },
@@ -142,19 +147,13 @@ return {
           },
         },
       })
-
-      local set_copilot_suggestion_hl = function()
-        vim.api.nvim_set_hl(0, "CopilotSuggestion", { fg = "#808080", italic = true })
-      end
-      vim.api.nvim_create_autocmd("User", {
-        pattern = "CopilotChatWindowOpened",
-        callback = set_copilot_suggestion_hl,
-        desc = "Reset CopilotSuggestion highlight when CopilotChat window opens",
-      })
     end,
     keys = {
       -- Chat commands
       { "<space>cc", function()
+        -- Reset Copilot suggestion highlight when opening chat
+        reset_copilot_suggestion_highlight()
+        
         local chat_bufnr = vim.fn.bufnr("copilot-chat")
         if chat_bufnr ~= -1 then
           -- If buffer exists, try to close its window
