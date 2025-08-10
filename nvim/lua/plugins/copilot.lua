@@ -142,6 +142,15 @@ return {
           },
         },
       })
+
+      local set_copilot_suggestion_hl = function()
+        vim.api.nvim_set_hl(0, "CopilotSuggestion", { fg = "#808080", italic = true })
+      end
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "CopilotChatWindowOpened",
+        callback = set_copilot_suggestion_hl,
+        desc = "Reset CopilotSuggestion highlight when CopilotChat window opens",
+      })
     end,
     keys = {
       -- Chat commands
