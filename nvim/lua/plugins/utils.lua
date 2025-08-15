@@ -137,13 +137,27 @@ return {
 
   -- Global replace - replaces greplace
   {
-    "windwp/nvim-spectre",
+    "nvim-pack/nvim-spectre",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
     keys = {
       { "<space>GS", function() require("spectre").open() end, desc = "Open Spectre" },
       { "<space>GF", function() require("spectre").open_file_search() end, desc = "Search current file" },
     },
     config = function()
       require("spectre").setup({
+        color_devicons = true,
+        open_cmd = 'vnew',
+        live_update = false,
+        line_sep_start = '┌─────────────────────────────────────────',
+        result_padding = '│  ',
+        line_sep       = '└─────────────────────────────────────────',
+        highlight = {
+            ui = "String",
+            search = "DiffChange",
+            replace = "DiffDelete"
+        },
         mapping = {
           ['toggle_line'] = {
               map = "dd",
@@ -152,7 +166,7 @@ return {
           },
           ['enter_file'] = {
               map = "<cr>",
-              cmd = "<cmd>lua require('spectre').enter_file()<CR>", 
+              cmd = "<cmd>lua require('spectre.actions').select_entry()<CR>",
               desc = "goto current file"
           },
           ['send_to_qf'] = {
@@ -215,6 +229,56 @@ return {
             cmd = "<cmd>lua require('spectre').resume_last_search()<CR>",
             desc = "resume last search before close"
           },
+        },
+        find_engine = {
+          -- rg is map with finder
+          ['rg'] = {
+            cmd = "rg",
+            -- default args
+            args = {
+              '--color=never',
+              '--no-heading',
+              '--with-filename',
+              '--line-number',
+              '--column',
+            },
+            options = {
+              ['ignore-case'] = {
+                value = "--ignore-case",
+                icon = "[I]",
+                desc = "ignore case"
+              },
+              ['hidden'] = {
+                value = "--hidden",
+                desc = "hidden file",
+                icon = "[H]"
+              },
+              -- you can put any option you want here it can toggle with
+              -- show_option function
+            }
+          },
+        },
+        replace_engine = {
+          ['sed'] = {
+            cmd = "sed",
+            args = nil,
+            options = {
+              ['ignore-case'] = {
+                value = "--ignore-case",
+                icon = "[I]",
+                desc = "ignore case"
+              },
+            }
+          },
+        },
+        default = {
+            find = {
+                cmd = "rg",
+                options = {"ignore-case"}
+            },
+            replace = {
+                cmd = "sed"
+            }
         },
       })
     end,
