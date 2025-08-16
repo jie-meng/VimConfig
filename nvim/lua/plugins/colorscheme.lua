@@ -12,6 +12,7 @@ M.themes = {
   { name = "onedark",    lualine = "onedark"    },
   { name = "molokai",    lualine = "molokai"    },
   { name = "ayu",        lualine = "ayu"        },
+  { name = "dracula",    lualine = "dracula"    },
 }
 
 -- 2. State and persistence
@@ -42,6 +43,7 @@ local plugin_map = {
   onedark      = "onedark.nvim",
   molokai      = "molokai",
   ayu          = "ayu",
+  dracula      = "dracula.nvim",
 }
 
 
@@ -127,11 +129,37 @@ return {
       require("gruvbox").setup({})
     end,
   },
-  { "folke/tokyonight.nvim", lazy = true, opts = { style = "moon" } },
-  { "catppuccin/nvim", name = "catppuccin", lazy = true, opts = { integrations = { nvimtree = true, telescope = true, gitsigns = true, treesitter = true } } },
-  { "navarasu/onedark.nvim", lazy = true },
+  { "folke/tokyonight.nvim", lazy = true, opts = { style = "storm" } },
+  { "catppuccin/nvim", name = "catppuccin", lazy = true, opts = { flavour = "mocha", integrations = { nvimtree = true, telescope = true, gitsigns = true, treesitter = true } } },
+  {
+    "navarasu/onedark.nvim",
+    lazy = true,
+    config = function()
+      require("onedark").setup {
+        style = "deep"
+      }
+    end,
+  },
   { "tomasr/molokai", lazy = true },
   { "Shatur/neovim-ayu", name = "ayu", lazy = true },
+  {
+    "Mofiqul/dracula.nvim",
+    name = "dracula.nvim",
+    lazy = true,
+    config = function()
+      require("dracula").setup({
+        overrides = {
+          CursorLine = { bg = "#44475a", blend = 0 },
+          CursorColumn = { bg = "#44475a", blend = 0 },
+          NvimTreeFolderIcon = { fg = "#8be9fd" },
+          NvimTreeFolderName = { fg = "#8be9fd" },
+          NvimTreeOpenedFolderName = { fg = "#50fa7b" },
+          NvimTreeRootFolder = { fg = "#ff79c6" },
+          NvimTreeFileIcon = { fg = "#f8f8f2" },
+        }
+      })
+    end,
+  },
   -- Color highlighter plugin
   { "NvChad/nvim-colorizer.lua",
     config = function()
