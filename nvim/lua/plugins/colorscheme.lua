@@ -10,7 +10,7 @@ M.themes = {
   { name = "tokyonight", lualine = "tokyonight" },
   { name = "catppuccin", lualine = "catppuccin" },
   { name = "onedark",    lualine = "onedark"    },
-  { name = "molokai",    lualine = "molokai"    },
+  { name = "monokai",    lualine = "monokai"    },
   { name = "ayu",        lualine = "ayu"        },
   { name = "dracula",    lualine = "dracula"    },
 }
@@ -41,7 +41,7 @@ local plugin_map = {
   tokyonight   = "tokyonight.nvim",
   catppuccin   = "catppuccin",
   onedark      = "onedark.nvim",
-  molokai      = "molokai",
+  monokai      = "monokai.nvim",
   ayu          = "ayu",
   dracula      = "dracula.nvim",
 }
@@ -140,7 +140,15 @@ return {
       }
     end,
   },
-  { "tomasr/molokai", lazy = true },
+  {
+    "tanvirtin/monokai.nvim",
+    lazy = true,
+    config = function()
+      require("monokai").setup {
+        palette = require("monokai").pro
+      }
+    end,
+  },
   { "Shatur/neovim-ayu", name = "ayu", lazy = true },
   {
     "Mofiqul/dracula.nvim",
