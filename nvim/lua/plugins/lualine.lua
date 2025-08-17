@@ -20,5 +20,7 @@ return {
         },
       })
     end
+    -- Keymap: <leader>ln to show Lualine notices
+    vim.keymap.set("n", "<leader>ln", ":LualineNotices<CR>", { desc = "Show Lualine notices" })
   end,
 }
