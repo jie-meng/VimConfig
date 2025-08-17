@@ -11,6 +11,53 @@ return {
     { "<space>j", ":NvimTreeFindFile<CR>", desc = "Find current file in tree" },
   },
   config = function()
+    -- File type handlers for different file types
+    local file_handlers = {
+      audio = {
+        extensions = { "mp3", "wav", "ogg", "flac", "aac", "m4a", "wma" },
+        handler = function(file_path)
+          -- Play audio file using playsound command
+          local cmd = string.format("playsound '%s'", file_path)
+          vim.fn.jobstart(cmd, {
+            detach = true,
+            on_exit = function(_, exit_code)
+              if exit_code ~= 0 then
+                vim.notify("Failed to play audio file: " .. file_path, vim.log.levels.WARN)
+              else
+                vim.notify("Playing: " .. vim.fn.fnamemodify(file_path, ":t"), vim.log.levels.INFO)
+              end
+            end
+          })
+        end
+      },
+      -- Future handlers can be added here
+      -- image = {
+      --   extensions = { "jpg", "jpeg", "png", "gif", "bmp" },
+      --   handler = function(file_path) ... end
+      -- },
+    }
+
+    -- Function to get file extension
+    local function get_file_extension(file_path)
+      return string.lower(file_path:match("^.+%.(.+)$") or "")
+    end
+
+    -- Function to handle file opening based on type
+    local function handle_file_open(file_path)
+      local extension = get_file_extension(file_path)
+      
+      -- Check each file type handler
+      for file_type, config in pairs(file_handlers) do
+        for _, ext in ipairs(config.extensions) do
+          if extension == ext then
+            config.handler(file_path)
+            return true -- File was handled by custom handler
+          end
+        end
+      end
+      
+      return false -- File should be opened normally
+    end
     -- Disable netrw
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
@@ -22,6 +69,34 @@ return {
         width = 40,
         side = "left",
       },
+      on_attach = function(bufnr)
+        local api = require("nvim-tree.api")
+        
+        -- Default mappings
+        api.config.mappings.default_on_attach(bufnr)
+        
+        -- Custom file opening handler
+        local function custom_edit()
+          local node = api.tree.get_node_under_cursor()
+          if not node then return end
+          
+          if node.type == "file" then
+            local file_path = node.absolute_path
+            -- Try custom handler first
+            if not handle_file_open(file_path) then
+              -- Fall back to default behavior
+              api.node.open.edit()
+            end
+          else
+            -- For directories, use default behavior
+            api.node.open.edit()
+          end
+        end
+        
+        -- Override the default <CR> and 'o' mappings
+        vim.keymap.set('n', '<CR>', custom_edit, { buffer = bufnr, noremap = true, silent = true, nowait = true })
+        vim.keymap.set('n', 'o', custom_edit, { buffer = bufnr, noremap = true, silent = true, nowait = true })
+      end,
       renderer = {
         group_empty = true,
         icons = {
@@ -110,7 +185,7 @@ return {
           end)
         end
       end
-    })
+    }) 
 
     -- Close nvim-tree if it's the last window
     vim.api.nvim_create_autocmd("BufEnter", {
@@ -119,30 +194,6 @@ return {
           vim.cmd("close")
         end
       end
-    })
-
-    -- NvimTree: P to play audio file under cursor
-    vim.api.nvim_create_autocmd("FileType", {
-      pattern = "NvimTree",
-      callback = function()
-        vim.keymap.set("n", "P", function()
-          local api = require("nvim-tree.api")
-          local node = api.tree.get_node_under_cursor()
-          if not node or not node.absolute_path then
-            vim.notify("No file selected", vim.log.levels.WARN)
-            return
-          end
-          local path = node.absolute_path
-          local ext = path:match("%.([^.]+)$")
-          local audio_exts = { mp3 = true, wav = true, ogg = true, flac = true, m4a = true, aac = true }
-          if ext and audio_exts[ext:lower()] then
-            vim.fn.system('playsound ' .. vim.fn.shellescape(path))
-            vim.notify("Playing: " .. path)
-          else
-            vim.notify("Not an audio file", vim.log.levels.WARN)
-          end
-        end, { buffer = true, desc = "Play audio file" })
-      end,
     })
   end,
 }
