@@ -120,5 +120,29 @@ return {
         end
       end
     })
+
+    -- NvimTree: P to play audio file under cursor
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "NvimTree",
+      callback = function()
+        vim.keymap.set("n", "P", function()
+          local api = require("nvim-tree.api")
+          local node = api.tree.get_node_under_cursor()
+          if not node or not node.absolute_path then
+            vim.notify("No file selected", vim.log.levels.WARN)
+            return
+          end
+          local path = node.absolute_path
+          local ext = path:match("%.([^.]+)$")
+          local audio_exts = { mp3 = true, wav = true, ogg = true, flac = true, m4a = true, aac = true }
+          if ext and audio_exts[ext:lower()] then
+            vim.fn.system('playsound ' .. vim.fn.shellescape(path))
+            vim.notify("Playing: " .. path)
+          else
+            vim.notify("Not an audio file", vim.log.levels.WARN)
+          end
+        end, { buffer = true, desc = "Play audio file" })
+      end,
+    })
   end,
 }

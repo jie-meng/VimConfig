@@ -22,12 +22,15 @@ keymap.set("n", "<Leader>si", ":source ~/.config/nvim/init.lua<CR>", { desc = "R
 keymap.set("n", "<Leader>[", ":bp<CR>", { desc = "Previous buffer" })
 keymap.set("n", "<Leader>]", ":bn<CR>", { desc = "Next buffer" })
 
--- Enable clipboard
 keymap.set("i", "<C-v>", "<ESC>\"+pa", { desc = "Paste from clipboard" })
 keymap.set("v", "<C-c>", "\"+y", { desc = "Copy to clipboard" })
 keymap.set("v", "<C-d>", "\"+d", { desc = "Cut to clipboard" })
 keymap.set("n", "y", "\"+y", { desc = "Yank to system clipboard" })
 keymap.set("v", "y", "\"+y", { desc = "Yank to system clipboard" })
+
+-- Paste from system clipboard with p
+keymap.set("n", "p", '"+p', { desc = "Paste from system clipboard" })
+keymap.set("v", "p", '"+p', { desc = "Paste from system clipboard" })
 
 -- Move
 keymap.set("n", "mb", "^", { desc = "Move to beginning of line" })
