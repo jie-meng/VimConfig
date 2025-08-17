@@ -91,7 +91,9 @@ function M.apply_theme(idx, silent, tried)
     vim.api.nvim_set_hl(0, "DiffText",   { bg = "#666600", bold = true }) 
   write_theme_idx(idx)
   if not silent then
-    vim.notify("Theme: " .. entry.name)
+    vim.schedule(function()
+      vim.notify("Theme: " .. entry.name)
+    end)
   end
 end
 
