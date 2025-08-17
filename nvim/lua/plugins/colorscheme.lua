@@ -10,7 +10,7 @@ M.themes = {
   { name = "tokyonight", lualine = "tokyonight" },
   { name = "catppuccin", lualine = "catppuccin" },
   { name = "onedark",    lualine = "onedark"    },
-  { name = "monokai",    lualine = "monokai"    },
+  { name = "monokai-pro", lualine = "monokai-pro" },
   { name = "ayu",        lualine = "ayu"        },
   { name = "dracula",    lualine = "dracula"    },
 }
@@ -41,7 +41,7 @@ local plugin_map = {
   tokyonight   = "tokyonight.nvim",
   catppuccin   = "catppuccin",
   onedark      = "onedark.nvim",
-  monokai      = "monokai.nvim",
+  ["monokai-pro"] = "monokai-pro.nvim",
   ayu          = "ayu",
   dracula      = "dracula.nvim",
 }
@@ -55,6 +55,7 @@ function M.apply_theme(idx, silent, tried)
   if plugin_name then
     require("lazy").load({ plugins = { plugin_name }, wait = true })
   end
+
   -- Switch colorscheme
   local ok = pcall(vim.cmd.colorscheme, entry.name)
   if not ok then
@@ -141,12 +142,26 @@ return {
     end,
   },
   {
-    "tanvirtin/monokai.nvim",
+    "loctvl842/monokai-pro.nvim",
+    priority = 1000,
     lazy = true,
     config = function()
-      require("monokai").setup {
-        palette = require("monokai").pro
-      }
+      require("monokai-pro").setup({
+        filter = "pro",
+        transparent_background = false,
+        terminal_colors = true,
+        devicons = true,
+        styles = {
+          comment = { italic = true },
+          keyword = { italic = true },
+          type = { italic = true },
+          storageclass = { italic = true },
+          structure = { italic = true },
+          parameter = { italic = true },
+          annotation = { italic = true },
+          tag_attribute = { italic = true },
+        },
+      })
     end,
   },
   { "Shatur/neovim-ayu", name = "ayu", lazy = true },
