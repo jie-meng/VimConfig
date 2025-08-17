@@ -150,19 +150,13 @@ return {
     config = function()
       require("monokai-pro").setup({
         filter = "pro",
-        transparent_background = false,
-        terminal_colors = true,
-        devicons = true,
-        styles = {
-          comment = { italic = true },
-          keyword = { italic = true },
-          type = { italic = true },
-          storageclass = { italic = true },
-          structure = { italic = true },
-          parameter = { italic = true },
-          annotation = { italic = true },
-          tag_attribute = { italic = true },
-        },
+        override = function(c)
+          return {
+            NvimTreeFolderName = { fg = c.base.blue },
+            NvimTreeOpenedFolderName = { fg = c.base.yellow },
+            NvimTreeFileIcon = { fg = c.base.white },
+          }
+        end,
       })
     end,
   },
