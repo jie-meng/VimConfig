@@ -126,6 +126,10 @@ return {
         -- Override the default <CR> and 'o' mappings
         vim.keymap.set('n', '<CR>', custom_edit, { buffer = bufnr, noremap = true, silent = true, nowait = true })
         vim.keymap.set('n', 'o', custom_edit, { buffer = bufnr, noremap = true, silent = true, nowait = true })
+        
+        -- Add custom keymaps from global config
+        vim.keymap.set('n', 'mx', ':qa!<CR>', { buffer = bufnr, noremap = true, silent = true, desc = "Quit all" })
+        vim.keymap.set('n', 'mq', ':q<CR>', { buffer = bufnr, noremap = true, silent = true, desc = "Quit" })
       end,
       renderer = {
         group_empty = true,
