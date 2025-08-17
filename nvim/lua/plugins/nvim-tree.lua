@@ -30,11 +30,41 @@ return {
           })
         end
       },
-      -- Future handlers can be added here
-      -- image = {
-      --   extensions = { "jpg", "jpeg", "png", "gif", "bmp" },
-      --   handler = function(file_path) ... end
-      -- },
+      media = {
+        extensions = { 
+          -- Images
+          "jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "tiff", "tif", "ico",
+          -- Videos
+          "mp4", "avi", "mkv", "mov", "wmv", "flv", "webm", "m4v", "3gp", "ogv"
+        },
+        handler = function(file_path)
+          -- Open media files with system default application (same as 's' key)
+          local filename = vim.fn.fnamemodify(file_path, ":t")
+          local cmd
+          
+          if vim.fn.has("mac") == 1 then
+            cmd = string.format("open '%s'", file_path)
+          elseif vim.fn.has("unix") == 1 then
+            cmd = string.format("xdg-open '%s'", file_path)
+          elseif vim.fn.has("win32") == 1 then
+            cmd = string.format("start '' '%s'", file_path)
+          else
+            vim.notify("Unsupported system for opening media files", vim.log.levels.WARN)
+            return
+          end
+          
+          vim.fn.jobstart(cmd, {
+            detach = true,
+            on_exit = function(_, exit_code)
+              if exit_code == 0 then
+                vim.notify("Opening: " .. filename, vim.log.levels.INFO)
+              else
+                vim.notify("Failed to open: " .. filename, vim.log.levels.WARN)
+              end
+            end
+          })
+        end
+      },
     }
 
     -- Function to get file extension
