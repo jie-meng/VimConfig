@@ -4,6 +4,9 @@
 
 local M = {}
 
+local CURSORLINE_BG = "#393a4b"
+local CURSORLINE_DIM_BG = "#282a36"
+
 -- 1. Theme list (extend as needed)
 M.themes = {
   { name = "gruvbox",    lualine = "gruvbox"    },
@@ -133,7 +136,14 @@ return {
     end,
   },
   { "folke/tokyonight.nvim", lazy = true, opts = { style = "storm" } },
-  { "catppuccin/nvim", name = "catppuccin", lazy = true, opts = { flavour = "mocha", integrations = { nvimtree = true, telescope = true, gitsigns = true, treesitter = true } } },
+  { "catppuccin/nvim", name = "catppuccin", lazy = true, opts = {
+    flavour = "mocha",
+    integrations = { nvimtree = true, telescope = true, gitsigns = true, treesitter = true },
+    custom_highlights = {
+    CursorLine = { bg = CURSORLINE_DIM_BG },
+    CursorColumn = { bg = CURSORLINE_DIM_BG },
+    },
+  } },
   {
     "navarasu/onedark.nvim",
     lazy = true,
@@ -168,8 +178,8 @@ return {
     config = function()
       require("dracula").setup({
         overrides = {
-          CursorLine = { bg = "#44475a", blend = 0 },
-          CursorColumn = { bg = "#44475a", blend = 0 },
+          CursorLine = { bg = CURSORLINE_BG },
+          CursorColumn = { bg = CURSORLINE_BG },
           NvimTreeFolderIcon = { fg = "#8be9fd" },
           NvimTreeFolderName = { fg = "#8be9fd" },
           NvimTreeOpenedFolderName = { fg = "#50fa7b" },
