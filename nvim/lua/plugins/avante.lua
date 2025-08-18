@@ -98,6 +98,10 @@ local user_opts = {
     },
   },
   hints = { enabled = true },
+  selection = {
+    enabled = true,
+    hint_display = "delayed",
+  },
   windows = {
     position = "right",
     wrap = true,
