@@ -130,6 +130,48 @@ return {
         -- Add custom keymaps from global config
         vim.keymap.set('n', 'mx', ':qa!<CR>', { buffer = bufnr, noremap = true, silent = true, desc = "Quit all" })
         vim.keymap.set('n', 'mq', ':q<CR>', { buffer = bufnr, noremap = true, silent = true, desc = "Quit" })
+
+        -- Show file/folder info
+        local function show_node_info()
+          local api = require("nvim-tree.api")
+          local node = api.tree.get_node_under_cursor()
+          if not node then return end
+          local path = node.absolute_path
+          local stat = vim.loop.fs_stat(path)
+          if not stat then
+            vim.notify("Cannot stat: " .. path, vim.log.levels.WARN)
+            return
+          end
+          if node.type == "file" then
+            local size = stat.size or 0
+            local ext = path:match("%.([^.]+)$") or "(none)"
+            local info = string.format(
+              "File: %s\nType: %s\nSize: %.1f KB\nModified: %s",
+              vim.fn.fnamemodify(path, ":t"),
+              ext,
+              size / 1024,
+              os.date("%Y-%m-%d %H:%M:%S", stat.mtime.sec)
+            )
+            vim.notify(info, vim.log.levels.INFO, { title = "File Info" })
+          elseif node.type == "directory" then
+            -- Count files and total size
+            local handle = io.popen(string.format('find "%s" -type f | wc -l', path))
+            local file_count = handle and tonumber(handle:read("*l")) or 0
+            if handle then handle:close() end
+            local size_handle = io.popen(string.format('du -sh "%s" 2>/dev/null | cut -f1', path))
+            local total_size = size_handle and size_handle:read("*l") or "?"
+            if size_handle then size_handle:close() end
+            local info = string.format(
+              "Folder: %s\nFiles: %d\nSize: %s\nModified: %s",
+              vim.fn.fnamemodify(path, ":t"),
+              file_count,
+              total_size,
+              os.date("%Y-%m-%d %H:%M:%S", stat.mtime.sec)
+            )
+            vim.notify(info, vim.log.levels.INFO, { title = "Folder Info" })
+          end
+        end
+        vim.keymap.set('n', 'fi', show_node_info, { buffer = bufnr, noremap = true, silent = true, desc = "Show file/folder info" })
       end,
       renderer = {
         group_empty = true,
