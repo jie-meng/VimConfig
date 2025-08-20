@@ -42,6 +42,7 @@ keymap.set("n", "md", "<C-f>M", { desc = "Page down and center cursor" })
 keymap.set("v", "mu", "<C-b>M", { desc = "Page up and center cursor" })
 keymap.set("v", "md", "<C-f>M", { desc = "Page down and center cursor" })
 keymap.set("n", "ma", ":A<CR>", { desc = "Switch to alternate file" })
+keymap.set("n", "mw", ":w<CR>", { desc = "Write file" })
 keymap.set("n", "mq", ":q<CR>", { desc = "Quit" })
 keymap.set("n", "mx", ":qa!<CR>", { desc = "Quit all" })
 
