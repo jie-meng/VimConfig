@@ -82,48 +82,89 @@ if vim.fn.executable(im_select_path) == 1 and english_input then
   })
 end
 
--- vim.defer_fn(function()
---   -- HACK: Workaround for TreeSitter highlighter 'Invalid end_col' errors
---   -- 
---   -- This is a known issue in Neovim since 2020 where TreeSitter's highlighter
---   -- miscalculates column positions in certain edge cases:
---   -- - When tab characters are used (byte offset vs display column mismatch)
---   -- - During line deletion/editing (stale position references)
---   -- - When nodes end at column 0 (range calculation edge case)
---   --
---   -- The error manifests as a popup loop that can cause data loss by preventing
---   -- normal editor operations. This wrapper catches and suppresses these specific
---   -- errors while allowing other errors to propagate normally.
---   --
---   -- This is a temporary fix until the upstream issue is resolved in Neovim core.
---   -- Track progress at: https://github.com/neovim/neovim/issues/29550
---   --
---   -- To remove this hack: Delete this entire block when the issue is fixed upstream
---   local ok, ts_highlight = pcall(require, 'vim.treesitter.highlighter')
---   if ok and ts_highlight.new then
---     local old_new = ts_highlight.new
---     ts_highlight.new = function(...)
---       local highlighter = old_new(...)
---       local old_on_line = highlighter.on_line
---       highlighter.on_line = function(self, ...)
---         local ok, err = pcall(old_on_line, self, ...)
---         if not ok and err:match("Invalid 'end_col'") then
---           -- Silently ignore the error
---           return
---         elseif not ok then
---           error(err)
---         end
---       end
---       return highlighter
---     end
---   end 
--- end, 0)
+vim.defer_fn(function()
+  -- HACK: Workaround for TreeSitter highlighter 'Invalid end_col' errors
+  -- 
+  -- This is a known issue in Neovim since 2020 where TreeSitter's highlighter
+  -- miscalculates column positions in certain edge cases:
+  -- - When tab characters are used (byte offset vs display column mismatch)
+  -- - During line deletion/editing (stale position references)
+  -- - When nodes end at column 0 (range calculation edge case)
+  --
+  -- The error manifests as a popup loop that can cause data loss by preventing
+  -- normal editor operations. This wrapper catches and suppresses these specific
+  -- errors while allowing other errors to propagate normally.
+  --
+  -- This is a temporary fix until the upstream issue is resolved in Neovim core.
+  -- Track progress at: https://github.com/neovim/neovim/issues/29550
+  --
+  -- To remove this hack: Delete this entire block when the issue is fixed upstream
+  
+  -- Method 1: Override nvim_buf_set_extmark to catch the error
+  local original_set_extmark = vim.api.nvim_buf_set_extmark
+  vim.api.nvim_buf_set_extmark = function(buffer, ns_id, line, col, opts)
+    local ok, result = pcall(original_set_extmark, buffer, ns_id, line, col, opts)
+    if not ok and (result:match("Invalid 'end_col'") or result:match("out of range")) then
+      -- Silently ignore TreeSitter end_col errors
+      return 0
+    elseif not ok then
+      error(result)
+    end
+    return result
+  end
+  
+  -- Method 2: Override TreeSitter highlighter
+  local ok, ts_highlight = pcall(require, 'vim.treesitter.highlighter')
+  if ok and ts_highlight.new then
+    local old_new = ts_highlight.new
+    ts_highlight.new = function(...)
+      local highlighter = old_new(...)
+      if highlighter and highlighter.on_line then
+        local old_on_line = highlighter.on_line
+        highlighter.on_line = function(self, ...)
+          local ok, err = pcall(old_on_line, self, ...)
+          if not ok and (err:match("Invalid 'end_col'") or err:match("out of range")) then
+            -- Silently ignore the error
+            return
+          elseif not ok then
+            error(err)
+          end
+        end
+      end
+      return highlighter
+    end
+  end 
+end, 0)
 
--- Hack: filter Invalid 'end_col' error from TreeSitter highlighter
+-- Method 3: Enhanced notify filter
 local old_notify = vim.notify
-vim.notify = function(msg, ...)
-  if type(msg) == "string" and msg:match("Invalid 'end_col'") then
+vim.notify = function(msg, level, opts)
+  if type(msg) == "string" and (
+    msg:match("Invalid 'end_col'") or 
+    msg:match("out of range") or
+    msg:match("treesitter.*highlighter")
+  ) then
     return
   end
-  return old_notify(msg, ...)
+  return old_notify(msg, level, opts)
 end
+
+-- Method 4: Suppress vim.api errors related to extmarks
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    -- Override global error handling for TreeSitter errors
+    local function suppress_ts_errors()
+      if vim.v.errmsg and (
+        vim.v.errmsg:match("Invalid 'end_col'") or
+        vim.v.errmsg:match("nvim_buf_set_extmark") or
+        vim.v.errmsg:match("treesitter.*highlighter")
+      ) then
+        vim.v.errmsg = ""
+      end
+    end
+    
+    vim.api.nvim_create_autocmd({"CursorMoved", "CursorMovedI", "TextChanged", "TextChangedI"}, {
+      callback = suppress_ts_errors
+    })
+  end
+})
