@@ -27,6 +27,11 @@ keymap.set("v", "<C-c>", "\"+y", { desc = "Copy to clipboard" })
 keymap.set("v", "<C-d>", "\"+d", { desc = "Cut to clipboard" })
 keymap.set("n", "y", "\"+y", { desc = "Yank to system clipboard" })
 keymap.set("v", "y", "\"+y", { desc = "Yank to system clipboard" })
+keymap.set("n", "x", "\"+x", { desc = "Cut to system clipboard" })
+keymap.set("v", "x", "\"+x", { desc = "Cut to system clipboard" })
+keymap.set("n", "dd", '"+dd', { desc = "Delete line to system clipboard" })
+keymap.set("n", "D", '"+D', { desc = "Delete to end of line to system clipboard" })
+keymap.set("v", "d", '"+d', { desc = "Delete selection to system clipboard" })
 
 -- Paste from system clipboard with p
 keymap.set("n", "p", '"+p', { desc = "Paste from system clipboard" })
