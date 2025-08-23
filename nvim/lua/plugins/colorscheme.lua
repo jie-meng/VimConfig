@@ -135,9 +135,9 @@ return {
       require("gruvbox").setup({})
     end,
   },
-  { "folke/tokyonight.nvim", lazy = true, opts = { style = "storm" } },
+  { "folke/tokyonight.nvim", lazy = true, opts = { style = "moon" } },
   { "catppuccin/nvim", name = "catppuccin", lazy = true, opts = {
-    flavour = "mocha",
+    flavour = "macchiato",
     integrations = { nvimtree = true, telescope = true, gitsigns = true, treesitter = true },
     custom_highlights = {
     CursorLine = { bg = CURSORLINE_DIM_BG },
@@ -149,7 +149,7 @@ return {
     lazy = true,
     config = function()
       require("onedark").setup {
-        style = "deep"
+        style = "warm"
       }
     end,
   },
@@ -170,7 +170,16 @@ return {
       })
     end,
   },
-  { "Shatur/neovim-ayu", name = "ayu", lazy = true },
+  {
+    "Shatur/neovim-ayu",
+    name = "ayu",
+    lazy = true,
+    config = function()
+      require("ayu").setup({
+        mirage = false, -- Set to `true` to use `mirage` variant instead of `dark` for dark background.
+      })
+    end,
+  },
   {
     "Mofiqul/dracula.nvim",
     name = "dracula.nvim",
