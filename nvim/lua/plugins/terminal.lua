@@ -188,9 +188,6 @@ return {
       end
     end, { desc = "Close terminal" })
     
-    -- F3: Exit terminal mode to normal mode (like original vim config)
-    vim.keymap.set("t", "<F3>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-    
     -- Additional useful terminal keymaps
     -- Escape also exits terminal mode (alternative to F3)
     vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })

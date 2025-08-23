@@ -128,7 +128,7 @@ vnoremap < <gv
 "" terminal
 set splitbelow
 nnoremap <F2> :ter ++rows=11<CR>
-tnoremap <F3> <C-\><C-n>
+tnoremap <Esc> <C-\><C-n>
 
 "" font
 if has('macunix')
