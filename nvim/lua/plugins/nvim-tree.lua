@@ -7,7 +7,7 @@ return {
   version = "*",
   lazy = false,
   keys = {
-    { "<Leader>w", ":NvimTreeToggle<CR>", desc = "Toggle file tree" },
+    { "<space>w", ":NvimTreeToggle<CR>", desc = "Toggle file tree" },
     { "<space>j", ":NvimTreeFindFile<CR>", desc = "Find current file in tree" },
   },
   config = function()

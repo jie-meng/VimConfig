@@ -268,6 +268,27 @@ return {
           terminal_height = 11  -- Reset to default height
         end
       })
+      
+      -- Monitor quickfix window changes to restore terminal height
+      vim.api.nvim_create_autocmd({"WinClosed", "WinNew"}, {
+        group = terminal_group,
+        callback = function()
+          -- Delay to let window operations complete
+          vim.defer_fn(function()
+            local term_buf = find_terminal_buffer()
+            if term_buf then
+              local term_win = find_terminal_window(term_buf)
+              if term_win then
+                local current_height = vim.api.nvim_win_get_height(term_win)
+                -- If terminal height is significantly larger than expected, restore it
+                if current_height > terminal_height + 5 then
+                  vim.api.nvim_win_set_height(term_win, terminal_height)
+                end
+              end
+            end
+          end, 50)
+        end
+      })
     end
     
     -- Initialize autocmds

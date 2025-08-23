@@ -297,7 +297,7 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 "" toggle tree
-map <Leader>w :NERDTreeToggle<Enter>
+map <space>w :NERDTreeToggle<Enter>
 "" locate current file in the tree
 nnoremap <silent> <space>j :NERDTreeFind<Enter>
 " autocmd BufWinEnter * NERDTreeFind
