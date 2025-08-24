@@ -11,7 +11,8 @@ return {
     vim.opt.splitbelow = true
     
     -- Store terminal window height
-    local terminal_height = 20  -- Default height
+    local default_terminal_height = 20  -- Default height
+    local terminal_height = default_terminal_height  -- Current height
     
     -- Helper function to find existing terminal buffer
     local function find_terminal_buffer()
@@ -192,6 +193,25 @@ return {
     -- Escape also exits terminal mode (alternative to F3)
     vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
     
+    -- F3: Reset terminal height to default (works in all modes)
+    local function reset_terminal_height()
+      local term_buf = find_terminal_buffer()
+      if term_buf then
+        local term_win = find_terminal_window(term_buf)
+        if term_win then
+          vim.api.nvim_win_set_height(term_win, default_terminal_height)
+          terminal_height = default_terminal_height
+          print("Terminal height reset to: " .. default_terminal_height)
+        else
+          print("Terminal is not visible")
+        end
+      else
+        print("No terminal buffer found")
+      end
+    end
+    
+    vim.keymap.set({"n", "t", "v"}, "<F3>", reset_terminal_height, { desc = "Reset terminal height" })
+    
     -- Easy navigation between terminal and other windows
     vim.keymap.set("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc = "Move to left window" })
     vim.keymap.set("t", "<C-j>", "<C-\\><C-n><C-w>j", { desc = "Move to down window" })
@@ -262,28 +282,7 @@ return {
         group = terminal_group,
         pattern = "term://*",
         callback = function()
-          terminal_height = 11  -- Reset to default height
-        end
-      })
-      
-      -- Monitor quickfix window changes to restore terminal height
-      vim.api.nvim_create_autocmd({"WinClosed", "WinNew"}, {
-        group = terminal_group,
-        callback = function()
-          -- Delay to let window operations complete
-          vim.defer_fn(function()
-            local term_buf = find_terminal_buffer()
-            if term_buf then
-              local term_win = find_terminal_window(term_buf)
-              if term_win then
-                local current_height = vim.api.nvim_win_get_height(term_win)
-                -- If terminal height is significantly larger than expected, restore it
-                if current_height > terminal_height + 5 then
-                  vim.api.nvim_win_set_height(term_win, terminal_height)
-                end
-              end
-            end
-          end, 50)
+          terminal_height = default_terminal_height  -- Reset to default height
         end
       })
     end

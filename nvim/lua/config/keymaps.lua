@@ -71,7 +71,6 @@ keymap.set("v", "<S-Tab>", "<gv", { desc = "Unindent selection" })
 
 -- Terminal
 keymap.set("n", "<F2>", ":terminal<CR>", { desc = "Open terminal" })
-keymap.set("t", "<F3>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 -- F4 in normal mode: Toggle quickfix window
 keymap.set("n", "<F4>", function()
