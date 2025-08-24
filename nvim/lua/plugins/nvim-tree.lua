@@ -14,7 +14,7 @@ return {
     -- File type handlers for different file types
     local file_handlers = {
       audio = {
-        extensions = { "mp3", "wav", "ogg", "flac", "aac", "m4a", "wma" },
+        extensions = { "mp3", "wav", "pcm", "ogg", "flac", "aac", "m4a", "wma" },
         handler = function(file_path)
           -- Play audio file using playsound command
           local cmd = string.format("playsound '%s'", file_path)
