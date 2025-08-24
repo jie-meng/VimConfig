@@ -92,11 +92,6 @@ return {
           }
         },
       },
-      pickers = {
-        find_files = {
-          theme = "dropdown",
-        }
-      },
       extensions = {
         fzf = {
           fuzzy = true,
