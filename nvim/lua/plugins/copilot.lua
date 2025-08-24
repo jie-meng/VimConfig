@@ -223,13 +223,29 @@ return {
       end, desc = "Analyze diagnostics at current line and send to Copilot Chat" },
       { "<space>cr", ":CopilotChatReview<CR>", desc = "Review code" },
       { "<space>cR", function()
-        -- Get git diff
         local diff = vim.fn.system("git diff --cached")
         if not diff or diff == "" then
           vim.notify("No git diff found", vim.log.levels.WARN)
           return
         end
-        local prompt = diff .. "\nPlease review the above git diff, point out any potential issues and explain them, Also generate a commit message.\n"
+        local prompt = "```diff\n" .. diff .. "\n```\n" .. [[
+
+As a professional code reviewer, please analyze the above git diff and output your review in clear, structured English Markdown. Strictly follow this format:
+
+1. **Problematic Code & Explanation**
+   - List all code snippets with potential issues (bugs, design flaws, maintainability, performance, etc.), and clearly explain the reason and impact for each.
+
+2. **Improvement Suggestions**
+   - For each issue, provide concrete suggestions for improvement or fixes.
+
+3. **Overall Assessment**
+   - Summarize the strengths and risks of this change, and highlight anything that needs special attention.
+
+4. **Recommended Commit Message**
+   - Generate a concise, accurate, and conventional commit message for this change.
+
+Format your output in clean Markdown for easy copy-paste into review tools or commit descriptions.
+]]
         require("CopilotChat").open({ window = { layout = 'vertical', width = 0.33 } })
         vim.defer_fn(function()
           local bufnr = vim.fn.bufnr("copilot-chat")
