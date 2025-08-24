@@ -181,7 +181,26 @@ return {
         vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename" }))
         vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
         vim.keymap.set("n", "<space>cf", function()
-          vim.lsp.buf.format({ async = true })
+          -- Special handling for Python with autopep8
+          if client.name == "pyright" then
+            local current_file = vim.api.nvim_buf_get_name(bufnr)
+            if vim.fn.executable("autopep8") == 1 then
+              -- Save current cursor position
+              local cursor_pos = vim.api.nvim_win_get_cursor(0)
+              -- Run autopep8
+              vim.fn.system(string.format("autopep8 --in-place --aggressive --aggressive %s", vim.fn.shellescape(current_file)))
+              -- Reload the buffer
+              vim.cmd("edit!")
+              -- Restore cursor position
+              pcall(vim.api.nvim_win_set_cursor, 0, cursor_pos)
+              vim.notify("Python file formatted with autopep8", vim.log.levels.INFO)
+            else
+              vim.notify("autopep8 not found. Install with: pip install autopep8", vim.log.levels.WARN)
+            end
+          else
+            -- Default LSP formatting for other languages
+            vim.lsp.buf.format({ async = true })
+          end
         end, vim.tbl_extend("force", opts, { desc = "Format" }))
 
         -- Project sync keymap for Gradle/Maven/Makefile
