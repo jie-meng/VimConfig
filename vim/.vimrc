@@ -84,8 +84,17 @@ nnoremap md <C-f>M
 vnoremap mu <C-b>M
 vnoremap md <C-f>M
 
-"" quit
+"" Switch to alternate file
+nnoremap ma :A<CR>
+
+"" Write file
+nnoremap mw :w<CR>
+
+"" Quit
 nnoremap mq :q<CR>
+
+"" Quit all
+nnoremap mx :qa!<CR>
 
 "" Better window navigation
 nnoremap <C-h> <C-w>h
