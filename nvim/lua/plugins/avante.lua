@@ -99,7 +99,7 @@ local user_opts = {
   },
   hints = { enabled = true },
   selection = {
-    enabled = true,
+    enabled = false,
     hint_display = "delayed",
   },
   windows = {
