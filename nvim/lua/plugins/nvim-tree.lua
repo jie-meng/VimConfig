@@ -2,6 +2,9 @@
 -- File Explorer (nvim-tree) - replaces NERDTree
 -- ============================================================================
 
+-- Variable to store the custom width (persists during session)
+local custom_width = nil
+
 return {
   "nvim-tree/nvim-tree.lua",
   version = "*",
@@ -96,8 +99,12 @@ return {
       sort_by = "case_sensitive",
       hijack_cursor = false, -- Don't move cursor to tree when opening
       view = {
-        width = 40,
+        width = function()
+          return custom_width or 40
+        end,
         side = "left",
+        preserve_window_proportions = true, -- Keep window proportions when opening files
+        adaptive_size = false, -- Don't auto-resize based on content
       },
       on_attach = function(bufnr)
         local api = require("nvim-tree.api")
@@ -218,6 +225,10 @@ return {
           enable = true,
           global = true,
         },
+        open_file = {
+          resize_window = false, -- Don't resize window when opening files
+          quit_on_open = false,  -- Don't close tree when opening files
+        },
       },
       update_focused_file = {
         enable = true,
@@ -268,6 +279,49 @@ return {
       callback = function()
         if vim.fn.winnr('$') == 1 and vim.bo.filetype == "NvimTree" then
           vim.cmd("close")
+        end
+      end
+    })
+
+    -- Save the width when nvim-tree window is resized
+    vim.api.nvim_create_autocmd("WinResized", {
+      callback = function()
+        local tree_winid = nil
+        for _, winid in ipairs(vim.api.nvim_list_wins()) do
+          local bufnr = vim.api.nvim_win_get_buf(winid)
+          if vim.api.nvim_buf_get_option(bufnr, 'filetype') == 'NvimTree' then
+            tree_winid = winid
+            break
+          end
+        end
+        
+        if tree_winid then
+          local width = vim.api.nvim_win_get_width(tree_winid)
+          -- Only save if it's different from default and seems like a manual resize
+          if width ~= 40 and width > 10 and width < 200 then
+            custom_width = width
+          end
+        end
+      end
+    })
+
+    -- Also detect manual resizing through vim commands
+    vim.api.nvim_create_autocmd("VimResized", {
+      callback = function()
+        local tree_winid = nil
+        for _, winid in ipairs(vim.api.nvim_list_wins()) do
+          local bufnr = vim.api.nvim_win_get_buf(winid)
+          if vim.api.nvim_buf_get_option(bufnr, 'filetype') == 'NvimTree' then
+            tree_winid = winid
+            break
+          end
+        end
+        
+        if tree_winid then
+          local width = vim.api.nvim_win_get_width(tree_winid)
+          if width ~= 40 and width > 10 and width < 200 then
+            custom_width = width
+          end
         end
       end
     })
