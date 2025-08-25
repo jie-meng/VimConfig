@@ -297,8 +297,18 @@ return {
           },
           filetypes = { "c", "cpp", "objc", "objcpp", "cc", "cxx" },
         },
+        sourcekit = {                     -- Swift/Objective-C for iOS development
+          cmd = { "sourcekit-lsp" },
+          filetypes = { "swift", "objective-c", "objective-cpp" },
+          root_dir = function(filename)
+            local util = require("lspconfig.util")
+            return util.root_pattern("Package.swift", ".git")(filename)
+              or util.find_git_ancestor(filename)
+              or vim.fn.getcwd()
+          end,
+        },
         -- jdtls = {},                    -- Java
-        -- kotlin_language_server = {},   -- Kotlin  
+        -- kotlin_language_server = {},   -- Kotlin
       }
 
       -- Setup all language servers
