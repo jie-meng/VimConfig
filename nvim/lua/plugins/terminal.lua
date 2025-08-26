@@ -172,8 +172,8 @@ return {
     
     -- Key mappings
     -- F2: Toggle terminal (like original vim config)
-    vim.keymap.set("n", "<F2>", toggle_terminal, { desc = "Toggle terminal" })
-    
+    vim.keymap.set({"n", "v"}, "<F2>", toggle_terminal, { desc = "Toggle terminal" })
+
     -- F2 in terminal mode: Close terminal directly
     vim.keymap.set("t", "<F2>", function()
       local term_win = vim.api.nvim_get_current_win()
