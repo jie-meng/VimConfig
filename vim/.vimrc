@@ -90,6 +90,9 @@ nnoremap ma :A<CR>
 "" Write file
 nnoremap mw :w<CR>
 
+"" Reload file
+nnoremap mr :e<CR>
+
 "" Quit
 nnoremap mq :q<CR>
 
