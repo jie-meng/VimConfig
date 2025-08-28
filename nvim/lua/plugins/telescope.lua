@@ -18,10 +18,22 @@ return {
   keys = {
     { "<space>fg", ":Telescope git_files<CR>", desc = "Find git files" },
     { "<space>ff", ":Telescope find_files<CR>", desc = "Find files" },
+    { "<space>fF", function()
+        require("telescope.builtin").find_files({
+          no_ignore = true,
+          hidden = true,
+          find_command = { "rg", "--files", "--no-ignore", "--hidden", "--glob", "!.git/*" }
+        })
+      end, desc = "Find all files (ignore .gitignore)" },
     { "<space>fe", ":Telescope buffers<CR>", desc = "Find buffers" },
     { "<space>fh", ":Telescope oldfiles<CR>", desc = "Find recent files" },
     { "<space>ft", ":Telescope tags<CR>", desc = "Find tags" },
     { "<space>fs", ":Telescope live_grep<CR>", desc = "Live grep" },
+    { "<space>fS", function()
+        require("telescope.builtin").live_grep({
+          additional_args = function() return {"--no-ignore", "--hidden"} end
+        })
+      end, desc = "Live grep all files (ignore .gitignore)" },
     { "<space>fw", ":Telescope grep_string<CR>", desc = "Grep current word" },
   },
   config = function()
