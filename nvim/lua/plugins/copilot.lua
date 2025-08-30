@@ -181,7 +181,7 @@ return {
       end, desc = "Open Copilot Chat (with current file)" },
       { "<space>ce", ":CopilotChatExplain<CR>", mode = {"v"}, desc = "Explain code" },
       { "<space>ct", ":CopilotChatTests<CR>", mode = {"v"}, desc = "Generate tests" },
-      { "<space>cf", ":CopilotChatFix<CR>", mode = {"v"}, desc = "Fix code" },
+      { "<space>cF", ":CopilotChatFix<CR>", mode = {"v"}, desc = "Fix code" },
       { "<space>co", ":CopilotChatOptimize<CR>", mode = {"v"}, desc = "Optimize code" },
       { "<space>cd", ":CopilotChatDocs<CR>", mode = {"v"}, desc = "Generate docs" },
       { "<space>cx", function()
@@ -264,7 +264,7 @@ Format your output in clean Markdown for easy copy-paste into review tools or co
       { "<space>cs", ":CopilotChatCommit<CR>", desc = "Generate commit message" },
       
       -- File picker for chat - select files with Telescope
-      { "<space>cF", function()
+      { "<space>cf", function()
         require("telescope.builtin").find_files({
           prompt_title = "Select Files for Copilot Chat",
           case_mode = "ignore_case",  -- Ignore case when searching
