@@ -16,7 +16,6 @@ M.themes = {
   { name = "monokai-pro",  lualine = "monokai-pro"  },
   { name = "ayu",          lualine = "ayu"          },
   { name = "dracula",      lualine = "dracula"      },
-  { name = "github_dark_dimmed",  lualine = "github_dark_dimmed"  },
 }
 
 -- 2. State and persistence
@@ -48,7 +47,6 @@ local plugin_map = {
   ["monokai-pro"] = "monokai-pro.nvim",
   ayu          = "ayu",
   dracula      = "dracula.nvim",
-  github_dark_dimmed  = "github-nvim-theme",
 }
 
 
@@ -197,35 +195,6 @@ return {
           NvimTreeRootFolder = { fg = "#ff79c6" },
           NvimTreeFileIcon = { fg = "#f8f8f2" },
         }
-      })
-    end,
-  },
-  {
-    "projekt0n/github-nvim-theme",
-    name = "github-nvim-theme",
-    lazy = true,
-    config = function()
-      require("github-theme").setup({
-        options = {
-          transparent = false,
-          terminal_colors = true,
-          dim_inactive = false,
-        },
-        groups = {
-          all = {
-            CursorLine = { bg = CURSORLINE_BG },
-            CursorColumn = { bg = CURSORLINE_BG },
-            -- NvimTree file and folder colors
-            NvimTreeFolderIcon = { fg = "#58a6ff" },      -- GitHub blue
-            NvimTreeFolderName = { fg = "#58a6ff" },      -- GitHub blue
-            NvimTreeOpenedFolderName = { fg = "#39d353" }, -- GitHub green
-            NvimTreeRootFolder = { fg = "#f85149" },       -- GitHub red
-            NvimTreeFileIcon = { fg = "#c9d1d9" },         -- GitHub light gray
-            NvimTreeNormal = { fg = "#c9d1d9" },           -- Default text color
-            NvimTreeExecFile = { fg = "#39d353" },         -- Executable files in green
-            NvimTreeSpecialFile = { fg = "#ffab70" },      -- Special files in orange
-          },
-        },
       })
     end,
   },
