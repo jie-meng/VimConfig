@@ -180,11 +180,18 @@ return {
       -- Save height before closing
       terminal_height = vim.api.nvim_win_get_height(term_win)
       vim.api.nvim_win_close(term_win, false)
+      
+      -- First try to use saved position from terminal_utils (for test commands)
+      local terminal_utils = require("config.terminal")
+      local saved_win, saved_cursor = terminal_utils.get_prev_position()
+      local target_win = saved_win or prev_win
+      local target_cursor = saved_cursor or prev_cursor
+      
       -- Restore previous window and cursor
-      if prev_win and vim.api.nvim_win_is_valid(prev_win) then
-        vim.api.nvim_set_current_win(prev_win)
-        if prev_cursor then
-          pcall(vim.api.nvim_win_set_cursor, prev_win, prev_cursor)
+      if target_win and vim.api.nvim_win_is_valid(target_win) then
+        vim.api.nvim_set_current_win(target_win)
+        if target_cursor then
+          pcall(vim.api.nvim_win_set_cursor, target_win, target_cursor)
         end
       end
     end, { desc = "Close terminal" })
