@@ -116,7 +116,6 @@ return {
           },
           reset = {
             normal = 'rs',
-            insert = 'rs',
           },
           submit_prompt = {
             normal = '<CR>',
