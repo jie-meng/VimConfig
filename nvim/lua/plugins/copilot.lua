@@ -311,7 +311,6 @@ Format your output in clean Markdown for easy copy-paste into review tools or co
                   
                   -- Move cursor to the end of the new line
                   vim.api.nvim_win_set_cursor(0, {line_count + 1, #lines[1]})
-                  vim.cmd("startinsert!")
                 end
               end, 100)
             end
