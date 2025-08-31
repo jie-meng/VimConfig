@@ -241,6 +241,53 @@ return {
           terminal_utils.send_to_terminal(cmd)
         end, vim.tbl_extend("force", opts, { desc = "Build project (Gradle/Maven/Makefile)" }))
 
+        -- Find TODO comments using Python tools
+        vim.keymap.set("n", "<space>mt", function()
+          local cwd = vim.fn.getcwd()
+          if vim.fn.filereadable(cwd .. "/tools.py") == 0 then
+            vim.notify("tools.py not found in project root", vim.log.levels.WARN)
+            return
+          end
+          
+          -- Execute python tools.py todo and capture output
+          local cmd = "python tools.py todo"
+          local output = vim.fn.system(cmd)
+          
+          if vim.v.shell_error ~= 0 then
+            vim.notify("Error executing tools.py: " .. output, vim.log.levels.ERROR)
+            return
+          end
+          
+          -- Parse output and create quickfix entries
+          local qf_entries = {}
+          for line in output:gmatch("[^\r\n]+") do
+            line = line:gsub("^%s+", ""):gsub("%s+$", "") -- trim whitespace
+            if line ~= "" then
+              -- Parse format: file:line:col: message
+              local file, lnum, col, text = line:match("^([^:]+):(%d+):(%d+):%s*(.*)$")
+              if file and lnum and col and text then
+                table.insert(qf_entries, {
+                  filename = file,
+                  lnum = tonumber(lnum),
+                  col = tonumber(col),
+                  text = text,
+                  type = 'I'  -- Info type
+                })
+              end
+            end
+          end
+          
+          if #qf_entries == 0 then
+            vim.notify("No TODO comments found", vim.log.levels.INFO)
+            return
+          end
+          
+          -- Set quickfix list and open quickfix window
+          vim.fn.setqflist(qf_entries, 'r')
+          vim.cmd("copen")
+          vim.notify(string.format("Found %d TODO comments", #qf_entries), vim.log.levels.INFO)
+        end, vim.tbl_extend("force", opts, { desc = "Find TODO comments" }))
+
         -- Setup conditional format on save
         format_on_save(client, bufnr)
       end
