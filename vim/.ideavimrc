@@ -71,6 +71,30 @@ nnoremap me $
 vnoremap mb ^
 vnoremap me $
 
+"" page up/down and center cursor
+nnoremap mu <C-b>M
+nnoremap md <C-f>M
+vnoremap mu <C-b>M
+vnoremap md <C-f>M
+
+"" Switch to alternate file
+nnoremap ma :A<CR>
+
+"" Write file
+nnoremap mw :w<CR>
+
+"" Reload file
+nnoremap mr :e<CR>
+
+"" Quit
+nnoremap mq :q<CR>
+
+"" Quit all
+nnoremap mx :qa!<CR>
+
+"" Clear search highlight
+nnoremap mn :noh<CR>
+
 "" Alt + * move line
 "" http://vim.wikia.com/wiki/Moving_lines_up_or_down
 nnoremap ∆ :m .+1<CR>==
