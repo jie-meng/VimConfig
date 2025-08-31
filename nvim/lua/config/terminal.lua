@@ -4,10 +4,6 @@
 
 local M = {}
 
--- Store previous window and cursor position (shared with plugins/terminal.lua logic)
-local prev_win = nil
-local prev_cursor = nil
-
 -- Helper function: jump to the bottom-most main editor window (not treeview, not terminal)
 local function goto_bottom_editor_window()
   local editor_wins = {}
@@ -29,10 +25,6 @@ end
 
 -- Find or show the terminal buffer, split and show if hidden
 local function get_or_show_terminal()
-  -- Save current window and cursor position before opening terminal
-  prev_win = vim.api.nvim_get_current_win()
-  prev_cursor = vim.api.nvim_win_get_cursor(prev_win)
-  
   local term_bufnr, term_winnr = nil, nil
   -- Find visible terminal window
   for _, winnr in ipairs(vim.api.nvim_list_wins()) do
@@ -76,13 +68,13 @@ local function get_or_show_terminal()
   return job_id, term_winnr
 end
 
--- Function to get previous window info (for F2 to return to correct position)
-function M.get_prev_position()
-  return prev_win, prev_cursor
-end
-
 -- Send a command to the terminal and enter insert mode
 function M.send_to_terminal(command)
+  -- Always save current position before sending command to terminal
+  if _G.save_terminal_position then
+    _G.save_terminal_position()
+  end
+  
   local job_id, _ = get_or_show_terminal()
   if not job_id then return false end
   vim.api.nvim_chan_send(job_id, command .. "\n")

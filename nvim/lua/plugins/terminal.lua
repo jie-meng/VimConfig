@@ -2,6 +2,30 @@
 -- Terminal Configuration - replaces vim terminal functions
 -- ============================================================================
 
+-- Global terminal state
+local default_terminal_height = 20  -- Default height
+local terminal_height = default_terminal_height  -- Current height
+
+-- Global position storage for terminal operations
+local saved_win = nil
+local saved_cursor = nil
+
+-- Global function to save current editor position
+function _G.save_terminal_position()
+  saved_win = vim.api.nvim_get_current_win()
+  saved_cursor = vim.api.nvim_win_get_cursor(saved_win)
+end
+
+-- Global function to restore saved editor position
+function _G.restore_terminal_position()
+  if saved_win and vim.api.nvim_win_is_valid(saved_win) then
+    vim.api.nvim_set_current_win(saved_win)
+    if saved_cursor then
+      pcall(vim.api.nvim_win_set_cursor, saved_win, saved_cursor)
+    end
+  end
+end
+
 return {
   -- This is a pseudo-plugin for terminal configuration
   name = "terminal-config",
@@ -9,10 +33,6 @@ return {
   config = function()
     -- Set split direction to open below current window (like vim's splitbelow)
     vim.opt.splitbelow = true
-    
-    -- Store terminal window height
-    local default_terminal_height = 20  -- Default height
-    local terminal_height = default_terminal_height  -- Current height
     
     -- Helper function to find existing terminal buffer
     local function find_terminal_buffer()
@@ -130,9 +150,8 @@ return {
 
     -- Main toggle terminal function
     local function toggle_terminal()
-      -- Always record current window and cursor before opening/showing terminal
-      prev_win = vim.api.nvim_get_current_win()
-      prev_cursor = vim.api.nvim_win_get_cursor(prev_win)
+      -- Always save current position when opening terminal
+      _G.save_terminal_position()
 
       local term_buf = find_terminal_buffer()
 
@@ -143,13 +162,8 @@ return {
           -- Terminal is visible, save height before closing
           terminal_height = vim.api.nvim_win_get_height(term_win)
           vim.api.nvim_win_close(term_win, false)
-          -- Restore previous window and cursor
-          if prev_win and vim.api.nvim_win_is_valid(prev_win) then
-            vim.api.nvim_set_current_win(prev_win)
-            if prev_cursor then
-              pcall(vim.api.nvim_win_set_cursor, prev_win, prev_cursor)
-            end
-          end
+          -- Restore saved position
+          _G.restore_terminal_position()
         else
           -- Terminal exists but not visible, show it
           show_existing_terminal(term_buf)
@@ -180,20 +194,8 @@ return {
       -- Save height before closing
       terminal_height = vim.api.nvim_win_get_height(term_win)
       vim.api.nvim_win_close(term_win, false)
-      
-      -- First try to use saved position from terminal_utils (for test commands)
-      local terminal_utils = require("config.terminal")
-      local saved_win, saved_cursor = terminal_utils.get_prev_position()
-      local target_win = saved_win or prev_win
-      local target_cursor = saved_cursor or prev_cursor
-      
-      -- Restore previous window and cursor
-      if target_win and vim.api.nvim_win_is_valid(target_win) then
-        vim.api.nvim_set_current_win(target_win)
-        if target_cursor then
-          pcall(vim.api.nvim_win_set_cursor, target_win, target_cursor)
-        end
-      end
+      -- Restore saved position
+      _G.restore_terminal_position()
     end, { desc = "Close terminal" })
     
     -- Additional useful terminal keymaps
