@@ -99,6 +99,9 @@ nnoremap mq :q<CR>
 "" Quit all
 nnoremap mx :qa!<CR>
 
+"" Clear search highlight
+nnoremap mn :noh<CR>
+
 "" Better window navigation
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j

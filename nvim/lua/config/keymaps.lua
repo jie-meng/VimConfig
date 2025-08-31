@@ -51,6 +51,7 @@ keymap.set("n", "mw", ":w<CR>", { desc = "Write file" })
 keymap.set("n", "mr", ":e<CR>", { desc = "Reload file" })
 keymap.set("n", "mq", ":q<CR>", { desc = "Quit" })
 keymap.set("n", "mx", ":qa!<CR>", { desc = "Quit all" })
+keymap.set("n", "mn", ":noh<CR>", { desc = "Clear search highlight" })
 
 -- Alt + J/K move line (Mac symbols: ∆ = Alt+J, ˚ = Alt+K)
 keymap.set("n", "∆", ":m .+1<CR>==", { desc = "Move line down" })
