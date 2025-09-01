@@ -57,14 +57,6 @@ if ! command -v fzf &> /dev/null; then
     brew install fzf
 fi
 
-# Nerd Font (for icons in nvim-tree/telescope)
-echo -e "${GREEN}Installing Nerd Font (JetBrainsMono)...${NC}"
-if [[ "$OSTYPE" == "darwin" ]]; then
-    brew tap homebrew/cask-fonts
-    brew install --cask font-jetbrains-mono-nerd-font
-    echo -e "${YELLOW}Please set your terminal font to 'JetBrainsMono Nerd Font' for best icon support.${NC}"
-fi
-
 # Install im-select for input method switching
 echo -e "${GREEN}Installing im-select (for input method switching)...${NC}"
 if ! command -v im-select &> /dev/null; then
