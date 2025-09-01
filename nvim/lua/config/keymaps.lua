@@ -72,7 +72,7 @@ keymap.set("v", "<Tab>", ">gv", { desc = "Indent selection" })
 keymap.set("v", "<S-Tab>", "<gv", { desc = "Unindent selection" })
 
 -- F4 in normal mode: Toggle quickfix window
-keymap.set({"n", "v"}, "<F4>", function()
+keymap.set({"n", "v", "t"}, "<F4>", function()
   for _, win in ipairs(vim.api.nvim_list_wins()) do
     if vim.fn.getwininfo(win)[1].quickfix == 1 then
       vim.cmd("cclose")
