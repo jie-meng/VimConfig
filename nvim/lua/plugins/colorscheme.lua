@@ -137,7 +137,7 @@ return {
   },
   { "folke/tokyonight.nvim", lazy = true, opts = { style = "moon" } },
   { "catppuccin/nvim", name = "catppuccin", lazy = true, opts = {
-    flavour = "macchiato",
+    flavour = "mocha",
     integrations = { nvimtree = true, telescope = true, gitsigns = true, treesitter = true },
     custom_highlights = {
     CursorLine = { bg = CURSORLINE_DIM_BG },
@@ -149,7 +149,7 @@ return {
     lazy = true,
     config = function()
       require("onedark").setup {
-        style = "warm"
+        style = "warmer"
       }
     end,
   },
