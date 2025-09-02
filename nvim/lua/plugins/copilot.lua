@@ -167,7 +167,7 @@ return {
       end, mode = {"n", "v"}, desc = "Toggle Copilot Chat window" },
       { "<space>ck", function()
         local current_file = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
-        require("CopilotChat").open({ window = { layout = 'vertical', width = COPILOT_CHAT_WINDOW_WIDTH } })
+        require("CopilotChat").open({ window = { layout = COPILOT_CHAT_WINDOW_LAYOUT, width = COPILOT_CHAT_WINDOW_WIDTH } })
         vim.defer_fn(function()
           local bufnr = vim.fn.bufnr("copilot-chat")
           if bufnr ~= -1 and current_file ~= "" then
@@ -245,7 +245,7 @@ As a professional code reviewer, please analyze the above git diff and output yo
 
 Format your output in clean Markdown for easy copy-paste into review tools or commit descriptions.
 ]]
-        require("CopilotChat").open({ window = { layout = 'vertical', width = COPILOT_CHAT_WINDOW_WIDTH } })
+        require("CopilotChat").open({ window = { layout = COPILOT_CHAT_WINDOW_LAYOUT, width = COPILOT_CHAT_WINDOW_WIDTH } })
         vim.defer_fn(function()
           local bufnr = vim.fn.bufnr("copilot-chat")
           if bufnr ~= -1 then
