@@ -92,6 +92,18 @@ return {
     config = function()
       local actions = require("diffview.actions")
       require("diffview").setup({
+        file_panel = {
+          listing_style = "tree",
+          tree_options = {
+            flatten_dirs = true,
+            folder_statuses = "only_folded",
+          },
+          win_config = {
+            position = "left",
+            width = 50,
+            win_opts = {}
+          },
+        },
         keymaps = {
           view = {
             { "n", "q", "<Cmd>DiffviewClose<CR>", { desc = "Close diffview" } },
