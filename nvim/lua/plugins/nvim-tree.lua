@@ -136,6 +136,12 @@ return {
         vim.keymap.set('n', 'mx', ':qa!<CR>', { buffer = bufnr, noremap = true, silent = true, desc = "Quit all" })
         vim.keymap.set('n', 'mq', ':q<CR>', { buffer = bufnr, noremap = true, silent = true, desc = "Quit" })
 
+        -- Shift+C: change root to selected node (change dir)
+        vim.keymap.set('n', 'C', function()
+          local api = require('nvim-tree.api')
+          api.tree.change_root_to_node()
+        end, { buffer = bufnr, noremap = true, silent = true, desc = "Change root to selected node" })
+
         -- Show file/folder info
         local function show_node_info()
           local api = require("nvim-tree.api")
