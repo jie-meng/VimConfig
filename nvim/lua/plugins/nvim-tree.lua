@@ -278,13 +278,5 @@ return {
       end
     }) 
 
-    -- Close nvim-tree if it's the last window
-    vim.api.nvim_create_autocmd("BufEnter", {
-      callback = function()
-        if vim.fn.winnr('$') == 1 and vim.bo.filetype == "NvimTree" then
-          vim.cmd("close")
-        end
-      end
-    })
   end,
 }

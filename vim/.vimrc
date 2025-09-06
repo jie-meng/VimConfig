@@ -78,24 +78,6 @@ nnoremap me $
 vnoremap mb ^
 vnoremap me $
 
-"" page up/down and center cursor
-nnoremap mu <C-b>M
-nnoremap md <C-f>M
-vnoremap mu <C-b>M
-vnoremap md <C-f>M
-
-"" Switch to alternate file
-nnoremap ma :A<CR>
-
-"" Write file
-nnoremap mw :w<CR>
-
-"" Reload file
-nnoremap mr :e<CR>
-
-"" Quit
-nnoremap mq :q<CR>
-
 "" Quit all
 nnoremap mx :qa!<CR>
 
@@ -303,8 +285,6 @@ colorscheme gruvbox
 " :highlight PmenuThumb ctermbg=DarkMagenta guibg=DarkMagenta
 
 "" <scrooloose/nerdtree>
-"" close vim if the only window left open is a NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif " close vim if the only window left open is a NERDTree
 "" open a NERDTree automatically when vim starts up if no files were specified
 autocmd StdinReadPre * let s:std_in=1 
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif 
