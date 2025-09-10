@@ -78,11 +78,21 @@ nnoremap me $
 vnoremap mb ^
 vnoremap me $
 
+"" Write file
+nnoremap mw :w<CR>
+
 "" Quit all
 nnoremap mx :qa!<CR>
 
 "" Clear search highlight
 nnoremap mn :noh<CR>
+
+" keymap.set("n", "mo", ":A<CR>", { desc = "Switch to alternate file" })
+" keymap.set("n", "mw", ":w<CR>", { desc = "Write file" })
+" keymap.set("n", "mr", ":e<CR>", { desc = "Reload file" })
+" keymap.set("n", "mq", ":q<CR>", { desc = "Quit" })
+" keymap.set("n", "mx", ":qa!<CR>", { desc = "Quit all" })
+" keymap.set("n", "mn", ":noh<CR>", { desc = "Clear search highlight" })
 
 "" Better window navigation
 nnoremap <C-h> <C-w>h
