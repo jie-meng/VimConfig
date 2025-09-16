@@ -33,7 +33,7 @@ return {
 
       -- Format on save with multi-language, multi-condition support
       local function format_on_save(client, bufnr)
-        if not (client.supports_method and client.supports_method("textDocument/formatting")) then
+        if not (client.supports_method and client:supports_method("textDocument/formatting")) then
           return
         end
 
@@ -301,10 +301,17 @@ return {
         format_on_save(client, bufnr)
       end
 
-      -- Diagnostic configuration
+      -- Diagnostic configuration with modern sign definition
       vim.diagnostic.config({
         virtual_text = false,
-        signs = true,
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = "✗",
+            [vim.diagnostic.severity.WARN] = "⚠",
+            [vim.diagnostic.severity.HINT] = "",
+            [vim.diagnostic.severity.INFO] = "ℹ",
+          },
+        },
         underline = true,
         update_in_insert = false,
         severity_sort = true,
@@ -317,13 +324,6 @@ return {
           prefix = "",
         },
       })
-
-      -- Diagnostic signs
-      local signs = { Error = "✗", Warn = "⚠", Hint = "", Info = "ℹ" }
-      for type, icon in pairs(signs) do
-        local hl = "DiagnosticSign" .. type
-        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-      end
 
       -- Language server configurations
       local home = os.getenv("HOME")
