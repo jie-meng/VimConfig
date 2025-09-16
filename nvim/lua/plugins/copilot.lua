@@ -86,11 +86,12 @@ return {
     lazy = false,
     dependencies = {
       { "nvim-lua/plenary.nvim", branch = "master" }, -- Required dependency
+      { "ravitemer/mcphub.nvim" }, -- MCP integration
     },
     build = "make tiktoken", -- Optional: for better token counting
     config = function()
       require("CopilotChat").setup({
-        debug = false, -- Enable debugging
+        debug = false, -- Enable debugging to see MCP calls
         model = 'gpt-4.1',
         temperature = 0.1,
         window = {

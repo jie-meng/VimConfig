@@ -34,11 +34,26 @@ return {
 
     if is_mcp_hub_installed() then
       require("mcphub").setup({
-        auto_approve = false,
-        extensions = {
-          avante = {
-            make_slash_commands = true,
+        auto_approve = true,
+        servers = {
+          context7 = {
+            command = "npx",
+            args = { "-y", "@upstash/context7-mcp" },
+            env = {},
+            auto_start = true,
+            disabled = false,
           },
+        },
+        extensions = {
+            avante = {
+              make_slash_commands = true,
+            },
+            copilotchat = {
+              enabled = true,
+              convert_tools_to_functions = true,     -- Convert MCP tools to CopilotChat functions
+              convert_resources_to_functions = true, -- Convert MCP resources to CopilotChat functions
+              add_mcp_prefix = false,                -- Add "mcp_" prefix to function names
+            },
         },
         ui = {
           window = {
@@ -49,9 +64,6 @@ return {
             zindex = 50,
           },
         },
-        on_ready = function(hub)
-          vim.notify("MCPHub is ready.", vim.log.levels.INFO)
-        end,
         on_error = function(err)
           vim.notify("MCPHub error: " .. tostring(err), vim.log.levels.ERROR)
         end,
@@ -69,5 +81,5 @@ return {
       end
       vim.notify(msg, installed and vim.log.levels.INFO or vim.log.levels.WARN)
     end, { desc = "MCPHub status" })
-  end,
+  end
 }
