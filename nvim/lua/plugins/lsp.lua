@@ -11,6 +11,15 @@ return {
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
+      vim.keymap.set("n", "<Leader>mc", function()
+        local log_path = vim.lsp.get_log_path()
+        local ok = os.remove(log_path)
+        if ok then
+          vim.notify("LSP log cleared: " .. log_path, vim.log.levels.INFO)
+        else
+          vim.notify("Failed to clear LSP log: " .. log_path, vim.log.levels.ERROR)
+        end
+      end, { desc = "Clear LSP log file" })
       -- Initialize Mason and LSP
       require("mason").setup()
       require("mason-lspconfig").setup({
@@ -365,13 +374,6 @@ return {
           on_attach = on_attach,
         }, config))
       end
-    end,
-  },
-  {
-    "williamboman/mason.nvim",
-    build = ":MasonUpdate",
-  },
-  {
-    "williamboman/mason-lspconfig.nvim",
-  },
+    end
+  }
 }
