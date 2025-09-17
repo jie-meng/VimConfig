@@ -87,17 +87,6 @@ return {
       vim.notify(msg, vim.log.levels.INFO)
     end, { desc = "MCPHub status" })
 
-    vim.keymap.set("n", "<space>Ml", function()
-      local installed = is_mcp_hub_installed()
-      if not installed then
-        vim.notify("mcp-hub is not installed", vim.log.levels.WARN)
-        return
-      end
-      
-      local servers_info = "Configured servers:\n• context7 (upstash context management)\n• playwright (web automation)"
-      vim.notify(servers_info, vim.log.levels.INFO)
-    end, { desc = "List configured MCP servers" })
-
     vim.keymap.set("n", "<space>Mh", function()
       local installed = is_mcp_hub_installed()
       if not installed then
@@ -119,5 +108,42 @@ return {
       
       vim.notify("To restart MCPHub, please restart Neovim or use :Lazy reload mcphub.nvim", vim.log.levels.INFO)
     end, { desc = "Restart MCPHub info" })
+
+    vim.keymap.set("n", "<space>Mc", function()
+      local config_path = vim.fn.expand("~/.config/mcphub/servers.json")
+      
+      -- Create config directory if it doesn't exist
+      local config_dir = vim.fn.fnamemodify(config_path, ":h")
+      if vim.fn.isdirectory(config_dir) == 0 then
+        vim.fn.mkdir(config_dir, "p")
+        vim.notify("Created MCPHub config directory: " .. config_dir, vim.log.levels.INFO)
+      end
+      
+      -- Create default config file if it doesn't exist
+      if vim.fn.filereadable(config_path) == 0 then
+        local default_config = vim.fn.json_encode({
+          servers = {
+            context7 = {
+              command = "npx",
+              args = { "-y", "@upstash/context7-mcp" },
+              env = {},
+              disabled = false
+            },
+            playwright = {
+              command = "npx", 
+              args = { "-y", "@playwright/mcp" },
+              env = {},
+              disabled = false
+            }
+          }
+        })
+        vim.fn.writefile(vim.split(default_config, "\n"), config_path)
+        vim.notify("Created default MCPHub config: " .. config_path, vim.log.levels.INFO)
+      end
+      
+      -- Open the config file
+      vim.cmd("edit " .. config_path)
+      vim.notify("Opened MCPHub config: " .. config_path, vim.log.levels.INFO)
+    end, { desc = "Open MCPHub config file" })
   end
 }
