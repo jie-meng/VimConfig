@@ -155,6 +155,77 @@ return {
       or "make",
   event = "VeryLazy",
   version = false, -- Never set this value to "*"! Never!
+  keys = {
+    {
+      "<Space>nn",
+      function() require("avante.api").ask() end,
+      desc = "Avante: Ask",
+      mode = { "n", "v" },
+    },
+    {
+      "<Space>ne",
+      function() require("avante.api").edit() end,
+      desc = "Avante: Edit",
+      mode = { "n", "v" },
+    },
+    {
+      "<Space>nr",
+      function() require("avante.api").refresh() end,
+      desc = "Avante: Refresh",
+      mode = "v",
+    },
+    {
+      "<Space>nt",
+      function() require("avante").toggle() end,
+      desc = "Avante: Toggle",
+      mode = "n",
+    },
+    {
+      "<Space>nc",
+      function()
+        local avante = require("avante")
+        local sidebar = avante.get()
+        if not sidebar then
+          require("avante.api").ask()
+          sidebar = avante.get()
+        end
+        if sidebar and sidebar.file_selector then
+          local current_file = vim.api.nvim_buf_get_name(0)
+          if current_file and current_file ~= "" then
+            local relative_path = require("avante.utils").relative_path(current_file)
+            sidebar.file_selector:add_selected_file(relative_path)
+          end
+        end
+      end,
+      desc = "Add current buffer to Avante context",
+      mode = { "n", "v" },
+    },
+    {
+      "<Space>nB",
+      function()
+        local avante = require("avante")
+        local sidebar = avante.get()
+        if not sidebar then
+          require("avante.api").ask()
+          sidebar = avante.get()
+        end
+        if sidebar and sidebar.file_selector then
+          local buffers = vim.api.nvim_list_bufs()
+          for _, buf in ipairs(buffers) do
+            if vim.api.nvim_buf_is_loaded(buf) and vim.api.nvim_buf_get_option(buf, 'buflisted') then
+              local buf_name = vim.api.nvim_buf_get_name(buf)
+              if buf_name and buf_name ~= "" then
+                local relative_path = require("avante.utils").relative_path(buf_name)
+                sidebar.file_selector:add_selected_file(relative_path)
+              end
+            end
+          end
+        end
+      end,
+      desc = "Add all buffers to Avante context",
+      mode = { "n", "v" },
+    },
+  },
   opts = vim.tbl_deep_extend("force", user_opts, {
     -- MCP Hub integration
     system_prompt = function()
