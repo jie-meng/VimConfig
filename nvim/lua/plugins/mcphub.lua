@@ -72,14 +72,52 @@ return {
 
     vim.keymap.set("n", "<space>Ms", function()
       local installed = is_mcp_hub_installed()
-      local running = installed and require("mcphub").get_hub_instance() ~= nil
-      local msg
       if not installed then
-        msg = "mcp-hub is not installed. MCPHub features are unavailable. Please run: npm install -g mcp-hub@latest"
-      else
-        msg = "MCPHub status: " .. (running and "running" or "not running")
+        vim.notify("mcp-hub is not installed. Please run: npm install -g mcp-hub@latest", vim.log.levels.WARN)
+        return
       end
-      vim.notify(msg, installed and vim.log.levels.INFO or vim.log.levels.WARN)
+      
+      local hub_ready = false
+      pcall(function()
+        local hub = require("mcphub").get_hub_instance()
+        hub_ready = hub and hub:is_ready()
+      end)
+      
+      local msg = "MCPHub status: " .. (hub_ready and "running" or "not ready")
+      vim.notify(msg, vim.log.levels.INFO)
     end, { desc = "MCPHub status" })
+
+    vim.keymap.set("n", "<space>Ml", function()
+      local installed = is_mcp_hub_installed()
+      if not installed then
+        vim.notify("mcp-hub is not installed", vim.log.levels.WARN)
+        return
+      end
+      
+      local servers_info = "Configured servers:\n• context7 (upstash context management)\n• playwright (web automation)"
+      vim.notify(servers_info, vim.log.levels.INFO)
+    end, { desc = "List configured MCP servers" })
+
+    vim.keymap.set("n", "<space>Mh", function()
+      local installed = is_mcp_hub_installed()
+      if not installed then
+        vim.notify("mcp-hub is not installed", vim.log.levels.WARN)
+        return
+      end
+      
+      pcall(function()
+        vim.cmd("MCPHub")
+      end)
+    end, { desc = "Open MCPHub UI" })
+
+    vim.keymap.set("n", "<space>Mr", function()
+      local installed = is_mcp_hub_installed()
+      if not installed then
+        vim.notify("mcp-hub is not installed", vim.log.levels.WARN)
+        return
+      end
+      
+      vim.notify("To restart MCPHub, please restart Neovim or use :Lazy reload mcphub.nvim", vim.log.levels.INFO)
+    end, { desc = "Restart MCPHub info" })
   end
 }
