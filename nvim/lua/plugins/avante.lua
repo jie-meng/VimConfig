@@ -155,7 +155,31 @@ return {
       or "make",
   event = "VeryLazy",
   version = false, -- Never set this value to "*"! Never!
-  opts = user_opts,
+  opts = vim.tbl_deep_extend("force", user_opts, {
+    -- MCP Hub integration
+    system_prompt = function()
+      local hub = require("mcphub").get_hub_instance()
+      return hub and hub:get_active_servers_prompt() or ""
+    end,
+    custom_tools = function()
+      return {
+        require("mcphub.extensions.avante").mcp_tool(),
+      }
+    end,
+    -- Disable Avante's built-in tools to avoid conflicts with MCPHub tools
+    disabled_tools = {
+      "list_files",    -- Built-in file operations
+      "search_files",
+      "read_file",
+      "create_file",
+      "rename_file",
+      "delete_file",
+      "create_dir",
+      "rename_dir",
+      "delete_dir",
+      "bash",         -- Built-in terminal access
+    },
+  }),
   dependencies = {
     "nvim-lua/plenary.nvim",
     "MunifTanjim/nui.nvim",
