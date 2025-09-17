@@ -17,8 +17,8 @@ local user_opts = {
       },
     },
     openai = {
-      endpoint = vim.env.ALIYUN_LLM_ENDPOINT or "https://dashscope.aliyuncs.com/compatible-mode/v1",
-      model = "qwen3-coder-plus",
+      endpoint = vim.env.AVANTE_OPENAI_ENDPOINT or "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      model = vim.env.AVANTE_OPENAI_MODEL or "qwen3-coder-plus",
       timeout = 30000,
       extra_request_body = {
         temperature = 0,
@@ -158,30 +158,12 @@ return {
   keys = {
     {
       "<Space>nn",
-      function() require("avante.api").ask() end,
-      desc = "Avante: Ask",
-      mode = { "n", "v" },
-    },
-    {
-      "<Space>ne",
-      function() require("avante.api").edit() end,
-      desc = "Avante: Edit",
-      mode = { "n", "v" },
-    },
-    {
-      "<Space>nr",
-      function() require("avante.api").refresh() end,
-      desc = "Avante: Refresh",
-      mode = "v",
-    },
-    {
-      "<Space>nt",
       function() require("avante").toggle() end,
       desc = "Avante: Toggle",
       mode = "n",
     },
     {
-      "<Space>nc",
+      "<Space>nk",
       function()
         local avante = require("avante")
         local sidebar = avante.get()
@@ -201,29 +183,41 @@ return {
       mode = { "n", "v" },
     },
     {
-      "<Space>nB",
+      "<Space>nR",
       function()
-        local avante = require("avante")
-        local sidebar = avante.get()
-        if not sidebar then
-          require("avante.api").ask()
-          sidebar = avante.get()
+        local diff = vim.fn.system("git diff --cached")
+        if not diff or diff == "" then
+          vim.notify("No git diff found", vim.log.levels.WARN)
+          return
         end
-        if sidebar and sidebar.file_selector then
-          local buffers = vim.api.nvim_list_bufs()
-          for _, buf in ipairs(buffers) do
-            if vim.api.nvim_buf_is_loaded(buf) and vim.api.nvim_buf_get_option(buf, 'buflisted') then
-              local buf_name = vim.api.nvim_buf_get_name(buf)
-              if buf_name and buf_name ~= "" then
-                local relative_path = require("avante.utils").relative_path(buf_name)
-                sidebar.file_selector:add_selected_file(relative_path)
-              end
-            end
-          end
-        end
+        local prompt = "```diff\n" .. diff .. "\n```\n" .. [[
+
+As a professional code reviewer, please analyze the above git diff and output your review in clear, structured English Markdown. Strictly follow this format:
+
+1. **Problematic Code & Explanation**
+   - List all code snippets with potential issues (bugs, design flaws, maintainability, performance, etc.), and clearly explain the reason and impact for each.
+
+2. **Improvement Suggestions**
+   - For each issue, provide concrete suggestions for improvement or fixes.
+
+3. **Overall Assessment**
+   - Summarize the strengths and risks of this change, and highlight anything that needs special attention.
+
+4. **Recommended Commit Message**
+   - Generate a concise, accurate, and conventional commit message for this change.
+
+Format your output in clean Markdown for easy copy-paste into review tools or commit descriptions.
+]]
+        require("avante.api").ask({
+          question = prompt,
+          win_config = { 
+            position = "right",
+            width = 30 
+          }
+        })
       end,
-      desc = "Add all buffers to Avante context",
-      mode = { "n", "v" },
+      desc = "Review current git diff with Avante",
+      mode = "n",
     },
   },
   opts = vim.tbl_deep_extend("force", user_opts, {
