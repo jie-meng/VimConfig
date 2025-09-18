@@ -2,6 +2,11 @@
 -- Avante.nvim - AI code assistant plugin configuration (full official style)
 -- ============================================================================
 
+-- Add these environment variables to your shell configuration (~/.bashrc, ~/.zshrc, etc.):
+-- export AVANTE_OPENAI_ENDPOINT=https://dashscope.aliyuncs.com/compatible-mode/v1
+-- export AVANTE_OPENAI_MODEL=qwen3-coder-plus
+-- export AVANTE_OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx
+
 local user_opts = {
   provider = "openai",
   mode = "agentic",
