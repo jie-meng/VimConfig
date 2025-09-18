@@ -34,6 +34,10 @@ return {
 
     if is_mcp_hub_installed() then
       require("mcphub").setup({
+        config = vim.fn.expand("~/.config/mcphub/servers.json"),
+        workspace = {
+          enabled = false,
+        },
         auto_approve = true,
         servers = {
           context7 = {
@@ -118,29 +122,7 @@ return {
         vim.fn.mkdir(config_dir, "p")
         vim.notify("Created MCPHub config directory: " .. config_dir, vim.log.levels.INFO)
       end
-      
-      -- Create default config file if it doesn't exist
-      if vim.fn.filereadable(config_path) == 0 then
-        local default_config = vim.fn.json_encode({
-          servers = {
-            context7 = {
-              command = "npx",
-              args = { "-y", "@upstash/context7-mcp" },
-              env = {},
-              disabled = false
-            },
-            playwright = {
-              command = "npx", 
-              args = { "-y", "@playwright/mcp" },
-              env = {},
-              disabled = false
-            }
-          }
-        })
-        vim.fn.writefile(vim.split(default_config, "\n"), config_path)
-        vim.notify("Created default MCPHub config: " .. config_path, vim.log.levels.INFO)
-      end
-      
+            
       -- Open the config file
       vim.cmd("edit " .. config_path)
       vim.notify("Opened MCPHub config: " .. config_path, vim.log.levels.INFO)
