@@ -26,7 +26,6 @@ return {
         automatic_enable = false,
       })
 
-      local lspconfig = require("lspconfig")
       local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
       local capabilities = cmp_nvim_lsp.default_capabilities()
@@ -37,15 +36,13 @@ return {
           return
         end
 
-        local util = require("lspconfig.util")
-        
         -- List of condition functions, each returns true/false
         local format_conditions = {}
 
         -- clangd: only if .clang-format exists in project root
         table.insert(format_conditions, function()
           if client.name ~= "clangd" then return false end
-          local root_dir = util.root_pattern(".clang-format")(vim.api.nvim_buf_get_name(bufnr))
+          local root_dir = vim.fs.root(vim.api.nvim_buf_get_name(bufnr), ".clang-format")
           return root_dir and vim.fn.filereadable(root_dir .. "/.clang-format") == 1
         end)
 
@@ -357,9 +354,8 @@ return {
           cmd = { "sourcekit-lsp" },
           filetypes = { "swift", "objective-c", "objective-cpp" },
           root_dir = function(filename)
-            local util = require("lspconfig.util")
-            return util.root_pattern("Package.swift", ".git")(filename)
-              or util.find_git_ancestor(filename)
+            return vim.fs.root(filename, { "Package.swift", ".git" })
+              or vim.fs.root(filename, ".git")
               or vim.fn.getcwd()
           end,
         },
@@ -367,12 +363,19 @@ return {
         -- kotlin_language_server = {},   -- Kotlin
       }
 
-      -- Setup all language servers
+      -- Setup all language servers using vim.lsp.config
       for server, config in pairs(servers) do
-        lspconfig[server].setup(vim.tbl_deep_extend("force", {
+        -- Merge the default config with server-specific config
+        local merged_config = vim.tbl_deep_extend("force", {
           capabilities = capabilities,
           on_attach = on_attach,
-        }, config))
+        }, config)
+        
+        -- Configure the server
+        vim.lsp.config(server, merged_config)
+        
+        -- Enable the server
+        vim.lsp.enable(server)
       end
     end
   }
