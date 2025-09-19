@@ -115,6 +115,12 @@ return {
           local node = api.tree.get_node_under_cursor()
           if not node then return end
           
+          -- Check if this is the parent directory node (..) at the top of tree
+          if node.type == "directory" and node.name == ".." then
+            -- Do nothing - prevent cd to parent directory
+            return
+          end
+          
           if node.type == "file" then
             local file_path = node.absolute_path
             -- Try custom handler first
