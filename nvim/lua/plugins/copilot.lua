@@ -221,31 +221,17 @@ return {
           end
         end, 100)
       end, desc = "Analyze diagnostics at current line and send to Copilot Chat" },
-      { "<space>cr", ":CopilotChatReview<CR>", desc = "Review code" },
-      { "<space>cR", function()
+      { "<space>cre", function()
         local diff = vim.fn.system("git diff --cached")
         if not diff or diff == "" then
           vim.notify("No git diff found", vim.log.levels.WARN)
           return
         end
-        local prompt = "```diff\n" .. diff .. "\n```\n" .. [[
-
-As a professional code reviewer, please analyze the above git diff and output your review in clear, structured English Markdown. Strictly follow this format:
-
-1. **Problematic Code & Explanation**
-   - List all code snippets with potential issues (bugs, design flaws, maintainability, performance, etc.), and clearly explain the reason and impact for each.
-
-2. **Improvement Suggestions**
-   - For each issue, provide concrete suggestions for improvement or fixes.
-
-3. **Overall Assessment**
-   - Summarize the strengths and risks of this change, and highlight anything that needs special attention.
-
-4. **Recommended Commit Message**
-   - Generate a concise, accurate, and conventional commit message for this change.
-
-Format your output in clean Markdown for easy copy-paste into review tools or commit descriptions.
-]]
+        
+        -- Get prompt from centralized config
+        local prompts = require("config.prompts")
+        local prompt = prompts.get_code_review_prompt_with_diff(diff, 'en') -- English version
+        
         require("CopilotChat").open({ window = { layout = COPILOT_CHAT_WINDOW_LAYOUT, width = COPILOT_CHAT_WINDOW_WIDTH } })
         vim.defer_fn(function()
           local bufnr = vim.fn.bufnr("copilot-chat")
@@ -260,7 +246,33 @@ Format your output in clean Markdown for easy copy-paste into review tools or co
             vim.api.nvim_win_set_cursor(0, {line_count + #lines, #(lines[#lines] or "")})
           end
         end, 100)
-      end, desc = "Review current git diff with Copilot" },
+      end, desc = "Review current git diff with Copilot (English)" },
+      { "<space>crc", function()
+        local diff = vim.fn.system("git diff --cached")
+        if not diff or diff == "" then
+          vim.notify("No git diff found", vim.log.levels.WARN)
+          return
+        end
+        
+        -- Get prompt from centralized config
+        local prompts = require("config.prompts")
+        local prompt = prompts.get_code_review_prompt_with_diff(diff, 'zh-cn') -- Chinese version
+        
+        require("CopilotChat").open({ window = { layout = COPILOT_CHAT_WINDOW_LAYOUT, width = COPILOT_CHAT_WINDOW_WIDTH } })
+        vim.defer_fn(function()
+          local bufnr = vim.fn.bufnr("copilot-chat")
+          if bufnr ~= -1 then
+            local line_count = vim.api.nvim_buf_line_count(bufnr)
+            local lines = {}
+            for s in prompt:gmatch("([^\n]*)\n?") do
+              table.insert(lines, s)
+            end
+            if #lines > 0 and lines[#lines] == "" then table.remove(lines, #lines) end
+            vim.api.nvim_buf_set_lines(bufnr, line_count, line_count, false, lines)
+            vim.api.nvim_win_set_cursor(0, {line_count + #lines, #(lines[#lines] or "")})
+          end
+        end, 100)
+      end, desc = "Review current git diff with Copilot (Chinese)" },
       { "<space>cs", ":CopilotChatCommit<CR>", desc = "Generate commit message" },
       
       -- File picker for chat - select files with Telescope
