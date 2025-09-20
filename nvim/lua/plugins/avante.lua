@@ -6,9 +6,10 @@
 -- export AVANTE_OPENAI_ENDPOINT=https://dashscope.aliyuncs.com/compatible-mode/v1
 -- export AVANTE_OPENAI_MODEL=qwen3-coder-plus
 -- export AVANTE_OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx
+-- export AVANTE_MOONSHOT_API_KEY=ms-xxxxxxxxxxxxxxxx
 
 local user_opts = {
-  provider = "openai",
+  provider = "moonshot",
   mode = "agentic",
   auto_suggestions_provider = "claude",
   providers = {
@@ -29,6 +30,15 @@ local user_opts = {
         temperature = 0,
         max_tokens = 32768,
       },
+    },
+    moonshot = {
+      endpoint = "https://api.moonshot.cn/v1", -- https://api.moonshot.ai/v1 for global
+      model = "kimi-k2-0905-preview",
+      timeout = 30000,
+      extra_request_body = {
+        temperature = 0.75,
+        max_tokens = 32768,
+      }, 
     },
   },
   dual_boost = {
