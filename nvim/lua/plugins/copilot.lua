@@ -42,7 +42,7 @@ return {
           auto_trigger = true,
           debounce = 75,
           keymap = {
-            accept = "<Tab>",
+            accept = "<C-m>",
             accept_word = false,
             accept_line = false,
             next = "<C-.>",
@@ -109,7 +109,7 @@ return {
         },
         mappings = {
           complete = {
-            insert = '<Tab>',
+            insert = '<C-m>',
           },
           close = {
             normal = 'q',

@@ -71,6 +71,23 @@ keymap.set("v", "<", "<gv", { desc = "Unindent selection" })
 keymap.set("v", "<Tab>", ">gv", { desc = "Indent selection" })
 keymap.set("v", "<S-Tab>", "<gv", { desc = "Unindent selection" })
 
+-- Tab for indenting in insert mode
+keymap.set("i", "<Tab>", function()
+  if vim.fn.pumvisible() == 1 then
+    return "<C-n>"  -- Navigate completion menu
+  else
+    return "<C-t>"  -- Indent
+  end
+end, { expr = true, desc = "Indent or next completion" })
+
+keymap.set("i", "<S-Tab>", function()
+  if vim.fn.pumvisible() == 1 then
+    return "<C-p>"  -- Navigate completion menu backwards
+  else
+    return "<C-d>"  -- Unindent
+  end
+end, { expr = true, desc = "Unindent or previous completion" })
+
 -- F4 in normal mode: Toggle quickfix window
 keymap.set({"n", "v", "t"}, "<F4>", function()
   for _, win in ipairs(vim.api.nvim_list_wins()) do

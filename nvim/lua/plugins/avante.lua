@@ -9,7 +9,7 @@
 -- export AVANTE_MOONSHOT_API_KEY=ms-xxxxxxxxxxxxxxxx
 
 local user_opts = {
-  provider = "moonshot",
+  provider = "openai",
   mode = "agentic",
   auto_suggestions_provider = "claude",
   providers = {
