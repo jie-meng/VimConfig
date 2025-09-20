@@ -198,6 +198,14 @@ return {
       mode = { "n", "v" },
     },
     {
+      "<Space>ns",
+      function()
+        vim.cmd("AvanteStop")
+      end,
+      desc = "Avante: Stop",
+      mode = "n",
+    },
+    {
       "<Space>nre",
       function()
         local diff = vim.fn.system("git diff --cached")
