@@ -42,7 +42,7 @@ return {
           auto_trigger = true,
           debounce = 75,
           keymap = {
-            accept = "<C-m>",
+            accept = false,  -- Disable default Tab mapping
             accept_word = false,
             accept_line = false,
             next = "<C-.>",
@@ -67,6 +67,22 @@ return {
       
       -- Set up custom highlight for Copilot suggestions
       reset_copilot_suggestion_highlight()
+      
+      -- Smart Tab mapping: accept Copilot suggestion if available, otherwise indent
+      vim.keymap.set("i", "<Tab>", function()
+        local copilot = require("copilot.suggestion")
+        if copilot.is_visible() then
+          copilot.accept()
+          return ""  -- Return empty string to prevent further processing
+        else
+          -- Check if completion menu is visible
+          if vim.fn.pumvisible() == 1 then
+            return "<C-n>"  -- Navigate completion menu
+          else
+            return "<C-t>"  -- Indent
+          end
+        end
+      end, { expr = true, desc = "Accept Copilot or indent" })
     end,
       keys = {
         { "<space>Ce", ":Copilot enable<CR>", desc = "Enable Copilot" },
@@ -109,7 +125,7 @@ return {
         },
         mappings = {
           complete = {
-            insert = '<C-m>',
+            insert = '<Tab>',
           },
           close = {
             normal = 'q',
