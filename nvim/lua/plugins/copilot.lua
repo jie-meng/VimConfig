@@ -19,31 +19,17 @@ return {
     config = function()
       require("copilot").setup({
         panel = {
-          enabled = true,
-          auto_refresh = false,
           keymap = {
-            jump_prev = "[[",
-            jump_next = "]]",
-            accept = "<CR>",
-            refresh = "gr",
-            open = "<M-CR>"
-          },
-          layout = {
-            position = "bottom", -- | top | left | right
-            ratio = 0.4
+            open = "<M-CR>"  -- Only keep the customized keymap
           },
         },
         suggestion = {
-          enabled = true,
-          auto_trigger = true,
-          debounce = 75,
+          auto_trigger = true,  -- Keep: different from default (false)
           keymap = {
-            accept = false,  -- Disable default Tab mapping
-            accept_word = false,
-            accept_line = false,
-            next = "<C-.>",
-            prev = "<C-,>",
-            dismiss = "<C-/>",
+            accept = false,  -- Keep: custom Tab mapping setup
+            next = "<C-.>",   -- Keep: custom keymap
+            prev = "<C-,>",   -- Keep: custom keymap
+            dismiss = "<C-/>", -- Keep: custom keymap
           },
         },
         filetypes = {
@@ -57,8 +43,6 @@ return {
           cvs = false,
           ["."] = false,
         },
-        copilot_node_command = 'node', -- Node.js version must be > 18.x
-        server_opts_overrides = {},
       })
       
       -- Set up custom highlight for Copilot suggestions
@@ -82,12 +66,10 @@ return {
     end,
     keys = {
       -- Basic Copilot management commands only
-      { "<space>Ce", ":Copilot enable<CR>", desc = "Enable Copilot" },
-      { "<space>Cu", ":Copilot setup<CR>", desc = "Copilot setup" },
       { "<space>Ca", ":Copilot auth<CR>", desc = "Copilot auth" },
-      { "<space>Co", ":Copilot signout<CR>", desc = "Copilot sign out" },
+      { "<space>Ci", ":Copilot auth info<CR>", desc = "Copilot auth info" },
+      { "<space>Co", ":Copilot auth signout<CR>", desc = "Copilot sign out" },
       { "<space>Cp", ":Copilot panel<CR>", desc = "Copilot panel" },
-      { "<space>Cd", ":Copilot disable<CR>", desc = "Disable Copilot" },
       { "<space>Cs", ":Copilot status<CR>", desc = "Copilot status" },
     },
   },
