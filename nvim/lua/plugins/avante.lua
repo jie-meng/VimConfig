@@ -8,6 +8,35 @@
 -- export AVANTE_OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx
 -- export AVANTE_MOONSHOT_API_KEY=ms-xxxxxxxxxxxxxxxx
 
+-- Persistence for provider and model selection
+local persistence_file = vim.fn.stdpath("data") .. "/avante_settings.json"
+
+local function save_settings(provider, model)
+  local settings = {
+    provider = provider,
+    model = model,
+    timestamp = os.time()
+  }
+  local file = io.open(persistence_file, "w")
+  if file then
+    file:write(vim.json.encode(settings))
+    file:close()
+  end
+end
+
+local function load_settings()
+  local file = io.open(persistence_file, "r")
+  if file then
+    local content = file:read("*all")
+    file:close()
+    local ok, settings = pcall(vim.json.decode, content)
+    if ok and settings then
+      return settings.provider, settings.model
+    end
+  end
+  return nil, nil
+end
+
 -- Available models (official names from providers)
 local AVAILABLE_MODELS = {
   "gpt-4.1",                    -- OpenAI GPT-4.1 (latest with 1M token context)
@@ -22,13 +51,16 @@ local AVAILABLE_PROVIDERS = {
   "openai"
 }
 
+-- Load saved settings
+local saved_provider, saved_model = load_settings()
+
 local user_opts = {
-  provider = "copilot",
+  provider = saved_provider or "copilot",
   mode = "agentic",
-  auto_suggestions_provider = "copilot",
+  auto_suggestions_provider = saved_provider or "copilot",
   providers = {
     copilot = {
-      model = "gpt-4.1",
+      model = (saved_provider == "copilot" and saved_model) or "gpt-4.1",
       timeout = 30000,
       extra_request_body = {
         temperature = 0.1,
@@ -307,8 +339,19 @@ return {
         }, function(choice)
           if choice then
             require("avante.config").override({ provider = choice })
+            
+            -- Get current model for the selected provider
+            local current_config = require("avante.config")
+            local current_model = "unknown"
+            if current_config.providers and current_config.providers[choice] and current_config.providers[choice].model then
+              current_model = current_config.providers[choice].model
+            end
+            
+            -- Save the selection
+            save_settings(choice, current_model)
+            
             vim.notify(
-              string.format("Switched to provider: %s", choice),
+              string.format("Switched to provider: %s (saved)", choice),
               vim.log.levels.INFO,
               { title = "Avante Provider" }
             )
@@ -366,8 +409,12 @@ return {
               provider = "copilot",
               providers = new_providers 
             })
+            
+            -- Save the selection
+            save_settings("copilot", choice)
+            
             vim.notify(
-              string.format("Switched Copilot model: %s → %s", current_model, choice),
+              string.format("Switched Copilot model: %s → %s (saved)", current_model, choice),
               vim.log.levels.INFO,
               { title = "Copilot Model" }
             )
