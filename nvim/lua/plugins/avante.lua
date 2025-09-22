@@ -53,7 +53,7 @@ local AVAILABLE_PROVIDERS = {
 -- Load saved settings
 local saved_provider, saved_model = load_settings()
 
-local SIDEBAR_WIDTH = 25
+local SIDEBAR_WIDTH = 30
 
 local user_opts = {
   provider = saved_provider or "copilot",
