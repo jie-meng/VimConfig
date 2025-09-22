@@ -150,7 +150,7 @@ local user_opts = {
       insert = "<C-s>",
     },
     cancel = {
-      normal = { "<C-c>", "<Esc>", "q" },
+      normal = { "<C-c>" },
       insert = { "<C-c>" },
     },
     sidebar = {
@@ -163,7 +163,7 @@ local user_opts = {
       remove_file = "d",
       add_file = "@",
       close = { "<Esc>", "q" },
-      close_from_input = nil, -- e.g., { normal = "<Esc>", insert = "<C-d>" }
+      close_from_input = { normal = "q" },
     },
   },
   hints = { enabled = true },
