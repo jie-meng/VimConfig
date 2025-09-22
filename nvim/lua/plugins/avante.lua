@@ -8,11 +8,33 @@
 -- export AVANTE_OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx
 -- export AVANTE_MOONSHOT_API_KEY=ms-xxxxxxxxxxxxxxxx
 
+-- Available models (official names from providers)
+local AVAILABLE_MODELS = {
+  "gpt-4.1",                    -- OpenAI GPT-4.1 (latest with 1M token context)
+  "gpt-4o",                     -- OpenAI GPT-4 Omni (multimodal)
+  "gpt-4o-mini",                -- OpenAI GPT-4 Omni Mini (lightweight)
+  "claude-4-sonnet"             -- Anthropic Claude 4 Sonnet (latest alias)
+}
+
+-- Available providers  
+local AVAILABLE_PROVIDERS = {
+  "copilot",
+  "openai"
+}
+
 local user_opts = {
-  provider = "openai",
+  provider = "copilot",
   mode = "agentic",
-  auto_suggestions_provider = "claude",
+  auto_suggestions_provider = "copilot",
   providers = {
+    copilot = {
+      model = "gpt-4.1",
+      timeout = 30000,
+      extra_request_body = {
+        temperature = 0.1,
+        max_tokens = 8192,
+      },
+    },
     claude = {
       endpoint = vim.env.AVANTE_CLAUDE_ENDPOINT or "https://api.anthropic.com",
       model = vim.env.AVANTE_CLAUDE_MODEL or "claude-sonnet-4-20250514",
@@ -43,7 +65,7 @@ local user_opts = {
   },
   dual_boost = {
     enabled = false,
-    first_provider = "openai",
+    first_provider = "copilot",
     second_provider = "claude",
     prompt = "Based on the two reference outputs below, generate a response that incorporates elements from both but reflects your own judgment and unique perspective. Do not provide any explanation, just give the response directly. Reference Output 1: [{{provider1_output}}], Reference Output 2: [{{provider2_output}}]",
     timeout = 60000,
@@ -172,13 +194,13 @@ return {
   version = false, -- Never set this value to "*"! Never!
   keys = {
     {
-      "<Space>nn",
+      "<Space>cc",
       function() require("avante").toggle() end,
       desc = "Avante: Toggle",
       mode = "n",
     },
     {
-      "<Space>nk",
+      "<Space>ck",
       function()
         local avante = require("avante")
         local sidebar = avante.get()
@@ -198,7 +220,7 @@ return {
       mode = { "n", "v" },
     },
     {
-      "<Space>ns",
+      "<Space>cs",
       function()
         vim.cmd("AvanteStop")
       end,
@@ -206,7 +228,7 @@ return {
       mode = "n",
     },
     {
-      "<Space>nre",
+      "<Space>cre",
       function()
         local diff = vim.fn.system("git diff --cached")
         if not diff or diff == "" then
@@ -230,7 +252,7 @@ return {
       mode = "n",
     },
     {
-      "<Space>nrc",
+      "<Space>crc",
       function()
         local diff = vim.fn.system("git diff --cached")
         if not diff or diff == "" then
@@ -251,6 +273,114 @@ return {
         })
       end,
       desc = "Review current git diff with Avante (Chinese)",
+      mode = "n",
+    },
+    {
+      "<Space>cpi",
+      function()
+        local config = require("avante.config")
+        local current_provider = config.provider or "unknown"
+        local providers = config.providers or {}
+        local current_model = "unknown"
+        
+        if providers[current_provider] and providers[current_provider].model then
+          current_model = providers[current_provider].model
+        end
+        
+        vim.notify(
+          string.format("Avante Provider: %s\nModel: %s", current_provider, current_model),
+          vim.log.levels.INFO,
+          { title = "Avante Model Info" }
+        )
+      end,
+      desc = "Show current Avante provider and model info",
+      mode = "n",
+    },
+    {
+      "<Space>cps",
+      function()
+        vim.ui.select(AVAILABLE_PROVIDERS, {
+          prompt = "Select Avante Provider:",
+          format_item = function(item)
+            return item:gsub("^%l", string.upper)
+          end,
+        }, function(choice)
+          if choice then
+            require("avante.config").override({ provider = choice })
+            vim.notify(
+              string.format("Switched to provider: %s", choice),
+              vim.log.levels.INFO,
+              { title = "Avante Provider" }
+            )
+          end
+        end)
+      end,
+      desc = "Switch Avante provider",
+      mode = "n",
+    },
+    {
+      "<Space>cpm",
+      function()
+        local current_config = require("avante.config")
+        local current_provider = current_config.provider or "unknown"
+        
+        -- Check if current provider is copilot
+        if current_provider ~= "copilot" then
+          vim.notify(
+            string.format("Model switching only available for Copilot provider.\nCurrent provider: %s", current_provider),
+            vim.log.levels.WARN,
+            { title = "Model Switch" }
+          )
+          return
+        end
+        
+        -- Get current model
+        local current_model = "gpt-4.1" -- default
+        if current_config.providers and current_config.providers.copilot and current_config.providers.copilot.model then
+          current_model = current_config.providers.copilot.model
+        end
+        
+        -- Filter models to only include Copilot-compatible ones
+        local copilot_models = {}
+        for _, model in ipairs(AVAILABLE_MODELS) do
+          table.insert(copilot_models, model)
+        end
+        
+        vim.ui.select(copilot_models, {
+          prompt = string.format("Select Copilot Model (current: %s):", current_model),
+          format_item = function(item)
+            if item == current_model then
+              return item .. " ← current"
+            end
+            return item
+          end,
+        }, function(choice)
+          if choice and choice ~= current_model then
+            local new_providers = vim.deepcopy(current_config.providers or {})
+            if not new_providers.copilot then
+              new_providers.copilot = {}
+            end
+            new_providers.copilot.model = choice
+            
+            require("avante.config").override({ 
+              provider = "copilot",
+              providers = new_providers 
+            })
+            vim.notify(
+              string.format("Switched Copilot model: %s → %s", current_model, choice),
+              vim.log.levels.INFO,
+              { title = "Copilot Model" }
+            )
+          elseif choice == current_model then
+            vim.notify(
+              string.format("Already using model: %s", current_model),
+              vim.log.levels.INFO,
+              { title = "Copilot Model" }
+            )
+          end
+        end)
+      end,
+      desc = "Switch model (Copilot provider only)",
       mode = "n",
     },
   },
