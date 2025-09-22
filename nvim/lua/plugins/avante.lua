@@ -41,7 +41,6 @@ end
 local AVAILABLE_MODELS = {
   "gpt-4.1",                    -- OpenAI GPT-4.1 (latest with 1M token context)
   "gpt-4o",                     -- OpenAI GPT-4 Omni (multimodal)
-  "gpt-4o-mini",                -- OpenAI GPT-4 Omni Mini (lightweight)
   "claude-4-sonnet"             -- Anthropic Claude 4 Sonnet (latest alias)
 }
 
@@ -53,6 +52,8 @@ local AVAILABLE_PROVIDERS = {
 
 -- Load saved settings
 local saved_provider, saved_model = load_settings()
+
+local SIDEBAR_WIDTH = 25
 
 local user_opts = {
   provider = saved_provider or "copilot",
@@ -174,7 +175,7 @@ local user_opts = {
   windows = {
     position = "right",
     wrap = true,
-    width = 30,
+    width = SIDEBAR_WIDTH,
     sidebar_header = {
       enabled = true,
       align = "center",
@@ -267,16 +268,16 @@ return {
           vim.notify("No git diff found", vim.log.levels.WARN)
           return
         end
-        
+
         -- Get prompt from centralized config
         local prompts = require("config.prompts")
         local prompt = prompts.get_code_review_prompt_with_diff(diff, 'en') -- English version
-        
+
         require("avante.api").ask({
           question = prompt,
           win_config = { 
             position = "right",
-            width = 30 
+            width = SIDEBAR_WIDTH
           }
         })
       end,
@@ -291,16 +292,16 @@ return {
           vim.notify("No git diff found", vim.log.levels.WARN)
           return
         end
-        
+
         -- Get prompt from centralized config
         local prompts = require("config.prompts")
         local prompt = prompts.get_code_review_prompt_with_diff(diff, 'zh-cn') -- Chinese version
-        
+
         require("avante.api").ask({
           question = prompt,
           win_config = { 
             position = "right",
-            width = 30 
+            width = SIDEBAR_WIDTH
           }
         })
       end,
