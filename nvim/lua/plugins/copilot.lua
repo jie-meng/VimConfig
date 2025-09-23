@@ -48,6 +48,17 @@ return {
       -- Set up custom highlight for Copilot suggestions
       reset_copilot_suggestion_highlight()
       
+      -- Auto-reset Copilot highlight when colorscheme changes
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        callback = function()
+          -- Delay the reset to ensure the new colorscheme is fully applied
+          vim.defer_fn(function()
+            reset_copilot_suggestion_highlight()
+          end, 100)
+        end,
+        desc = "Auto-reset Copilot suggestion highlight after colorscheme change"
+      })
+      
       -- Smart Tab mapping: accept Copilot suggestion if available, otherwise indent
       vim.keymap.set("i", "<Tab>", function()
         local copilot = require("copilot.suggestion")
@@ -71,6 +82,10 @@ return {
       { "<space>Co", ":Copilot auth signout<CR>", desc = "Copilot sign out" },
       { "<space>Cp", ":Copilot panel<CR>", desc = "Copilot panel" },
       { "<space>Cs", ":Copilot status<CR>", desc = "Copilot status" },
+      { "<space>Ch", function()
+        reset_copilot_suggestion_highlight()
+        vim.notify("Copilot suggestion highlight reset", vim.log.levels.INFO)
+      end, desc = "Reset Copilot suggestion highlight" },
     },
   },
 }

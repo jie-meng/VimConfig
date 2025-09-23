@@ -87,12 +87,25 @@ function M.apply_theme(idx, silent, tried)
       },
     })
   end
-    -- Enhance diff highlight contrast
-    vim.api.nvim_set_hl(0, "DiffAdd",    { bg = "#335533", bold = true })
-    vim.api.nvim_set_hl(0, "DiffChange", { bg = "#444444", bold = true })
-    vim.api.nvim_set_hl(0, "DiffDelete", { bg = "#553333", bold = true })
-    vim.api.nvim_set_hl(0, "DiffText",   { bg = "#666600", bold = true }) 
+
+  -- Enhance diff highlight contrast
+  vim.api.nvim_set_hl(0, "DiffAdd",    { bg = "#335533", bold = true })
+  vim.api.nvim_set_hl(0, "DiffChange", { bg = "#444444", bold = true })
+  vim.api.nvim_set_hl(0, "DiffDelete", { bg = "#553333", bold = true })
+  vim.api.nvim_set_hl(0, "DiffText",   { bg = "#666600", bold = true })
+  
+  -- Reset Copilot suggestion highlight after theme change (if Copilot is loaded)
+  if package.loaded["copilot"] then
+    vim.defer_fn(function()
+      vim.api.nvim_set_hl(0, "CopilotSuggestion", { 
+        fg = "#808080", -- Gray color for suggestions
+        italic = true 
+      })
+    end, 50)
+  end 
+
   write_theme_idx(idx)
+
   if not silent then
     vim.schedule(function()
       vim.notify("Theme: " .. entry.name)
