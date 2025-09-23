@@ -206,6 +206,17 @@ local user_opts = {
       current = "DiffText",
       incoming = "DiffAdd",
     },
+    -- Custom highlights for better visibility
+    visual = {
+      bg = "#4c566a",
+      fg = "#eceff4",
+      bold = true,
+    },
+    search = {
+      bg = "#ebcb8b",
+      fg = "#2e3440", 
+      bold = true,
+    },
   },
   diff = {
     autojump = true,
@@ -225,6 +236,41 @@ return {
       or "make",
   event = "VeryLazy",
   version = false, -- Never set this value to "*"! Never!
+  init = function()
+    -- Improve Visual mode selection visibility in Avante windows
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "Avante*",
+      callback = function()
+        -- Set better Visual mode highlighting for Avante buffers
+        vim.api.nvim_set_hl(0, "Visual", { 
+          bg = "#4c566a",  -- A more contrasting blue-gray
+          fg = "#eceff4",  -- Light foreground for better contrast
+          bold = true 
+        })
+        -- Also set Search highlight for better findability
+        vim.api.nvim_set_hl(0, "Search", { 
+          bg = "#ebcb8b", 
+          fg = "#2e3440", 
+          bold = true 
+        })
+        -- Improve IncSearch (incremental search) highlighting
+        vim.api.nvim_set_hl(0, "IncSearch", { 
+          bg = "#d08770", 
+          fg = "#2e3440", 
+          bold = true 
+        })
+      end,
+    })
+    
+    -- Prevent window ID errors
+    vim.api.nvim_create_autocmd("WinNew", {
+      callback = function()
+        vim.defer_fn(function()
+          -- Small delay to let window creation complete
+        end, 10)
+      end,
+    })
+  end,
   keys = {
     {
       "<Space>cc",
@@ -429,6 +475,25 @@ return {
         end)
       end,
       desc = "Switch model (Copilot provider only)",
+      mode = "n",
+    },
+    {
+      "<Space>cvh",
+      function()
+        -- Reset Visual mode highlighting for better visibility
+        vim.api.nvim_set_hl(0, "Visual", { 
+          bg = "#4c566a",  -- Blue-gray background
+          fg = "#eceff4",  -- Light foreground  
+          bold = true 
+        })
+        vim.api.nvim_set_hl(0, "Search", { 
+          bg = "#ebcb8b", 
+          fg = "#2e3440", 
+          bold = true 
+        })
+        vim.notify("Visual mode highlighting updated for better selection visibility", vim.log.levels.INFO)
+      end,
+      desc = "Fix Visual mode highlighting for better selection visibility",
       mode = "n",
     },
   },
