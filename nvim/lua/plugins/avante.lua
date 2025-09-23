@@ -309,7 +309,7 @@ return {
       mode = "n",
     },
     {
-      "<Space>cpi",
+      "<Space>cmi",
       function()
         local config = require("avante.config")
         local current_provider = config.provider or "unknown"
@@ -330,7 +330,7 @@ return {
       mode = "n",
     },
     {
-      "<Space>cps",
+      "<Space>cmp",
       function()
         vim.ui.select(AVAILABLE_PROVIDERS, {
           prompt = "Select Avante Provider:",
@@ -363,7 +363,7 @@ return {
       mode = "n",
     },
     {
-      "<Space>cpm",
+      "<Space>cmm",
       function()
         local current_config = require("avante.config")
         local current_provider = current_config.provider or "unknown"
