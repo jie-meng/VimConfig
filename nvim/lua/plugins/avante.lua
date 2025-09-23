@@ -262,6 +262,32 @@ return {
       end,
     })
     
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "AvanteRequest",
+      callback = function()
+        vim.cmd("silent! wa")
+        
+        local refreshed = 0
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+          if vim.api.nvim_buf_is_loaded(buf) and not vim.api.nvim_buf_get_option(buf, 'modified') then
+            local name = vim.api.nvim_buf_get_name(buf)
+            if name ~= "" and vim.fn.filereadable(name) == 1 then
+              vim.api.nvim_buf_call(buf, function()
+                vim.cmd('checktime')
+              end)
+              refreshed = refreshed + 1
+            end
+          end
+        end
+        
+        vim.notify(
+          string.format("Pre-edit: Saved all files + refreshed %d buffers", refreshed),
+          vim.log.levels.INFO,
+          { timeout = 1500 }
+        )
+      end,
+    })
+    
     -- Prevent window ID errors
     vim.api.nvim_create_autocmd("WinNew", {
       callback = function()
@@ -494,6 +520,36 @@ return {
         vim.notify("Visual mode highlighting updated for better selection visibility", vim.log.levels.INFO)
       end,
       desc = "Fix Visual mode highlighting for better selection visibility",
+      mode = "n",
+    },
+    {
+      "<Space>crf",
+      function()
+        -- 多文件编辑前的完整准备工作
+        -- 1. 保存所有已修改的文件 (你建议的 :wa)
+        vim.cmd("silent! wa")
+        
+        -- 2. 刷新所有文件缓冲区
+        local refreshed = 0
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+          if vim.api.nvim_buf_is_loaded(buf) then
+            local name = vim.api.nvim_buf_get_name(buf)
+            if name ~= "" and vim.fn.filereadable(name) == 1 then
+              vim.api.nvim_buf_call(buf, function()
+                vim.cmd('checktime')
+              end)
+              refreshed = refreshed + 1
+            end
+          end
+        end
+        
+        vim.notify(
+          string.format("✅ Ready for multi-file editing:\n• Saved all modified files (:wa)\n• Refreshed %d file buffers", refreshed),
+          vim.log.levels.INFO,
+          { title = "Avante Pre-edit", timeout = 3000 }
+        )
+      end,
+      desc = "Prepare for multi-file editing: save all files + refresh buffers",
       mode = "n",
     },
   },
