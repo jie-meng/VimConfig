@@ -474,6 +474,14 @@ return {
               providers = new_providers 
             })
             
+            -- Force reinitialize Avante's internal state
+            pcall(function()
+              local avante = require("avante")
+              if avante.refresh then
+                avante.refresh()
+              end
+            end)
+            
             -- Save the selection
             save_settings("copilot", choice)
             
