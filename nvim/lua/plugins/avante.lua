@@ -237,6 +237,13 @@ return {
   event = "VeryLazy",
   version = false, -- Never set this value to "*"! Never!
   init = function()
+    -- Setup which-key group for Avante (如果使用 which-key)
+    if pcall(require, "which-key") then
+      require("which-key").add({
+        { "<Space>c", group = "Avante AI Assistant" }
+      })
+    end
+    
     -- Improve Visual mode selection visibility in Avante windows
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "Avante*",
@@ -290,41 +297,7 @@ return {
   end,
   keys = {
     {
-      "<Space>cc",
-      function() require("avante").toggle() end,
-      desc = "Avante: Toggle",
-      mode = "n",
-    },
-    {
-      "<Space>ck",
-      function()
-        local avante = require("avante")
-        local sidebar = avante.get()
-        if not sidebar then
-          require("avante.api").ask()
-          sidebar = avante.get()
-        end
-        if sidebar and sidebar.file_selector then
-          local current_file = vim.api.nvim_buf_get_name(0)
-          if current_file and current_file ~= "" then
-            local relative_path = require("avante.utils").relative_path(current_file)
-            sidebar.file_selector:add_selected_file(relative_path)
-          end
-        end
-      end,
-      desc = "Add current buffer to Avante context",
-      mode = { "n", "v" },
-    },
-    {
-      "<Space>cs",
-      function()
-        vim.cmd("AvanteStop")
-      end,
-      desc = "Avante: Stop",
-      mode = "n",
-    },
-    {
-      "<Space>cre",
+      "<Leader>are",
       function()
         local diff = vim.fn.system("git diff --cached")
         if not diff or diff == "" then
@@ -348,7 +321,7 @@ return {
       mode = "n",
     },
     {
-      "<Space>crc",
+      "<Leader>arc",
       function()
         local diff = vim.fn.system("git diff --cached")
         if not diff or diff == "" then
@@ -369,137 +342,6 @@ return {
         })
       end,
       desc = "Review current git diff with Avante (Chinese)",
-      mode = "n",
-    },
-    {
-      "<Space>cmi",
-      function()
-        local config = require("avante.config")
-        local current_provider = config.provider or "unknown"
-        local providers = config.providers or {}
-        local current_model = "unknown"
-        
-        if providers[current_provider] and providers[current_provider].model then
-          current_model = providers[current_provider].model
-        end
-        
-        vim.notify(
-          string.format("Avante Provider: %s\nModel: %s", current_provider, current_model),
-          vim.log.levels.INFO,
-          { title = "Avante Model Info" }
-        )
-      end,
-      desc = "Show current Avante provider and model info",
-      mode = "n",
-    },
-    {
-      "<Space>cmp",
-      function()
-        vim.ui.select(AVAILABLE_PROVIDERS, {
-          prompt = "Select Avante Provider:",
-          format_item = function(item)
-            return item:gsub("^%l", string.upper)
-          end,
-        }, function(choice)
-          if choice then
-            require("avante.config").override({ provider = choice })
-            
-            -- Get current model for the selected provider
-            local current_config = require("avante.config")
-            local current_model = "unknown"
-            if current_config.providers and current_config.providers[choice] and current_config.providers[choice].model then
-              current_model = current_config.providers[choice].model
-            end
-            
-            -- Save the selection
-            save_settings(choice, current_model)
-            
-            vim.notify(
-              string.format("Switched to provider: %s (saved)", choice),
-              vim.log.levels.INFO,
-              { title = "Avante Provider" }
-            )
-          end
-        end)
-      end,
-      desc = "Switch Avante provider",
-      mode = "n",
-    },
-    {
-      "<Space>cmm",
-      function()
-        local current_config = require("avante.config")
-        local current_provider = current_config.provider or "unknown"
-        
-        -- Check if current provider is copilot
-        if current_provider ~= "copilot" then
-          vim.notify(
-            string.format("Model switching only available for Copilot provider.\nCurrent provider: %s", current_provider),
-            vim.log.levels.WARN,
-            { title = "Model Switch" }
-          )
-          return
-        end
-        
-        -- Get current model
-        local current_model = "gpt-4.1" -- default
-        if current_config.providers and current_config.providers.copilot and current_config.providers.copilot.model then
-          current_model = current_config.providers.copilot.model
-        end
-        
-        -- Filter models to only include Copilot-compatible ones
-        local copilot_models = {}
-        for _, model in ipairs(AVAILABLE_MODELS) do
-          table.insert(copilot_models, model)
-        end
-        
-        vim.ui.select(copilot_models, {
-          prompt = string.format("Select Copilot Model (current: %s):", current_model),
-          format_item = function(item)
-            if item == current_model then
-              return item .. " ← current"
-            end
-            return item
-          end,
-        }, function(choice)
-          if choice and choice ~= current_model then
-            local new_providers = vim.deepcopy(current_config.providers or {})
-            if not new_providers.copilot then
-              new_providers.copilot = {}
-            end
-            new_providers.copilot.model = choice
-            
-            require("avante.config").override({ 
-              provider = "copilot",
-              providers = new_providers 
-            })
-            
-            -- Force reinitialize Avante's internal state
-            pcall(function()
-              local avante = require("avante")
-              if avante.refresh then
-                avante.refresh()
-              end
-            end)
-            
-            -- Save the selection
-            save_settings("copilot", choice)
-            
-            vim.notify(
-              string.format("Switched Copilot model: %s → %s (saved)", current_model, choice),
-              vim.log.levels.INFO,
-              { title = "Copilot Model" }
-            )
-          elseif choice == current_model then
-            vim.notify(
-              string.format("Already using model: %s", current_model),
-              vim.log.levels.INFO,
-              { title = "Copilot Model" }
-            )
-          end
-        end)
-      end,
-      desc = "Switch model (Copilot provider only)",
       mode = "n",
     },
   },
