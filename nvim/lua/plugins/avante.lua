@@ -297,6 +297,22 @@ return {
   end,
   keys = {
     {
+      "<Leader>ak",
+      function()
+        local avante = require("avante")
+        local sidebar = avante.get()
+        if not sidebar then
+          require("avante.api").ask()
+          sidebar = avante.get()
+        end
+        if sidebar and sidebar.file_selector then
+          local current_file = vim.api.nvim_buf_get_name(0)
+          if current_file and current_file ~= "" then
+            local relative_path = require("avante.utils").relative_path(current_file)
+            sidebar.file_selector:add_selected_file(relative_path)
+          end
+        end
+      end,
       "<Leader>are",
       function()
         local diff = vim.fn.system("git diff --cached")
