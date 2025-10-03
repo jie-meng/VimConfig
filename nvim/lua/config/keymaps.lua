@@ -71,14 +71,20 @@ keymap.set("v", "<", "<gv", { desc = "Unindent selection" })
 keymap.set("v", "<Tab>", ">gv", { desc = "Indent selection" })
 keymap.set("v", "<S-Tab>", "<gv", { desc = "Unindent selection" })
 
--- Tab for indenting in insert mode
+-- Tab for indenting in insert mode (only indent cursor position, not whole line)
 keymap.set("i", "<Tab>", function()
   if vim.fn.pumvisible() == 1 then
     return "<C-n>"  -- Navigate completion menu
   else
-    return "<C-t>"  -- Indent
+    -- Insert spaces based on shiftwidth (respects expandtab setting)
+    local sw = vim.bo.shiftwidth
+    if vim.bo.expandtab then
+      return string.rep(" ", sw)  -- Insert spaces
+    else
+      return "\t"  -- Insert actual tab character
+    end
   end
-end, { expr = true, desc = "Indent or next completion" })
+end, { expr = true, desc = "Indent at cursor or next completion" })
 
 keymap.set("i", "<S-Tab>", function()
   if vim.fn.pumvisible() == 1 then

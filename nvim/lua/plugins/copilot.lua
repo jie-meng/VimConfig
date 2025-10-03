@@ -59,7 +59,7 @@ return {
         desc = "Auto-reset Copilot suggestion highlight after colorscheme change"
       })
       
-      -- Smart Tab mapping: accept Copilot suggestion if available, otherwise indent
+      -- Smart Tab mapping: accept Copilot suggestion if available, otherwise indent at cursor
       vim.keymap.set("i", "<Tab>", function()
         local copilot = require("copilot.suggestion")
         if copilot.is_visible() then
@@ -70,10 +70,16 @@ return {
           if vim.fn.pumvisible() == 1 then
             return "<C-n>"  -- Navigate completion menu
           else
-            return "<C-t>"  -- Indent
+            -- Insert spaces based on shiftwidth at cursor position (not whole line)
+            local sw = vim.bo.shiftwidth
+            if vim.bo.expandtab then
+              return string.rep(" ", sw)  -- Insert spaces
+            else
+              return "\t"  -- Insert actual tab character
+            end
           end
         end
-      end, { expr = true, desc = "Accept Copilot or indent" })
+      end, { expr = true, desc = "Accept Copilot or indent at cursor" })
     end,
     keys = {
       -- Basic Copilot management commands only
