@@ -9,8 +9,10 @@
 -- export AVANTE_MOONSHOT_API_KEY=ms-xxxxxxxxxxxxxxxx
 
 local SIDEBAR_WIDTH = 30
+local INSTRUCTIONS_FILE = "AGENTS.md"
 
 local user_opts = {
+  instructions_file = INSTRUCTIONS_FILE,
   provider = "copilot",
   mode = "agentic",
   auto_suggestions_provider = "copilot",
@@ -290,7 +292,7 @@ return {
       end,
       desc = "Review current git diff with Avante (English)",
       mode = "n",
-    },
+    }, 
     {
       "<Leader>arc",
       function()
@@ -313,6 +315,84 @@ return {
         })
       end,
       desc = "Review current git diff with Avante (Chinese)",
+      mode = "n",
+    },
+    {
+      "<Leader>ait",
+      function()
+        -- Determine project root (git top-level) or fallback to cwd
+        local handle = io.popen('git rev-parse --show-toplevel 2>/dev/null')
+        local git_root = nil
+        if handle then
+          git_root = handle:read('*l')
+          handle:close()
+        end
+        local root = nil
+        if git_root and git_root ~= '' then
+          root = git_root
+        else
+          root = vim.fn.getcwd()
+        end
+
+  local path = root .. '/' .. INSTRUCTIONS_FILE
+
+        -- Content to write
+        local content = [[
+# project instructions for myapp
+
+## your role
+
+you are an expert full-stack developer specializing in react, node.js, and typescript. you understand modern web development practices and have experience with our tech stack.
+
+## your mission
+
+help build a scalable e-commerce platform by:
+
+- writing type-safe typescript code
+- following react best practices and hooks patterns
+- implementing restful apis with proper error handling
+- ensuring responsive design with tailwind css
+- writing comprehensive unit and integration tests
+
+## project context
+
+myapp is a modern e-commerce platform targeting small businesses. we prioritize performance, accessibility, and user experience.
+
+## technology stack
+
+- frontend: react 18, typescript, tailwind css, vite
+- backend: node.js, express, prisma, postgresql
+- testing: jest, react testing library, playwright
+- deployment: docker, aws
+
+## coding standards
+
+- use functional components with hooks
+- prefer composition over inheritance
+- write self-documenting code with clear variable names
+- add jsdoc comments for complex functions
+- follow the existing folder structure and naming conventions
+]]
+        -- If file exists, ask before overwriting
+        if vim.fn.filereadable(path) == 1 then
+          local choice = vim.fn.confirm(INSTRUCTIONS_FILE .. ' already exists at ' .. path .. '\nOverwrite?', '&Yes\n&No', 2)
+          if choice ~= 1 then
+            vim.notify('Cancelled: ' .. INSTRUCTIONS_FILE .. ' not overwritten', vim.log.levels.INFO)
+            return
+          end
+        end
+
+        local f, err = io.open(path, 'w')
+        if not f then
+          vim.notify('Failed to write ' .. INSTRUCTIONS_FILE .. ': ' .. tostring(err), vim.log.levels.ERROR)
+          return
+        end
+        f:write(content)
+        f:close()
+
+        vim.notify('Created ' .. INSTRUCTIONS_FILE .. ' at: ' .. path, vim.log.levels.INFO)
+      end,
+  desc = "Generate " .. INSTRUCTIONS_FILE .. " in project root",
       mode = "n",
     },
   },
