@@ -8,60 +8,15 @@
 -- export AVANTE_OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx
 -- export AVANTE_MOONSHOT_API_KEY=ms-xxxxxxxxxxxxxxxx
 
--- Persistence for provider and model selection
-local persistence_file = vim.fn.stdpath("data") .. "/avante_settings.json"
-
-local function save_settings(provider, model)
-  local settings = {
-    provider = provider,
-    model = model,
-    timestamp = os.time()
-  }
-  local file = io.open(persistence_file, "w")
-  if file then
-    file:write(vim.json.encode(settings))
-    file:close()
-  end
-end
-
-local function load_settings()
-  local file = io.open(persistence_file, "r")
-  if file then
-    local content = file:read("*all")
-    file:close()
-    local ok, settings = pcall(vim.json.decode, content)
-    if ok and settings then
-      return settings.provider, settings.model
-    end
-  end
-  return nil, nil
-end
-
--- Available models (official names from providers)
-local AVAILABLE_MODELS = {
-  "gpt-4.1",                    -- OpenAI GPT-4.1 (latest with 1M token context)
-  "gpt-4o",                     -- OpenAI GPT-4 Omni (multimodal)
-  "claude-4-sonnet"             -- Anthropic Claude 4 Sonnet (latest alias)
-}
-
--- Available providers  
-local AVAILABLE_PROVIDERS = {
-  "copilot",
-  "openai"
-}
-
--- Load saved settings
-local saved_provider, saved_model = load_settings()
-
 local SIDEBAR_WIDTH = 30
 
 local user_opts = {
-  provider = saved_provider or "copilot",
+  provider = "copilot",
   mode = "agentic",
-  auto_suggestions_provider = saved_provider or "copilot",
+  auto_suggestions_provider = "copilot",
   providers = {
     copilot = {
-      model = (saved_provider == "copilot" and saved_model) or "gpt-4.1",
+      model = "gpt-5-mini",
       timeout = 30000,
       extra_request_body = {
         temperature = 0.1,
