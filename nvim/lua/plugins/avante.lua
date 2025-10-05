@@ -11,193 +11,21 @@
 local SIDEBAR_WIDTH = 30
 local INSTRUCTIONS_FILE = "AGENTS.md"
 
-local user_opts = {
-  instructions_file = INSTRUCTIONS_FILE,
-  provider = "copilot",
-  mode = "agentic",
-  auto_suggestions_provider = "copilot",
-  providers = {
-    copilot = {
-      model = "gpt-5-mini",
-      timeout = 30000,
-      extra_request_body = {
-        temperature = 0.1,
-        max_tokens = 8192,
-      },
-    },
-    claude = {
-      endpoint = vim.env.AVANTE_CLAUDE_ENDPOINT or "https://api.anthropic.com",
-      model = vim.env.AVANTE_CLAUDE_MODEL or "claude-sonnet-4-20250514",
-      timeout = 30000,
-      extra_request_body = {
-        temperature = 0.75,
-        max_tokens = 20480,
-      },
-    },
-    openai = {
-      endpoint = vim.env.AVANTE_OPENAI_ENDPOINT or "https://dashscope.aliyuncs.com/compatible-mode/v1",
-      model = vim.env.AVANTE_OPENAI_MODEL or "qwen3-coder-plus",
-      timeout = 30000,
-      extra_request_body = {
-        temperature = 0,
-        max_tokens = 32768,
-      },
-    },
-    moonshot = {
-      endpoint = "https://api.moonshot.cn/v1", -- https://api.moonshot.ai/v1 for global
-      model = "kimi-k2-0905-preview",
-      timeout = 30000,
-      extra_request_body = {
-        temperature = 0.75,
-        max_tokens = 32768,
-      }, 
-    },
-  },
-  dual_boost = {
-    enabled = false,
-    first_provider = "copilot",
-    second_provider = "claude",
-    prompt = "Based on the two reference outputs below, generate a response that incorporates elements from both but reflects your own judgment and unique perspective. Do not provide any explanation, just give the response directly. Reference Output 1: [{{provider1_output}}], Reference Output 2: [{{provider2_output}}]",
-    timeout = 60000,
-  },
-  behaviour = {
-    auto_suggestions = false,
-    auto_set_highlight_group = true,
-    auto_set_keymaps = true,
-    auto_apply_diff_after_generation = false,
-    support_paste_from_clipboard = false,
-    minimize_diff = true,
-    enable_token_counting = true,
-    auto_approve_tool_permissions = false,
-  },
-  prompt_logger = {
-    enabled = true,
-    log_dir = vim.fn.stdpath("cache") .. "/avante_prompts",
-    fortune_cookie_on_success = false,
-    next_prompt = {
-      normal = "<C-n>",
-      insert = "<C-n>",
-    },
-    prev_prompt = {
-      normal = "<C-p>",
-      insert = "<C-p>",
-    },
-  },
-  mappings = {
-    diff = {
-      ours = "co",
-      theirs = "ct",
-      all_theirs = "ca",
-      both = "cb",
-      cursor = "cc",
-      next = "]x",
-      prev = "[x",
-    },
-    suggestion = {
-      accept = "<M-l>",
-      next = "<M-]>",
-      prev = "<M-[>",
-      dismiss = "<C-]>",
-    },
-    jump = {
-      next = "]]",
-      prev = "[[",
-    },
-    submit = {
-      normal = "<CR>",
-      insert = "<C-s>",
-    },
-    cancel = {
-      normal = { "<C-c>" },
-      insert = { "<C-c>" },
-    },
-    sidebar = {
-      apply_all = "A",
-      apply_cursor = "a",
-      retry_user_request = "r",
-      edit_user_request = "e",
-      switch_windows = "<Tab>",
-      reverse_switch_windows = "<S-Tab>",
-      remove_file = "d",
-      add_file = "@",
-      close = { "<C-q>" },
-      close_from_input = { normal = "<C-q>" },
-    },
-  },
-  hints = { enabled = true },
-  selection = {
-    enabled = false,
-    hint_display = "delayed",
-  },
-  windows = {
-    position = "right",
-    wrap = true,
-    width = SIDEBAR_WIDTH,
-    sidebar_header = {
-      enabled = true,
-      align = "center",
-      rounded = true,
-    },
-    spinner = {
-      editing = { "⡀", "⠄", "⠂", "⠁", "⠈", "⠐", "⠠", "⢀", "⣀", "⢄", "⢂", "⢁", "⢈", "⢐", "⢠", "⣠", "⢤", "⢢", "⢡", "⢨", "⢰", "⣰", "⢴", "⢲", "⢱", "⢸", "⣸", "⢼", "⢺", "⢹", "⣹", "⢽", "⢻", "⣻", "⢿", "⣿" },
-      generating = { "·", "✢", "✳", "∗", "✻", "✽" },
-      thinking = { "🤯", "🙄" },
-    },
-    input = {
-      prefix = "> ",
-      height = 16,
-    },
-    edit = {
-      border = "rounded",
-      start_insert = false,
-    },
-    ask = {
-      floating = false,
-      start_insert = false,
-      border = "rounded",
-      focus_on_apply = "ours",
-    },
-  },
-  highlights = {
-    diff = {
-      current = "DiffText",
-      incoming = "DiffAdd",
-    },
-    -- Custom highlights for better visibility
-    visual = {
-      bg = "#4c566a",
-      fg = "#eceff4",
-      bold = true,
-    },
-    search = {
-      bg = "#ebcb8b",
-      fg = "#2e3440", 
-      bold = true,
-    },
-  },
-  diff = {
-    autojump = true,
-    list_opener = "copen",
-    override_timeoutlen = 500,
-  },
-  suggestion = {
-    debounce = 600,
-    throttle = 600,
-  },
-}
-
 return {
   "yetone/avante.nvim",
-  build = vim.fn.has("win32") == 1
+  -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+  -- ⚠️ must add this setting! ! !
+  build = vim.fn.has("win32") ~= 0
       and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
       or "make",
   event = "VeryLazy",
   version = false, -- Never set this value to "*"! Never!
+  ---@module 'avante'
+  ---@type avante.Config
   init = function()
-    -- Setup which-key group for Avante (如果使用 which-key)
     if pcall(require, "which-key") then
       require("which-key").add({
-        { "<Space>c", group = "Avante AI Assistant" }
+        { "<Leader>a", group = "Avante AI Assistant" }
       })
     end
     
@@ -396,7 +224,95 @@ myapp is a modern e-commerce platform targeting small businesses. we prioritize 
       mode = "n",
     },
   },
-  opts = vim.tbl_deep_extend("force", user_opts, {
+  opts = {
+    -- Project-specific instructions file
+    instructions_file = INSTRUCTIONS_FILE,
+    
+    -- Performance optimizations
+    debug = false, -- Disable debug mode
+    hints = { enabled = false }, -- Disable hints for better performance
+    -- Core provider settings - optimized for speed
+    provider = "copilot",
+    mode = "agentic",
+    auto_suggestions_provider = "copilot",
+    providers = {
+      copilot = {
+        model = "gpt-5-mini",
+        timeout = 30000,
+        extra_request_body = {
+          temperature = 0.1,
+          max_tokens = 20480, -- Reduce max tokens for faster generation
+        },
+      },
+      claude = {
+        endpoint = vim.env.AVANTE_CLAUDE_ENDPOINT or "https://api.anthropic.com",
+        model = vim.env.AVANTE_CLAUDE_MODEL or "claude-sonnet-4-20250514",
+        timeout = 30000,
+        extra_request_body = {
+          temperature = 0.75,
+          max_tokens = 20480,
+        },
+      },
+      openai = {
+        endpoint = vim.env.AVANTE_OPENAI_ENDPOINT or "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        model = vim.env.AVANTE_OPENAI_MODEL or "qwen3-coder-plus",
+        timeout = 30000,
+        extra_request_body = {
+          temperature = 0,
+          max_tokens = 20480,
+        },
+      },
+      moonshot = {
+        endpoint = "https://api.moonshot.cn/v1", -- https://api.moonshot.ai/v1 for global
+        model = "kimi-k2-0905-preview",
+        timeout = 30000,
+        extra_request_body = {
+          temperature = 0.75,
+          max_tokens = 32768,
+        }, 
+      },
+    },
+    behaviour = {
+      auto_suggestions = false, -- Keep disabled for performance
+      auto_approve_tool_permissions = false,
+      enable_fastapply = true, -- Keep for faster edits
+      enable_token_counting = false, -- Disable to reduce overhead
+      minimize_diff = true, -- Enable minimal diff for faster processing
+      support_paste_from_clipboard = false, -- Disable if not needed
+    },
+    prompt_logger = {
+      enabled = false, -- Disable logging for performance
+    },
+    selection = {
+      enabled = false, -- Default is true
+    },
+    windows = {
+      width = SIDEBAR_WIDTH, -- Custom width (default is 30)
+      input = {
+        height = 16, -- Custom height (default is 8)
+      },
+      edit = {
+        start_insert = false, -- Default is true
+      },
+      ask = {
+        start_insert = false, -- Default is true
+      },
+    },
+    highlights = {
+      -- Custom highlights for better visibility
+      visual = {
+        bg = "#4c566a",
+        fg = "#eceff4",
+        bold = true,
+      },
+      search = {
+        bg = "#ebcb8b",
+        fg = "#2e3440", 
+        bold = true,
+      },
+    },
+
+
     -- MCP Hub integration
     system_prompt = function()
       local hub = require("mcphub").get_hub_instance()
@@ -407,46 +323,54 @@ myapp is a modern e-commerce platform targeting small businesses. we prioritize 
         require("mcphub.extensions.avante").mcp_tool(),
       }
     end,
-    -- Disable Avante's built-in tools to avoid conflicts with MCPHub tools
+    -- Disable tools for better performance in legacy mode
     disabled_tools = {
-      "list_files",    -- Built-in file operations
-      "search_files",
-      "read_file",
-      "create_file",
-      "rename_file",
-      "delete_file",
-      "create_dir",
-      "rename_dir",
-      "delete_dir",
-      "bash",         -- Built-in terminal access
+      -- "list_files",    -- Built-in file operations
+      -- "search_files",
+      -- "read_file",
+      -- "create_file",
+      -- "rename_file",
+      -- "delete_file",
+      -- "create_dir",
+      -- "rename_dir",
+      -- "delete_dir",
+      -- "bash",         -- Built-in terminal access
+      -- "python",       -- Disable Python execution
+      -- "web_search",   -- Disable web search
+      -- "rag_search",   -- Disable RAG search
     },
-  }),
+  },
   dependencies = {
     "nvim-lua/plenary.nvim",
     "MunifTanjim/nui.nvim",
-    "echasnovski/mini.pick",
-    "nvim-telescope/telescope.nvim",
-    "hrsh7th/nvim-cmp",
-    "ibhagwan/fzf-lua",
-    "stevearc/dressing.nvim",
-    "folke/snacks.nvim",
-    "nvim-tree/nvim-web-devicons",
-    "zbirenbaum/copilot.lua",
+    --- The below dependencies are optional,
+    "echasnovski/mini.pick", -- for file_selector provider mini.pick
+    "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+    "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+    "ibhagwan/fzf-lua", -- for file_selector provider fzf
+    "stevearc/dressing.nvim", -- for input provider dressing
+    "folke/snacks.nvim", -- for input provider snacks
+    "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+    "zbirenbaum/copilot.lua", -- for providers='copilot'
     {
+      -- support for image pasting
       "HakonHarnes/img-clip.nvim",
       event = "VeryLazy",
       opts = {
+        -- recommended settings
         default = {
           embed_image_as_base64 = false,
           prompt_for_file_name = false,
           drag_and_drop = {
             insert_mode = true,
           },
+          -- required for Windows users
           use_absolute_path = true,
         },
       },
     },
     {
+      -- Make sure to set this up properly if you have lazy=true
       'MeanderingProgrammer/render-markdown.nvim',
       opts = {
         file_types = { "markdown", "Avante" },
