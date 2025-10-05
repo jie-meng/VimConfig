@@ -237,7 +237,7 @@ myapp is a modern e-commerce platform targeting small businesses. we prioritize 
     auto_suggestions_provider = "copilot",
     providers = {
       copilot = {
-        model = "gpt-5-mini",
+        model = "gpt-4.1",
         timeout = 30000,
         extra_request_body = {
           temperature = 0.1,
@@ -312,7 +312,6 @@ myapp is a modern e-commerce platform targeting small businesses. we prioritize 
       },
     },
 
-
     -- MCP Hub integration
     system_prompt = function()
       local hub = require("mcphub").get_hub_instance()
@@ -325,19 +324,18 @@ myapp is a modern e-commerce platform targeting small businesses. we prioritize 
     end,
     -- Disable tools for better performance in legacy mode
     disabled_tools = {
-      -- "list_files",    -- Built-in file operations
-      -- "search_files",
-      -- "read_file",
-      -- "create_file",
-      -- "rename_file",
-      -- "delete_file",
-      -- "create_dir",
-      -- "rename_dir",
-      -- "delete_dir",
-      -- "bash",         -- Built-in terminal access
-      -- "python",       -- Disable Python execution
-      -- "web_search",   -- Disable web search
-      -- "rag_search",   -- Disable RAG search
+       "list_files",    -- Built-in file operations
+        "search_files",
+        "read_file",
+        "create_file",
+        "rename_file",
+        "delete_file",
+        "create_dir",
+        "rename_dir",
+        "delete_dir",
+        "bash",         -- Built-in terminal access
+        -- "web_search",   -- Disable web search
+        -- "rag_search",   -- Disable RAG search
     },
   },
   dependencies = {
