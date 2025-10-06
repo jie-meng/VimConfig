@@ -22,64 +22,7 @@ return {
   version = false, -- Never set this value to "*"! Never!
   ---@module 'avante'
   ---@type avante.Config
-  init = function()
-    if pcall(require, "which-key") then
-      require("which-key").add({
-        { "<Leader>a", group = "Avante AI Assistant" }
-      })
-    end
-    
-    -- Improve Visual mode selection visibility in Avante windows
-    vim.api.nvim_create_autocmd("FileType", {
-      pattern = "Avante*",
-      callback = function()
-        -- Set better Visual mode highlighting for Avante buffers
-        vim.api.nvim_set_hl(0, "Visual", { 
-          bg = "#4c566a",  -- A more contrasting blue-gray
-          fg = "#eceff4",  -- Light foreground for better contrast
-          bold = true 
-        })
-        -- Also set Search highlight for better findability
-        vim.api.nvim_set_hl(0, "Search", { 
-          bg = "#ebcb8b", 
-          fg = "#2e3440", 
-          bold = true 
-        })
-        -- Improve IncSearch (incremental search) highlighting
-        vim.api.nvim_set_hl(0, "IncSearch", { 
-          bg = "#d08770", 
-          fg = "#2e3440", 
-          bold = true 
-        })
-      end,
-    })
-    
-    vim.api.nvim_create_autocmd("User", {
-      pattern = "AvanteRequest",
-      callback = function()
-        vim.cmd("silent! wa")
-        
-        local refreshed = 0
-        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-          if vim.api.nvim_buf_is_loaded(buf) and not vim.api.nvim_buf_get_option(buf, 'modified') then
-            local name = vim.api.nvim_buf_get_name(buf)
-            if name ~= "" and vim.fn.filereadable(name) == 1 then
-              vim.api.nvim_buf_call(buf, function()
-                vim.cmd('checktime')
-              end)
-              refreshed = refreshed + 1
-            end
-          end
-        end
-        
-        vim.notify(
-          string.format("Pre-edit: Saved all files + refreshed %d buffers", refreshed),
-          vim.log.levels.INFO,
-          { timeout = 1500 }
-        )
-      end,
-    })
-  end,
+
   keys = {
     {
       "<Leader>ak",
@@ -98,6 +41,10 @@ return {
           end
         end
       end,
+      desc = "Add current file to Avante file selector",
+      mode = "n",
+    },
+    {
       "<Leader>are",
       function()
         local diff = vim.fn.system("git diff --cached")
@@ -120,7 +67,7 @@ return {
       end,
       desc = "Review current git diff with Avante (English)",
       mode = "n",
-    }, 
+    },
     {
       "<Leader>arc",
       function()
@@ -145,85 +92,8 @@ return {
       desc = "Review current git diff with Avante (Chinese)",
       mode = "n",
     },
-    {
-      "<Leader>ait",
-      function()
-        -- Determine project root (git top-level) or fallback to cwd
-        local handle = io.popen('git rev-parse --show-toplevel 2>/dev/null')
-        local git_root = nil
-        if handle then
-          git_root = handle:read('*l')
-          handle:close()
-        end
-        local root = nil
-        if git_root and git_root ~= '' then
-          root = git_root
-        else
-          root = vim.fn.getcwd()
-        end
-
-  local path = root .. '/' .. INSTRUCTIONS_FILE
-
-        -- Content to write
-        local content = [[
-# project instructions for myapp
-
-## your role
-
-you are an expert full-stack developer specializing in react, node.js, and typescript. you understand modern web development practices and have experience with our tech stack.
-
-## your mission
-
-help build a scalable e-commerce platform by:
-
-- writing type-safe typescript code
-- following react best practices and hooks patterns
-- implementing restful apis with proper error handling
-- ensuring responsive design with tailwind css
-- writing comprehensive unit and integration tests
-
-## project context
-
-myapp is a modern e-commerce platform targeting small businesses. we prioritize performance, accessibility, and user experience.
-
-## technology stack
-
-- frontend: react 18, typescript, tailwind css, vite
-- backend: node.js, express, prisma, postgresql
-- testing: jest, react testing library, playwright
-- deployment: docker, aws
-
-## coding standards
-
-- use functional components with hooks
-- prefer composition over inheritance
-- write self-documenting code with clear variable names
-- add jsdoc comments for complex functions
-- follow the existing folder structure and naming conventions
-]]
-        -- If file exists, ask before overwriting
-        if vim.fn.filereadable(path) == 1 then
-          local choice = vim.fn.confirm(INSTRUCTIONS_FILE .. ' already exists at ' .. path .. '\nOverwrite?', '&Yes\n&No', 2)
-          if choice ~= 1 then
-            vim.notify('Cancelled: ' .. INSTRUCTIONS_FILE .. ' not overwritten', vim.log.levels.INFO)
-            return
-          end
-        end
-
-        local f, err = io.open(path, 'w')
-        if not f then
-          vim.notify('Failed to write ' .. INSTRUCTIONS_FILE .. ': ' .. tostring(err), vim.log.levels.ERROR)
-          return
-        end
-        f:write(content)
-        f:close()
-
-        vim.notify('Created ' .. INSTRUCTIONS_FILE .. ' at: ' .. path, vim.log.levels.INFO)
-      end,
-  desc = "Generate " .. INSTRUCTIONS_FILE .. " in project root",
-      mode = "n",
-    },
   },
+
   opts = {
     -- Project-specific instructions file
     instructions_file = INSTRUCTIONS_FILE,
@@ -237,7 +107,7 @@ myapp is a modern e-commerce platform targeting small businesses. we prioritize 
     auto_suggestions_provider = "copilot",
     providers = {
       copilot = {
-        model = "gpt-4.1",
+        model = "gpt-5-mini",
         timeout = 30000,
         extra_request_body = {
           temperature = 0.1,
@@ -310,6 +180,11 @@ myapp is a modern e-commerce platform targeting small businesses. we prioritize 
         fg = "#2e3440", 
         bold = true,
       },
+      incsearch = {
+        bg = "#d08770",
+        fg = "#2e3440",
+        bold = true,
+      },
     },
 
     -- MCP Hub integration
@@ -322,22 +197,8 @@ myapp is a modern e-commerce platform targeting small businesses. we prioritize 
         require("mcphub.extensions.avante").mcp_tool(),
       }
     end,
-    -- Disable tools for better performance in legacy mode
-    disabled_tools = {
-       "list_files",    -- Built-in file operations
-        "search_files",
-        "read_file",
-        "create_file",
-        "rename_file",
-        "delete_file",
-        "create_dir",
-        "rename_dir",
-        "delete_dir",
-        "bash",         -- Built-in terminal access
-        -- "web_search",   -- Disable web search
-        -- "rag_search",   -- Disable RAG search
-    },
   },
+
   dependencies = {
     "nvim-lua/plenary.nvim",
     "MunifTanjim/nui.nvim",
