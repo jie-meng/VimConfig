@@ -145,9 +145,8 @@ return {
     behaviour = {
       auto_suggestions = false, -- Keep disabled for performance
       auto_approve_tool_permissions = false,
-      enable_fastapply = true, -- Keep for faster edits
       enable_token_counting = false, -- Disable to reduce overhead
-      minimize_diff = true, -- Enable minimal diff for faster processing
+      minimize_diff = false, -- Enable minimal diff for faster processing
       support_paste_from_clipboard = false, -- Disable if not needed
     },
     prompt_logger = {
