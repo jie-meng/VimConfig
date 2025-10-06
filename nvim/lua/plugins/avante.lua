@@ -149,6 +149,10 @@ return {
       minimize_diff = false, -- Enable minimal diff for faster processing
       support_paste_from_clipboard = false, -- Disable if not needed
     },
+    web_search_engine = {
+      provider = "tavily", -- tavily, serpapi, google, kagi, brave, or searxng
+      proxy = nil, -- proxy support, e.g., http://127.0.0.1:7890
+    },
     prompt_logger = {
       enabled = false, -- Disable logging for performance
     },
@@ -165,24 +169,6 @@ return {
       },
       ask = {
         start_insert = false, -- Default is true
-      },
-    },
-    highlights = {
-      -- Custom highlights for better visibility
-      visual = {
-        bg = "#4c566a",
-        fg = "#eceff4",
-        bold = true,
-      },
-      search = {
-        bg = "#ebcb8b",
-        fg = "#2e3440", 
-        bold = true,
-      },
-      incsearch = {
-        bg = "#d08770",
-        fg = "#2e3440",
-        bold = true,
       },
     },
 
