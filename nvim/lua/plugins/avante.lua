@@ -107,7 +107,7 @@ return {
     auto_suggestions_provider = "copilot",
     providers = {
       copilot = {
-        model = "gpt-4.1",
+        model = "gpt-5-mini",
         timeout = 30000,
         extra_request_body = {
           temperature = 0.1,
