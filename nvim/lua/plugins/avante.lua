@@ -45,7 +45,7 @@ return {
       mode = "n",
     },
     {
-      "<Leader>are",
+      "<Leader>ave",
       function()
         local diff = vim.fn.system("git diff --cached")
         if not diff or diff == "" then
@@ -69,7 +69,7 @@ return {
       mode = "n",
     },
     {
-      "<Leader>arc",
+      "<Leader>avc",
       function()
         local diff = vim.fn.system("git diff --cached")
         if not diff or diff == "" then
