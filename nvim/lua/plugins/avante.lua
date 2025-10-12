@@ -171,7 +171,7 @@ return {
       },
     },
     behaviour = {
-      auto_suggestions = true, -- Experimental stage
+      auto_suggestions = false, -- Experimental stage
       auto_set_highlight_group = true,
       auto_set_keymaps = true,
       auto_apply_diff_after_generation = false,
@@ -207,6 +207,16 @@ return {
         switch_windows = "<C-j>",
         reverse_switch_windows = "<C-k>",
       },
+      suggestion = {
+        accept = "<Tab>",
+        next = "<M-]>",
+        prev = "<M-[>",
+        dismiss = "<C-]>",
+      },
+    },
+    suggestion = {
+      debounce = 600,
+      throttle = 600,
     },
 
     -- MCP Hub integration
