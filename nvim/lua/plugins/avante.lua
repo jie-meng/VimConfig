@@ -11,6 +11,64 @@
 local SIDEBAR_WIDTH = 30
 local INSTRUCTIONS_FILE = "AGENTS.md"
 
+-- Global Avante layout reset function
+_G.reset_avante_layout = function()
+  -- First check if Avante plugin is available
+  local ok, avante = pcall(require, "avante")
+  if not ok then
+    -- Avante plugin not available, do nothing silently
+    return
+  end
+  
+  -- Check if there's an active Avante sidebar
+  local sidebar = avante.get()
+  if not sidebar then
+    -- No active Avante sidebar, do nothing silently
+    return
+  end
+  
+  -- Check if Avante window is actually visible
+  local avante_visible = false
+  if sidebar.winid and vim.api.nvim_win_is_valid(sidebar.winid) then
+    -- Window exists and is valid
+    avante_visible = true
+  else
+    -- Check for any Avante-related windows by buffer type
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      local buf_name = vim.api.nvim_buf_get_name(buf)
+      local filetype = vim.api.nvim_buf_get_option(buf, 'filetype')
+      
+      if filetype == 'Avante' or buf_name:match('Avante') then
+        avante_visible = true
+        break
+      end
+    end
+  end
+  
+  -- Only proceed if Avante window is actually visible
+  if not avante_visible then
+    -- Avante window not visible, do nothing silently
+    return
+  end
+  
+  -- Avante is visible, proceed with reset (simple approach)
+  vim.notify("Resetting Avante layout...", vim.log.levels.INFO)
+  
+  local api = require("avante.api")
+  
+  -- Simple close and reopen
+  if sidebar.close then
+    sidebar:close()
+  end
+  
+  -- Wait and reopen
+  vim.defer_fn(function()
+    api.ask()
+    vim.notify("Avante layout reset complete", vim.log.levels.INFO)
+  end, 100)
+end
+
 return {
   "yetone/avante.nvim",
   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
@@ -95,46 +153,7 @@ return {
     {
       "<Leader>ae",
       function()
-        -- Reset Avante window layout - more comprehensive approach
-        vim.notify("Attempting to reset Avante layout...", vim.log.levels.INFO)
-        
-        -- Method 1: Try to get and reset existing sidebar
-        local ok, avante = pcall(require, "avante")
-        if ok then
-          local sidebar = avante.get()
-          if sidebar then
-            vim.notify("Found Avante sidebar, resetting...", vim.log.levels.INFO)
-            
-            -- Close and reopen approach (more reliable)
-            local api = require("avante.api")
-            
-            -- Store current buffer for context
-            local current_buf = vim.api.nvim_get_current_buf()
-            
-            -- Close current avante instance
-            if sidebar.close then
-              sidebar:close()
-            end
-            
-            -- Wait a moment and reopen
-            vim.defer_fn(function()
-              -- Reopen avante
-              api.ask()
-              vim.notify("Avante layout reset complete", vim.log.levels.INFO)
-            end, 100)
-            
-          else
-            vim.notify("No active Avante sidebar found", vim.log.levels.WARN)
-          end
-        else
-          vim.notify("Avante plugin not available", vim.log.levels.ERROR)
-        end
-        
-        -- Method 2: Fallback - general window equalization
-        vim.defer_fn(function()
-          vim.cmd("wincmd =")
-          vim.cmd("redraw!")
-        end, 200)
+        _G.reset_avante_layout()
       end,
       desc = "Reset Avante window layout",
       mode = "n",
