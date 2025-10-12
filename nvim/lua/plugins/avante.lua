@@ -9,64 +9,25 @@
 -- export AVANTE_MOONSHOT_API_KEY=ms-xxxxxxxxxxxxxxxx
 
 local SIDEBAR_WIDTH = 30
+local RESET_CHAT_WINDOW_HEIGHT = 45
 local INSTRUCTIONS_FILE = "AGENTS.md"
 
 -- Global Avante layout reset function
 _G.reset_avante_layout = function()
-  -- First check if Avante plugin is available
-  local ok, avante = pcall(require, "avante")
-  if not ok then
-    -- Avante plugin not available, do nothing silently
-    return
-  end
-  
-  -- Check if there's an active Avante sidebar
-  local sidebar = avante.get()
-  if not sidebar then
-    -- No active Avante sidebar, do nothing silently
-    return
-  end
-  
-  -- Check if Avante window is actually visible
-  local avante_visible = false
-  if sidebar.winid and vim.api.nvim_win_is_valid(sidebar.winid) then
-    -- Window exists and is valid
-    avante_visible = true
-  else
-    -- Check for any Avante-related windows by buffer type
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
-      local buf = vim.api.nvim_win_get_buf(win)
-      local buf_name = vim.api.nvim_buf_get_name(buf)
-      local filetype = vim.api.nvim_buf_get_option(buf, 'filetype')
-      
-      if filetype == 'Avante' or buf_name:match('Avante') then
-        avante_visible = true
-        break
-      end
+  -- Find the first Avante window (should be the chat window)
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    local filetype = vim.api.nvim_buf_get_option(buf, 'filetype')
+    
+    if filetype == 'Avante' then
+      -- Found Avante window, set it to fixed height
+      pcall(vim.api.nvim_win_set_height, win, RESET_CHAT_WINDOW_HEIGHT)
+      vim.notify("Reset Avante chat height", vim.log.levels.INFO)
+      return
     end
   end
   
-  -- Only proceed if Avante window is actually visible
-  if not avante_visible then
-    -- Avante window not visible, do nothing silently
-    return
-  end
-  
-  -- Avante is visible, proceed with reset (simple approach)
-  vim.notify("Resetting Avante layout...", vim.log.levels.INFO)
-  
-  local api = require("avante.api")
-  
-  -- Simple close and reopen
-  if sidebar.close then
-    sidebar:close()
-  end
-  
-  -- Wait and reopen
-  vim.defer_fn(function()
-    api.ask()
-    vim.notify("Avante layout reset complete", vim.log.levels.INFO)
-  end, 100)
+  vim.notify("No Avante chat window found", vim.log.levels.WARN)
 end
 
 return {
@@ -158,6 +119,7 @@ return {
       desc = "Reset Avante window layout",
       mode = "n",
     },
+
   },
 
   opts = {
