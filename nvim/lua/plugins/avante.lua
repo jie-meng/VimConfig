@@ -171,6 +171,12 @@ return {
         start_insert = false, -- Default is true
       },
     },
+    mappings = {
+      sidebar = {
+        switch_windows = "<C-j>",
+        reverse_switch_windows = "<C-k>",
+      },
+    },
 
     -- MCP Hub integration
     system_prompt = function()
