@@ -111,7 +111,7 @@ return {
         timeout = 30000,
         extra_request_body = {
           temperature = 0.1,
-          max_tokens = 20480, -- Reduce max tokens for faster generation
+          max_tokens = 32768, -- Reduce max tokens for faster generation
         },
       },
       claude = {
@@ -119,8 +119,8 @@ return {
         model = vim.env.AVANTE_CLAUDE_MODEL or "claude-sonnet-4-20250514",
         timeout = 30000,
         extra_request_body = {
-          temperature = 0.75,
-          max_tokens = 20480,
+          temperature = 0.1,
+          max_tokens = 32768,
         },
       },
       openai = {
@@ -128,8 +128,8 @@ return {
         model = vim.env.AVANTE_OPENAI_MODEL or "qwen3-coder-plus",
         timeout = 30000,
         extra_request_body = {
-          temperature = 0,
-          max_tokens = 20480,
+          temperature = 0.1,
+          max_tokens = 32768,
         },
       },
       moonshot = {
@@ -137,17 +137,20 @@ return {
         model = "kimi-k2-0905-preview",
         timeout = 30000,
         extra_request_body = {
-          temperature = 0.75,
+          temperature = 0.1,
           max_tokens = 32768,
         }, 
       },
     },
     behaviour = {
-      auto_suggestions = false, -- Keep disabled for performance
-      auto_approve_tool_permissions = false,
-      enable_token_counting = false, -- Disable to reduce overhead
-      minimize_diff = true, -- Enable minimal diff for faster processing
-      support_paste_from_clipboard = false, -- Disable if not needed
+      auto_suggestions = true, -- Experimental stage
+      auto_set_highlight_group = true,
+      auto_set_keymaps = true,
+      auto_apply_diff_after_generation = false,
+      support_paste_from_clipboard = false,
+      minimize_diff = true, -- Whether to remove unchanged lines when applying a code block
+      enable_token_counting = true, -- Whether to enable token counting. Default to true.
+      auto_approve_tool_permissions = false, -- Default: show permission prompts for all tools
     },
     web_search_engine = {
       provider = "tavily", -- tavily, serpapi, google, kagi, brave, or searxng
