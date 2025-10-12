@@ -92,6 +92,53 @@ return {
       desc = "Review current git diff with Avante (Chinese)",
       mode = "n",
     },
+    {
+      "<Leader>ae",
+      function()
+        -- Reset Avante window layout - more comprehensive approach
+        vim.notify("Attempting to reset Avante layout...", vim.log.levels.INFO)
+        
+        -- Method 1: Try to get and reset existing sidebar
+        local ok, avante = pcall(require, "avante")
+        if ok then
+          local sidebar = avante.get()
+          if sidebar then
+            vim.notify("Found Avante sidebar, resetting...", vim.log.levels.INFO)
+            
+            -- Close and reopen approach (more reliable)
+            local api = require("avante.api")
+            
+            -- Store current buffer for context
+            local current_buf = vim.api.nvim_get_current_buf()
+            
+            -- Close current avante instance
+            if sidebar.close then
+              sidebar:close()
+            end
+            
+            -- Wait a moment and reopen
+            vim.defer_fn(function()
+              -- Reopen avante
+              api.ask()
+              vim.notify("Avante layout reset complete", vim.log.levels.INFO)
+            end, 100)
+            
+          else
+            vim.notify("No active Avante sidebar found", vim.log.levels.WARN)
+          end
+        else
+          vim.notify("Avante plugin not available", vim.log.levels.ERROR)
+        end
+        
+        -- Method 2: Fallback - general window equalization
+        vim.defer_fn(function()
+          vim.cmd("wincmd =")
+          vim.cmd("redraw!")
+        end, 200)
+      end,
+      desc = "Reset Avante window layout",
+      mode = "n",
+    },
   },
 
   opts = {
