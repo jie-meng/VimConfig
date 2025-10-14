@@ -66,6 +66,16 @@ else
     echo -e "${YELLOW}im-select is already installed.${NC}"
 fi
 
+# Install JetBrains Nerd Font
+echo -e "${GREEN}Installing JetBrains Nerd Font...${NC}"
+if ! fc-list | grep -i "JetBrainsMono Nerd Font" &> /dev/null; then
+    brew tap homebrew/cask-fonts
+    brew install --cask font-jetbrains-mono-nerd-font
+    echo -e "${GREEN}JetBrains Mono Nerd Font installed.${NC}"
+else
+    echo -e "${YELLOW}JetBrains Mono Nerd Font is already installed.${NC}"
+fi
+
 # Create config directory
 echo -e "${GREEN}Creating Neovim config directory...${NC}"
 mkdir -p ~/.config/nvim
@@ -94,6 +104,12 @@ echo -e "${YELLOW}- Additional language servers via :Mason (Rust, Go, etc.)${NC}
 echo -e "${YELLOW}- Code formatters (prettier, autopep8, stylua, etc.)${NC}"
 echo -e "${YELLOW}- Git (usually pre-installed on macOS)${NC}"
 echo -e "${YELLOW}- Node.js/Python3 (if you need specific language support)${NC}"
+echo ""
+echo -e "${BLUE}=== How to configure JetBrains Nerd Font in iTerm2 ===${NC}"
+echo -e "${YELLOW}1. Open iTerm2 Preferences (Cmd + ,)${NC}"
+echo -e "${YELLOW}2. Go to Profiles > Text${NC}"
+echo -e "${YELLOW}3. Set Font and Non-ASCII Font to 'JetBrainsMono Nerd Font'${NC}"
+echo -e "${YELLOW}4. Make sure 'Use built-in Powerline glyphs' is unchecked${NC}"
 echo ""
 echo -e "${BLUE}=== Next Steps ===${NC}"
 echo -e "${YELLOW}1. Open a new terminal or run 'source ~/.zshrc' (or ~/.bash_profile)${NC}"
