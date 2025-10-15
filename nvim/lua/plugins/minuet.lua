@@ -33,17 +33,22 @@ return {
   },
   config = function()
     require("minuet").setup({
-      virtualtext = {
-        auto_trigger_ft = { "*" }, -- '*' stands for all file types
-        keymap = {
-          accept = "<A-A>", -- Disable builtin, use custom Tab key below
-          accept_line = "<A-a>",
-          accept_n_lines = "<A-z>",
-          prev = "<A-[>",
-          next = "<A-]>",
-          dismiss = "<A-e>",
-        },
+      lsp = {
+        enabled_ft = { "*" },
+        -- Enables automatic completion triggering using `vim.lsp.completion.enable`
+        enabled_auto_trigger_ft = { "*" },
       },
+      -- virtualtext = {
+      --   auto_trigger_ft = { "*" }, -- '*' stands for all file types
+      --   keymap = {
+      --     accept = "<A-A>", -- Disable builtin, use custom Tab key below
+      --     accept_line = "<A-a>",
+      --     accept_n_lines = "<A-z>",
+      --     prev = "<A-[>",
+      --     next = "<A-]>",
+      --     dismiss = "<A-e>",
+      --   },
+      -- },
       provider = "openai_fim_compatible",
       n_completions = 1, -- Recommend for local model for resource saving
       -- I recommend beginning with a small context window size and incrementally
