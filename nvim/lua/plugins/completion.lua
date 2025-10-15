@@ -38,7 +38,7 @@ return {
         ["<C-f>"] = cmp.mapping.scroll_docs(4),
         ["<C-Space>"] = cmp.mapping.complete(),
         ["<C-e>"] = cmp.mapping.abort(),
-        ["<C-l>"] = cmp.mapping(function()
+        ["<C-i>"] = cmp.mapping(function()
           if cmp.visible() then
             cmp.close()
           end
