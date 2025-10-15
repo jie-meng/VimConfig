@@ -29,7 +29,7 @@ return {
         suggestion = {
           auto_trigger = true,  -- Keep: different from default (false)
           keymap = {
-            accept = false,  -- Keep: custom Tab mapping setup
+            accept = "<C-l>",  -- Keep: custom Tab mapping setup
             next = "<C-.>",   -- Keep: custom keymap
             prev = "<C-,>",   -- Keep: custom keymap
             dismiss = "<C-/>", -- Keep: custom keymap
