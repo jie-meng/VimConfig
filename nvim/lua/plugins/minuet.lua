@@ -4,6 +4,9 @@
 
 return {
   "milanglacier/minuet-ai.nvim",
+  enabled = function()
+    return require("config.ai_completion_provider").is_enabled("minuet")
+  end,
   event = "VeryLazy",
   config = function()
     require("minuet").setup({

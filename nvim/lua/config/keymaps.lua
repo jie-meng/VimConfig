@@ -129,3 +129,9 @@ keymap.set("n", "<Esc>", ":noh<CR>", { desc = "Clear search highlight" })
 for i = 1, 12 do
   keymap.set("i", "<F" .. i .. ">", "<Nop>", { desc = "Disable F" .. i .. " in insert mode" })
 end
+
+-- AI Completion Provider management
+keymap.set("n", "<Leader>At", ":AICompletionProviderSwitch<CR>", { desc = "Toggle AI completion provider (Copilot/Minuet)" })
+keymap.set("n", "<Leader>As", ":AICompletionProviderStatus<CR>", { desc = "Show current AI completion provider" })
+keymap.set("n", "<Leader>Ac", ":AICompletionProviderSwitch copilot<CR>", { desc = "Switch to Copilot" })
+keymap.set("n", "<Leader>Am", ":AICompletionProviderSwitch minuet<CR>", { desc = "Switch to Minuet" })

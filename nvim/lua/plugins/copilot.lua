@@ -14,6 +14,9 @@ return {
   -- GitHub Copilot for code completion (basic functionality only)
   {
     "zbirenbaum/copilot.lua",
+    enabled = function()
+      return require("config.ai_completion_provider").is_enabled("copilot")
+    end,
     cmd = "Copilot",
     event = "InsertEnter",
     config = function()
