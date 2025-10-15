@@ -14,12 +14,17 @@ return {
   -- GitHub Copilot for code completion (basic functionality only)
   {
     "zbirenbaum/copilot.lua",
-    enabled = function()
-      return require("config.ai_completion_provider").is_enabled("copilot")
-    end,
     cmd = "Copilot",
     event = "InsertEnter",
     config = function()
+      local provider = require("config.ai_completion_provider")
+      local is_active = provider.is_enabled("copilot")
+      
+      -- Only setup if this is the active provider
+      if not is_active then
+        return
+      end
+      
       require("copilot").setup({
         panel = {
           keymap = {
