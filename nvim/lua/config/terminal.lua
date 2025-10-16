@@ -24,7 +24,7 @@ local function goto_bottom_editor_window()
 end
 
 -- Find or show the terminal buffer, split and show if hidden
--- Only finds user-created terminals (marked with user_terminal_f2)
+-- Only finds user-created terminals (marked with user_terminal)
 local function get_or_show_terminal()
   local term_bufnr, term_winnr = nil, nil
   -- Find visible terminal window
@@ -32,7 +32,7 @@ local function get_or_show_terminal()
     local bufnr = vim.api.nvim_win_get_buf(winnr)
     if vim.api.nvim_buf_is_loaded(bufnr) and vim.api.nvim_buf_get_option(bufnr, "buftype") == "terminal" then
       -- Check if this is a user terminal (has our marker)
-      local ok, is_user_terminal = pcall(vim.api.nvim_buf_get_var, bufnr, "user_terminal_f2")
+      local ok, is_user_terminal = pcall(vim.api.nvim_buf_get_var, bufnr, "user_terminal")
       if ok and is_user_terminal then
         term_bufnr = bufnr
         term_winnr = winnr
@@ -45,7 +45,7 @@ local function get_or_show_terminal()
     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
       if vim.api.nvim_buf_is_loaded(bufnr) and vim.api.nvim_buf_get_option(bufnr, "buftype") == "terminal" then
         -- Check if this is a user terminal (has our marker)
-        local ok, is_user_terminal = pcall(vim.api.nvim_buf_get_var, bufnr, "user_terminal_f2")
+        local ok, is_user_terminal = pcall(vim.api.nvim_buf_get_var, bufnr, "user_terminal")
         if ok and is_user_terminal then
           term_bufnr = bufnr
           break
