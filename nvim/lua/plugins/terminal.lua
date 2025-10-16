@@ -35,10 +35,15 @@ return {
     vim.opt.splitbelow = true
     
     -- Helper function to find existing terminal buffer
+    -- Only finds user-created terminals (marked with user_terminal_f2)
     local function find_terminal_buffer()
       for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buftype == "terminal" then
-          return buf
+          -- Check if this is a user terminal (has our marker)
+          local ok, is_user_terminal = pcall(vim.api.nvim_buf_get_var, buf, "user_terminal_f2")
+          if ok and is_user_terminal then
+            return buf
+          end
         end
       end
       return nil
@@ -131,6 +136,10 @@ return {
         -- No special environment, create normal terminal
         vim.cmd("terminal " .. vim.o.shell)
       end
+
+      -- Mark this terminal as a user terminal (for F2 management)
+      local buf = vim.api.nvim_get_current_buf()
+      vim.api.nvim_buf_set_var(buf, "user_terminal_f2", true)
 
       vim.cmd("startinsert")  -- Enter insert mode automatically
     end
