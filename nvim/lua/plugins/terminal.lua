@@ -237,10 +237,14 @@ return {
         -- Restore saved position
         _G.restore_terminal_position()
       else
-        -- This is not user terminal (e.g., claudecode), ignore F2
-        -- Do nothing to avoid interfering with other terminals
+        -- This is not user terminal (e.g., claudecode)
+        -- Exit terminal mode first, then toggle user terminal
+        vim.cmd("stopinsert")
+        vim.defer_fn(function()
+          toggle_terminal()
+        end, 50)
       end
-    end, { desc = "Close user terminal" })
+    end, { desc = "Close user terminal or toggle from other terminal" })
     
     -- Additional useful terminal keymaps
     -- Escape also exits terminal mode (alternative to F3)

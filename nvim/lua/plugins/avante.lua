@@ -26,8 +26,6 @@ _G.reset_avante_layout = function()
       return
     end
   end
-  
-  vim.notify("No Avante chat window found", vim.log.levels.WARN)
 end
 
 return {
