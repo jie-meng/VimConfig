@@ -3,10 +3,15 @@
 -- ============================================================================
 
 -- Add these environment variables to your shell configuration (~/.bashrc, ~/.zshrc, etc.):
--- export AVANTE_OPENAI_ENDPOINT=https://dashscope.aliyuncs.com/compatible-mode/v1
--- export AVANTE_OPENAI_MODEL=qwen3-coder-plus
--- export AVANTE_OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx
--- export AVANTE_MOONSHOT_API_KEY=ms-xxxxxxxxxxxxxxxx
+-- export AVANTE_OPENAI_ENDPOINT=https://open.bigmodel.cn/api/coding/paas/v4
+-- export AVANTE_OPENAI_MODEL=glm-4.6
+-- export AVANTE_OPENAI_API_KEY=sk-xxx
+-- export AVANTE_MOONSHOT_MODEL=kimi-k2-0905-previewxxx
+-- export AVANTE_MOONSHOT_API_KEY=sk-xxx
+-- export AVANTE_GLM_MODEL=glm-4.6
+-- export AVANTE_GLM_API_KEY=sk-xxx
+-- export AVANTE_DASHSCOPE_MODEL=qwen3-coder-plus
+-- export AVANTE_DASHSCOPE_API_KEY=sk-xxx
 
 local SIDEBAR_WIDTH = 30
 local RESET_CHAT_WINDOW_HEIGHT = 45
@@ -141,8 +146,9 @@ return {
         },
       },
       claude = {
-        endpoint = vim.env.AVANTE_CLAUDE_ENDPOINT or "https://api.anthropic.com",
-        model = vim.env.AVANTE_CLAUDE_MODEL or "claude-sonnet-4-20250514",
+        endpoint = vim.env.CLAUDE_ENDPOINT or "https://api.anthropic.com",
+        model = vim.env.CLAUDE_MODEL or "claude-sonnet-4-20250514",
+        api_key_name = vim.env.CLAUDE_API_KEY,
         timeout = 30000,
         extra_request_body = {
           temperature = 0.1,
@@ -150,8 +156,9 @@ return {
         },
       },
       openai = {
-        endpoint = vim.env.AVANTE_OPENAI_ENDPOINT or "https://dashscope.aliyuncs.com/compatible-mode/v1",
-        model = vim.env.AVANTE_OPENAI_MODEL or "qwen3-coder-plus",
+        endpoint = vim.env.OPENAI_ENDPOINT or "https://api.openai.com/v1",
+        model = vim.env.OPENAI_MODEL or "gpt-4.1",
+        api_key_name = vim.env.OPENAI_API_KEY,
         timeout = 30000,
         extra_request_body = {
           temperature = 0.1,
@@ -159,14 +166,35 @@ return {
         },
       },
       moonshot = {
-        endpoint = "https://api.moonshot.cn/v1", -- https://api.moonshot.ai/v1 for global
-        model = "kimi-k2-0905-preview",
+        endpoint = vim.env.MOONSHOT_ENDPOINT or "https://api.moonshot.cn/v1", -- https://api.moonshot.ai/v1 for global
+        model = vim.env.MOONSHOT_MODEL or "kimi-k2-0905-preview",
+        api_key_name = vim.env.MOONSHOT_API_KEY,
         timeout = 30000,
         extra_request_body = {
           temperature = 0.1,
           max_tokens = 32768,
         }, 
       },
+      glm = {
+        endpoint = vim.env.GLM_ENDPOINT or "https://open.bigmodel.cn/api/coding/paas/v4",
+        model = vim.env.GLM_MODEL or "glm-4.6",
+        api_key_name = vim.env.GLM_API_KEY,
+        timeout = 30000,
+        extra_request_body = {
+          temperature = 0.1,
+          max_tokens = 32768,
+        },
+      },
+      qwen = {
+        endpoint = vim.env.DASHSCOPE_ENDPOINT or "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        model = vim.env.DASHSCOPE_MODEL or "qwen3-coder-plus",
+        api_key_name = vim.env.DASHSCOPE_API_KEY,
+        timeout = 30000,
+        extra_request_body = {
+          temperature = 0.1,
+          max_tokens = 32768,
+        },
+      }
     },
     behaviour = {
       auto_suggestions = false, -- Experimental stage
