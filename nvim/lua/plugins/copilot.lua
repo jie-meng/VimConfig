@@ -41,15 +41,12 @@ return {
           },
         },
         filetypes = {
-          yaml = false,
-          markdown = false,
-          help = false,
-          gitcommit = false,
-          gitrebase = false,
-          hgcommit = false,
-          svn = false,
-          cvs = false,
-          ["."] = false,
+          help = false,           -- Vim help files
+          gitcommit = false,      -- Git commit messages
+          gitrebase = false,      -- Git rebase interactive
+          hgcommit = false,       -- Mercurial commit messages
+          svn = false,            -- SVN files
+          cvs = false,            -- CVS files
         },
       })
       
