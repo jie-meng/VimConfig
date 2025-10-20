@@ -21,6 +21,7 @@ return {
     keys = {
       { "<Space>c", nil, desc = "Claude Code" },
       { "<Space>cc", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
+      { "<Space>cy", "<cmd>ClaudeCode --dangerously-skip-permissions<cr>", desc = "Toggle Claude (YOLO mode)" },
       { "<Space>cf", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
       { "<Space>cr", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
       { "<Space>cC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
