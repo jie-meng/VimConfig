@@ -189,6 +189,38 @@ return {
           end
         end
         vim.keymap.set('n', 'fi', show_node_info, { buffer = bufnr, noremap = true, silent = true, desc = "Show file/folder info" })
+        
+        -- Override delete mapping to handle buffer replacement before deletion
+        vim.keymap.set('n', 'd', function()
+          local node = api.tree.get_node_under_cursor()
+          if not node then return end
+          
+          -- If it's a file, replace all windows showing this file with empty buffers
+          if node.type == "file" then
+            local file_path = node.absolute_path
+            
+            -- Find all windows displaying this file
+            local windows_with_file = {}
+            for _, win in ipairs(vim.api.nvim_list_wins()) do
+              local buf = vim.api.nvim_win_get_buf(win)
+              if vim.api.nvim_buf_is_valid(buf) then
+                local buf_name = vim.api.nvim_buf_get_name(buf)
+                if buf_name == file_path then
+                  table.insert(windows_with_file, win)
+                end
+              end
+            end
+            
+            -- Replace each window with an empty buffer BEFORE deletion
+            for _, win in ipairs(windows_with_file) do
+              local new_buf = vim.api.nvim_create_buf(true, false)
+              vim.api.nvim_win_set_buf(win, new_buf)
+            end
+          end
+          
+          -- Now perform the actual delete operation
+          api.fs.remove()
+        end, { buffer = bufnr, noremap = true, silent = true, desc = "Delete file/folder" })
       end,
       renderer = {
         group_empty = true,
@@ -282,7 +314,7 @@ return {
           end)
         end
       end
-    }) 
+    })
 
   end,
 }
