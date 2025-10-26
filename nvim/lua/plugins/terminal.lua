@@ -246,11 +246,10 @@ return {
       end
     end, { desc = "Close user terminal or toggle from other terminal" })
     
-    -- Additional useful terminal keymaps
-    -- Escape also exits terminal mode (alternative to F3)
-    vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+    -- F3: Exit terminal mode to normal mode (works in terminal mode only)
+    vim.keymap.set("t", "<F3>", "<C-\\><C-n>", { desc = "Exit terminal mode to normal" })
     
-    -- F3: Reset terminal height to default (works in all modes)
+    -- Shift+F3: Reset terminal height to default (works in all modes)
     local function reset_terminal_height()
       local term_buf = find_terminal_buffer()
       if term_buf then
@@ -272,7 +271,7 @@ return {
       end
     end
     
-    vim.keymap.set({"n", "t", "v"}, "<F3>", reset_terminal_height, { desc = "Reset terminal height" })
+    vim.keymap.set({"n", "t", "v"}, "<S-F3>", reset_terminal_height, { desc = "Reset terminal height" })
     
     -- Easy navigation between terminal and other windows
     vim.keymap.set("t", "<C-h>", "<C-\\><C-n><C-w>h", { desc = "Move to left window" })
