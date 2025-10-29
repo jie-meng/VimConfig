@@ -80,15 +80,38 @@ return {
   {
     "sindrets/diffview.nvim",
     dependencies = "nvim-lua/plenary.nvim",
-    keys = {
-      { "<space>go", ":DiffviewOpen<CR>", desc = "Open diffview" },
-      { "<space>gv", ":DiffviewFileHistory<CR>", desc = "File history" },
-      { "<space>gf", ":DiffviewFileHistory %<CR>", desc = "File history (current file)" },
-      { "<space>gp", function()
-        local dir = vim.fn.expand('%:p:h')
-        vim.api.nvim_feedkeys(":DiffviewFileHistory " .. dir, "n", false)
-      end, desc = "File history (current directory, editable)" },
-    },
+    keys = (function()
+      -- Helper function to check if inside .git directory
+      local function is_under_git_dir()
+        local cwd = vim.fn.getcwd()
+        return vim.fn.isdirectory(cwd .. "/.git") == 1
+      end
+
+      -- Helper function to safely execute diffview commands
+      local function safe_diffview_cmd(cmd)
+        return function()
+          if is_under_git_dir() then
+            vim.cmd(cmd)
+          else 
+            vim.notify("Cannot run Diffview not in .git directory", vim.log.levels.WARN)
+          end
+        end
+      end
+
+      return {
+        { "<space>go", safe_diffview_cmd("DiffviewOpen"), desc = "Open diffview" },
+        { "<space>gv", safe_diffview_cmd("DiffviewFileHistory"), desc = "File history" },
+        { "<space>gf", safe_diffview_cmd("DiffviewFileHistory %"), desc = "File history (current file)" },
+        { "<space>gp", function()
+          if is_under_git_dir() then
+            local dir = vim.fn.expand('%:p:h')
+            vim.api.nvim_feedkeys(":DiffviewFileHistory " .. dir, "n", false)
+          else
+            vim.notify("Cannot run Diffview not in .git directory", vim.log.levels.WARN)
+          end
+        end, desc = "File history (current directory, editable)" },
+      }
+    end)(),
     config = function()
       local actions = require("diffview.actions")
       require("diffview").setup({
