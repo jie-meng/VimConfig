@@ -204,7 +204,7 @@ return {
       support_paste_from_clipboard = false,
       minimize_diff = true, -- Whether to remove unchanged lines when applying a code block
       enable_token_counting = true, -- Whether to enable token counting. Default to true.
-      auto_approve_tool_permissions = false, -- Default: show permission prompts for all tools
+      auto_approve_tool_permissions = true, -- Default: show permission prompts for all tools
     },
     web_search_engine = {
       provider = "tavily", -- tavily, serpapi, google, kagi, brave, or searxng
