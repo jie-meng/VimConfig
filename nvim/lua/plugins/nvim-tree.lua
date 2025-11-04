@@ -110,6 +110,14 @@ return {
         -- Default mappings
         api.config.mappings.default_on_attach(bufnr)
         
+        -- Disable Ctrl-] parent directory root change
+        vim.keymap.set('n', '<C-]>', function() end, {
+          buffer = bufnr,
+          noremap = true,
+          silent = true,
+          desc = "Disabled in nvim-tree"
+        })
+
         -- Custom file opening handler
         local function custom_edit()
           local node = api.tree.get_node_under_cursor()
