@@ -122,7 +122,24 @@ return {
       desc = "Reset Avante window layout",
       mode = "n",
     },
-
+    {
+      "<Leader>aq",
+      function()
+        local sidebar = require("avante").get()
+        if not sidebar then
+          vim.notify("Avante sidebar not found", vim.log.levels.WARN)
+          return
+        end
+        -- Clear chat history
+        sidebar:clear_history()
+        -- Wait a bit for the clear to process, then close
+        vim.defer_fn(function()
+          sidebar:close()
+        end, 100)
+      end,
+      desc = "Clear chat and close Avante",
+      mode = "n",
+    },
   },
 
   opts = {
