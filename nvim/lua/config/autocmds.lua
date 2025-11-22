@@ -135,3 +135,19 @@ autocmd("FileType", {
         vim.keymap.set("n", "<Leader>a", ":A<CR>", { buffer = true, desc = "Alternate file" })
     end,
 })
+
+-- Jenkinsfile variants detection (e.g., Jenkinsfile-server, Jenkinsfile-prod)
+-- Neovim's default filetype.vim only matches exactly 'Jenkinsfile'.
+-- Extend it so any filename beginning with 'Jenkinsfile-' and without an extension is treated as Groovy.
+augroup("JenkinsfileDetection", { clear = true })
+autocmd({ "BufNewFile", "BufRead" }, {
+    group = "JenkinsfileDetection",
+    pattern = { "Jenkinsfile-*", "Jenkinsfile_*" },
+    callback = function(ev)
+        -- Guard: skip if an explicit extension exists (e.g., Jenkinsfile-test.groovy)
+        local name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(ev.buf), ":t")
+        if name:match("%.[%w_.-]+$") then return end
+        vim.bo[ev.buf].filetype = "groovy"
+    end,
+})
+
