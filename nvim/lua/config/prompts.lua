@@ -4,9 +4,56 @@
 
 local M = {}
 
+-- Get current git branch name
+local function get_git_branch()
+  local branch = vim.fn.system("git rev-parse --abbrev-ref HEAD 2>/dev/null")
+  if branch and branch ~= "" then
+    return vim.trim(branch)
+  end
+  return nil
+end
+
+-- Parse branch name and extract commit message format
+-- If branch is A/B/C format (two slashes), return A[B] format
+-- Otherwise return nil
+local function get_commit_message_format()
+  local branch = get_git_branch()
+  if not branch then
+    return nil
+  end
+
+  -- Check if branch has format A/B/C (two slashes)
+  local parts = {}
+  for part in branch:gmatch("[^/]+") do
+    table.insert(parts, part)
+  end
+
+  if #parts >= 3 then
+    -- Format: A[B] message
+    return parts[1] .. "[" .. parts[2] .. "]"
+  end
+
+  return nil
+end
+
 -- Code review prompt templates
-local code_review_prompts = {
-  ['en'] = [[
+local function get_code_review_prompt_template(lang, commit_format)
+  local commit_message_section_en = [[
+4. **Recommended Commit Message**
+   - Generate a concise, accurate, and conventional commit message for this change.]]
+
+  local commit_message_section_zh = [[
+4. **推荐提交信息**
+   - 为此变更生成简洁、准确且符合规范的提交信息，提交信息使用英文。]]
+
+  -- Add format requirement if branch format is detected
+  if commit_format then
+    commit_message_section_en = commit_message_section_en .. "\n   - IMPORTANT: The commit message MUST follow this format: " .. commit_format .. " <message>"
+    commit_message_section_zh = commit_message_section_zh .. "\n   - 重要：提交信息必须遵循以下格式：" .. commit_format .. " <message>"
+  end
+
+  local prompts = {
+    ['en'] = [[
 As a professional code reviewer, please analyze the above git diff and output your review in clear, structured English Markdown. Strictly follow this format:
 
 1. **Problematic Code & Explanation**
@@ -18,13 +65,12 @@ As a professional code reviewer, please analyze the above git diff and output yo
 3. **Overall Assessment**
    - Summarize the strengths and risks of this change, and highlight anything that needs special attention.
 
-4. **Recommended Commit Message**
-   - Generate a concise, accurate, and conventional commit message for this change.
+]] .. commit_message_section_en .. [[
 
 Format your output in clean Markdown for easy copy-paste into review tools or commit descriptions.
 ]],
 
-  ['zh-cn'] = [[
+    ['zh-cn'] = [[
 作为一名专业的代码审查员，请分析上述 git diff 并以清晰、结构化的中文 Markdown 格式输出您的审查意见。请严格遵循以下格式：
 
 1. **问题代码及说明**
@@ -36,17 +82,20 @@ Format your output in clean Markdown for easy copy-paste into review tools or co
 3. **整体评估**
    - 总结此次变更的优势和风险，并突出需要特别关注的地方。
 
-4. **推荐提交信息**
-   - 为此变更生成简洁、准确且符合规范的提交信息，提交信息使用英文。
+]] .. commit_message_section_zh .. [[
 
 请以清晰的 Markdown 格式输出，便于复制粘贴到审查工具或提交描述中。
 ]]
-}
+  }
+
+  return prompts[lang] or prompts['en']
+end
 
 -- Get code review prompt by language
 function M.get_code_review_prompt(lang)
   lang = lang or 'en'
-  return code_review_prompts[lang] or code_review_prompts['en']
+  local commit_format = get_commit_message_format()
+  return get_code_review_prompt_template(lang, commit_format)
 end
 
 -- Get code review prompt with git diff wrapper
