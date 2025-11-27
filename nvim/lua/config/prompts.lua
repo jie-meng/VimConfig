@@ -40,16 +40,18 @@ end
 local function get_code_review_prompt_template(lang, commit_format)
   local commit_message_section_en = [[
 4. **Recommended Commit Message**
-   - Generate a concise, accurate, and conventional commit message for this change.]]
+   - Generate a concise, accurate, and conventional commit message for this change.
+   - IMPORTANT: The commit message MUST be written in English.]]
 
   local commit_message_section_zh = [[
 4. **推荐提交信息**
-   - 为此变更生成简洁、准确且符合规范的提交信息，提交信息使用英文。]]
+   - 为此变更生成简洁、准确且符合规范的提交信息。
+   - 重要：提交信息必须使用英文（The commit message MUST be written in English）。]]
 
   -- Add format requirement if branch format is detected
   if commit_format then
-    commit_message_section_en = commit_message_section_en .. "\n   - IMPORTANT: The commit message MUST follow this format: " .. commit_format .. " <message>"
-    commit_message_section_zh = commit_message_section_zh .. "\n   - 重要：提交信息必须遵循以下格式：" .. commit_format .. " <message>"
+    commit_message_section_en = commit_message_section_en .. "\n   - IMPORTANT: The commit message MUST follow this format: " .. commit_format .. " <message> (message must be in English)"
+    commit_message_section_zh = commit_message_section_zh .. "\n   - 重要：提交信息必须遵循以下格式：" .. commit_format .. " <message>（message 必须使用英文）"
   end
 
   local prompts = {
