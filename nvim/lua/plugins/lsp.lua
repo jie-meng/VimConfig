@@ -20,6 +20,58 @@ return {
           vim.notify("Failed to clear LSP log: " .. log_path, vim.log.levels.ERROR)
         end
       end, { desc = "Clear LSP log file" })
+
+      -- Refresh LSP workspace and reload all buffers
+      vim.keymap.set("n", "<space>mr", function()
+        vim.notify("Refreshing LSP workspace...", vim.log.levels.INFO)
+        
+        -- 1. Restart all LSP clients
+        for _, client in pairs(vim.lsp.get_clients()) do
+          if client.name ~= "null-ls" then
+            vim.notify("Restarting LSP client: " .. client.name, vim.log.levels.INFO)
+            client.stop(true)
+          end
+        end
+        
+        -- 2. Reload all buffers to sync with filesystem
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+          if vim.api.nvim_buf_is_loaded(buf) and vim.api.nvim_buf_get_option(buf, 'buftype') == '' then
+            local buf_name = vim.api.nvim_buf_get_name(buf)
+            if buf_name ~= '' and vim.fn.filereadable(buf_name) == 1 then
+              vim.api.nvim_buf_call(buf, function()
+                vim.cmd('checktime')
+                vim.cmd('e!')
+              end)
+            end
+          end
+        end
+        
+        -- 3. Wait a moment for LSP clients to restart, then force workspace refresh
+        vim.defer_fn(function()
+          for _, client in pairs(vim.lsp.get_clients()) do
+            if client.supports_method("workspace/didChangeWatchedFiles") then
+              -- Force workspace refresh by sending didChangeWatchedFiles
+              local params = {
+                changes = {
+                  {
+                    uri = vim.uri_from_fname(vim.fn.getcwd()),
+                    type = 1, -- Created
+                  }
+                }
+              }
+              client.notify("workspace/didChangeWatchedFiles", params)
+            end
+            
+            -- Also try workspace/didChangeConfiguration if supported
+            if client.supports_method("workspace/didChangeConfiguration") then
+              client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+            end
+          end
+          
+          vim.notify("LSP workspace refresh completed!", vim.log.levels.INFO)
+        end, 1000) -- Wait 1 second for LSP to restart
+        
+      end, { desc = "Refresh LSP workspace and reload buffers" })
       -- Initialize Mason and LSP
       require("mason").setup()
       require("mason-lspconfig").setup({
