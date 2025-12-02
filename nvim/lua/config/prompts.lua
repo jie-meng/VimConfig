@@ -14,7 +14,7 @@ local function get_git_branch()
 end
 
 -- Parse branch name and extract commit message format
--- If branch is A/B/C format (two slashes), return A[B] format
+-- If branch is A/B or A/B/C format (one or two slashes), return A[B] format
 -- Otherwise return nil
 local function get_commit_message_format()
   local branch = get_git_branch()
@@ -22,14 +22,14 @@ local function get_commit_message_format()
     return nil
   end
 
-  -- Check if branch has format A/B/C (two slashes)
+  -- Check if branch has format A/B or A/B/C
   local parts = {}
   for part in branch:gmatch("[^/]+") do
     table.insert(parts, part)
   end
 
-  if #parts >= 3 then
-    -- Format: A[B] message
+  if #parts >= 2 then
+    -- Format: A[B] message (use first two parts)
     return parts[1] .. "[" .. parts[2] .. "]"
   end
 
