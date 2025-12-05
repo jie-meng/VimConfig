@@ -15,16 +15,40 @@ local function send_to_terminal(command)
   end
 end
 
--- Find the nearest pytest function name above the cursor
+-- Find the nearest pytest function/method name above the cursor
+-- Returns: test_name, class_name (class_name is nil if it's a file-level function)
 local function find_nearest_pytest_func()
   local cursor = vim.api.nvim_win_get_cursor(0)
   local cur_line = cursor[1]
+  local test_name = nil
+  local class_name = nil
+  
+  -- First, find the nearest test function/method
   for i = cur_line, 1, -1 do
     local line = vim.fn.getline(i)
     local name = string.match(line, "^%s*def%s+(test_[%w_]+)")
-    if name then return name end
+    if name then
+      test_name = name
+      -- Now search upward from this point to see if it's inside a class
+      for j = i - 1, 1, -1 do
+        local class_line = vim.fn.getline(j)
+        -- Match class definition (Test* or *Test)
+        local cls = string.match(class_line, "^class%s+([%w_]+)%s*[:(]")
+        if cls then
+          class_name = cls
+          break
+        end
+        -- If we hit another def at the same or lower indentation level, stop searching
+        -- (means we're not in a class)
+        if string.match(class_line, "^def%s+") then
+          break
+        end
+      end
+      break
+    end
   end
-  return nil
+  
+  return test_name, class_name
 end
 
 -- Build pytest command for different modes
@@ -32,9 +56,15 @@ local function build_python_test_cmd(mode)
   local cwd = vim.fn.getcwd()
   local file = vim.fn.expand("%")
   if mode == "nearest" then
-    local func_name = find_nearest_pytest_func()
-    if func_name then
-      return string.format("cd %s && PYTHONPATH=%s pytest %s::%s -v", cwd, cwd, file, func_name)
+    local test_name, class_name = find_nearest_pytest_func()
+    if test_name then
+      if class_name then
+        -- Test method inside a class: file.py::ClassName::test_method
+        return string.format("cd %s && PYTHONPATH=%s pytest %s::%s::%s -v", cwd, cwd, file, class_name, test_name)
+      else
+        -- File-level test function: file.py::test_function
+        return string.format("cd %s && PYTHONPATH=%s pytest %s::%s -v", cwd, cwd, file, test_name)
+      end
     else
       return string.format("cd %s && PYTHONPATH=%s pytest %s -v", cwd, cwd, file)
     end
