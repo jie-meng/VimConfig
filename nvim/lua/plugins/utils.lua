@@ -118,6 +118,7 @@ return {
     ft = { "markdown" },
     build = function() vim.fn["mkdp#util#install"]() end,
     keys = {
+      { "<F8>", ":MarkdownPreviewToggle<CR>", ft = "markdown", desc = "Markdown preview" },
       { "<Leader>mp", ":MarkdownPreviewToggle<CR>", ft = "markdown", desc = "Markdown preview" },
       { "<Leader>mb", function() vim.fn["mkdp#util#install"]() end, ft = "markdown", desc = "Build markdown-preview" },
     },
