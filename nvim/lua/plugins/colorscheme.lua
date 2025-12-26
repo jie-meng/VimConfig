@@ -10,11 +10,8 @@ local CURSORLINE_DIM_BG = "#282a36"
 -- 1. Theme list (extend as needed)
 M.themes = {
    { name = "gruvbox",      lualine = "gruvbox"      },
-  { name = "tokyonight",   lualine = "tokyonight"   },
   { name = "catppuccin",   lualine = "catppuccin"   },
-  { name = "onedark",      lualine = "onedark"      },
   { name = "monokai-pro",  lualine = "monokai-pro"  },
-  { name = "ayu",          lualine = "ayu"          },
   { name = "dracula",      lualine = "dracula"      },
   { name = "bamboo",       lualine = "bamboo"       },
 }
@@ -42,11 +39,8 @@ M.current_idx = read_theme_idx()
 -- 3. Theme switching logic
 local plugin_map = {
   gruvbox      = "gruvbox.nvim",
-  tokyonight   = "tokyonight.nvim",
   catppuccin   = "catppuccin",
-  onedark      = "onedark.nvim",
   ["monokai-pro"] = "monokai-pro.nvim",
-  ayu          = "ayu",
   dracula      = "dracula.nvim",
   bamboo       = "bamboo.nvim",
 }
@@ -150,7 +144,6 @@ return {
       require("gruvbox").setup({})
     end,
   },
-  { "folke/tokyonight.nvim", lazy = true, opts = { style = "moon" } },
   { "catppuccin/nvim", name = "catppuccin", lazy = true, opts = {
     flavour = "mocha",
     integrations = { nvimtree = true, telescope = true, gitsigns = true, treesitter = true },
@@ -159,15 +152,6 @@ return {
     CursorColumn = { bg = CURSORLINE_DIM_BG },
     },
   } },
-  {
-    "navarasu/onedark.nvim",
-    lazy = true,
-    config = function()
-      require("onedark").setup {
-        style = "warmer"
-      }
-    end,
-  },
   {
     "loctvl842/monokai-pro.nvim",
     priority = 1000,
@@ -182,16 +166,6 @@ return {
             NvimTreeFileIcon = { fg = c.base.white },
           }
         end,
-      })
-    end,
-  },
-  {
-    "Shatur/neovim-ayu",
-    name = "ayu",
-    lazy = true,
-    config = function()
-      require("ayu").setup({
-        mirage = false, -- Set to `true` to use `mirage` variant instead of `dark` for dark background.
       })
     end,
   },
