@@ -16,6 +16,7 @@ M.themes = {
   { name = "monokai-pro",  lualine = "monokai-pro"  },
   { name = "ayu",          lualine = "ayu"          },
   { name = "dracula",      lualine = "dracula"      },
+  { name = "bamboo",       lualine = "bamboo"       },
 }
 
 -- 2. State and persistence
@@ -47,6 +48,7 @@ local plugin_map = {
   ["monokai-pro"] = "monokai-pro.nvim",
   ayu          = "ayu",
   dracula      = "dracula.nvim",
+  bamboo       = "bamboo.nvim",
 }
 
 
@@ -208,6 +210,16 @@ return {
           NvimTreeRootFolder = { fg = "#ff79c6" },
           NvimTreeFileIcon = { fg = "#f8f8f2" },
         }
+      })
+    end,
+  },
+  {
+    "ribru17/bamboo.nvim",
+    name = "bamboo.nvim",
+    lazy = true,
+    config = function()
+      require("bamboo").setup({
+        style = "vulgaris", -- Choose between 'vulgaris' (regular), 'multiplex', or 'light'
       })
     end,
   },
