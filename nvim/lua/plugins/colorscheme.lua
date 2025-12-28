@@ -10,7 +10,6 @@ local CURSORLINE_DIM_BG = "#282a36"
 -- 1. Theme list (extend as needed)
 M.themes = {
    { name = "gruvbox",      lualine = "gruvbox"      },
-  { name = "catppuccin",   lualine = "catppuccin"   },
   { name = "monokai-pro",  lualine = "monokai-pro"  },
   { name = "dracula",      lualine = "dracula"      },
   { name = "bamboo",       lualine = "bamboo"       },
@@ -39,7 +38,6 @@ M.current_idx = read_theme_idx()
 -- 3. Theme switching logic
 local plugin_map = {
   gruvbox      = "gruvbox.nvim",
-  catppuccin   = "catppuccin",
   ["monokai-pro"] = "monokai-pro.nvim",
   dracula      = "dracula.nvim",
   bamboo       = "bamboo.nvim",
@@ -144,14 +142,6 @@ return {
       require("gruvbox").setup({})
     end,
   },
-  { "catppuccin/nvim", name = "catppuccin", lazy = true, opts = {
-    flavour = "mocha",
-    integrations = { nvimtree = true, telescope = true, gitsigns = true, treesitter = true },
-    custom_highlights = {
-    CursorLine = { bg = CURSORLINE_DIM_BG },
-    CursorColumn = { bg = CURSORLINE_DIM_BG },
-    },
-  } },
   {
     "loctvl842/monokai-pro.nvim",
     priority = 1000,
