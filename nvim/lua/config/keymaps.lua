@@ -135,3 +135,8 @@ keymap.set("n", "<Leader>At", ":AICompletionProviderSwitch<CR>", { desc = "Toggl
 keymap.set("n", "<Leader>As", ":AICompletionProviderStatus<CR>", { desc = "Show current AI completion provider" })
 keymap.set("n", "<Leader>Ac", ":AICompletionProviderSwitch copilot<CR>", { desc = "Switch to Copilot" })
 keymap.set("n", "<Leader>Am", ":AICompletionProviderSwitch minuet<CR>", { desc = "Switch to Minuet" })
+
+-- AI BGM toggle
+keymap.set("n", "<F10>", function()
+  vim.fn.jobstart("ai-bgm toggle")
+end, { desc = "Toggle AI BGM" })
