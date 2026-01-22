@@ -137,6 +137,9 @@ set splitbelow
 nnoremap <F2> :ter ++rows=11<CR>
 tnoremap <Esc> <C-\><C-n>
 
+"" AI BGM toggle
+nnoremap <F10> :call system('ai-bgm toggle')<CR>
+
 "" font
 if has('macunix')
     set guifont=Monaco:h12
