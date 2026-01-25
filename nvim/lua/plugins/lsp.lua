@@ -21,35 +21,52 @@ return {
         end
       end, { desc = "Clear LSP log file" })
 
-      -- Refresh LSP workspace (gentle approach - no buffer reload)
+      -- Restart LSP workspace (selective restart - preserves copilot and other services)
       vim.keymap.set("n", "<space>mr", function()
-        vim.notify("Refreshing LSP workspace...", vim.log.levels.INFO)
+        vim.notify("Restarting LSP workspace...", vim.log.levels.INFO)
         
-        -- Send workspace refresh notifications to all LSP clients
-        for _, client in pairs(vim.lsp.get_clients()) do
-          if client.name ~= "null-ls" then
-            -- Try workspace/didChangeWatchedFiles if supported
-            if client.supports_method("workspace/didChangeWatchedFiles") then
-              local params = {
-                changes = {
-                  {
-                    uri = vim.uri_from_fname(vim.fn.getcwd()),
-                    type = 1, -- Created
-                  }
-                }
-              }
-              client.notify("workspace/didChangeWatchedFiles", params)
+        -- Define language servers to restart (exclude copilot, null-ls, etc.)
+        local language_servers = { "lua_ls", "ts_ls", "pyright", "clangd", "sourcekit", "jdtls", "kotlin_language_server" }
+        local clients = vim.lsp.get_clients()
+        local stopped_clients = {}
+        
+        -- Only stop language servers, preserve copilot and other services
+        for _, client in pairs(clients) do
+          local should_restart = false
+          for _, server_name in ipairs(language_servers) do
+            if client.name == server_name then
+              should_restart = true
+              break
             end
-            
-            -- Try workspace/didChangeConfiguration if supported
-            if client.supports_method("workspace/didChangeConfiguration") then
-              client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
-            end
+          end
+          
+          if should_restart then
+            table.insert(stopped_clients, client.name)
+            vim.lsp.stop_client(client.id, true)
           end
         end
         
-        vim.notify("LSP workspace refresh completed!", vim.log.levels.INFO)
-      end, { desc = "Refresh LSP workspace (gentle)" })
+        if #stopped_clients > 0 then
+          vim.notify("Restarting LSP servers: " .. table.concat(stopped_clients, ", "), vim.log.levels.INFO)
+          
+          -- Wait a bit for clients to fully stop, then restart them
+          vim.defer_fn(function()
+            -- Re-enable LSP for current buffer which will trigger LSP restart
+            vim.cmd("edit!")  -- Reload buffer to trigger LSP attach
+            
+            -- Also send workspace refresh to remaining clients (like copilot)
+            for _, client in pairs(vim.lsp.get_clients()) do
+              if client.supports_method("workspace/didChangeConfiguration") then
+                client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+              end
+            end
+            
+            vim.notify("LSP workspace restart completed!", vim.log.levels.INFO)
+          end, 300)  -- Reduced delay since we're only restarting specific servers
+        else
+          vim.notify("No language servers to restart", vim.log.levels.WARN)
+        end
+      end, { desc = "Restart LSP workspace (selective restart)" })
       -- Initialize Mason and LSP
       require("mason").setup()
       require("mason-lspconfig").setup({
@@ -61,7 +78,7 @@ return {
       local capabilities = cmp_nvim_lsp.default_capabilities()
 
       -- Format on save with multi-language, multi-condition support
-      local function format_on_save(client, bufnr)
+        local function format_on_save(client, bufnr)
         if not (client.supports_method and client:supports_method("textDocument/formatting")) then
           return
         end
