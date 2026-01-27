@@ -138,5 +138,5 @@ keymap.set("n", "<Leader>Am", ":AICompletionProviderSwitch minuet<CR>", { desc =
 
 -- AI BGM toggle
 keymap.set("n", "<F10>", function()
-  vim.fn.jobstart("ai-bgm toggle")
+  vim.fn.jobstart("bgm toggle")
 end, { desc = "Toggle AI BGM" })

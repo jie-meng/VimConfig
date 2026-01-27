@@ -138,7 +138,7 @@ nnoremap <F2> :ter ++rows=11<CR>
 tnoremap <Esc> <C-\><C-n>
 
 "" AI BGM toggle
-nnoremap <F10> :call system('ai-bgm toggle')<CR>
+nnoremap <F10> :call system('bgm toggle')<CR>
 
 "" font
 if has('macunix')
@@ -299,8 +299,8 @@ colorscheme gruvbox
 
 "" <scrooloose/nerdtree>
 "" open a NERDTree automatically when vim starts up if no files were specified
-autocmd StdinReadPre * let s:std_in=1 
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif 
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 "" open NERDTree automatically when vim starts up on opening a directory
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
