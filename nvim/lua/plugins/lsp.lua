@@ -21,52 +21,93 @@ return {
         end
       end, { desc = "Clear LSP log file" })
 
-      -- Restart LSP workspace (selective restart - preserves copilot and other services)
-      vim.keymap.set("n", "<space>mr", function()
-        vim.notify("Restarting LSP workspace...", vim.log.levels.INFO)
+      -- Restart LSP workspace (thorough restart - preserves copilot and other services)
+        vim.keymap.set("n", "<space>mr", function()
+        vim.notify("Performing thorough LSP restart...", vim.log.levels.INFO)
         
-        -- Define language servers to restart (exclude copilot, null-ls, etc.)
-        local language_servers = { "lua_ls", "ts_ls", "pyright", "clangd", "sourcekit", "jdtls", "kotlin_language_server" }
+        -- Define services to preserve (copilot, null-ls, etc.)
+        local preserve_services = { "copilot", "null-ls", "none-ls" }
         local clients = vim.lsp.get_clients()
         local stopped_clients = {}
+        local preserved_clients = {}
         
-        -- Only stop language servers, preserve copilot and other services
+        -- Stop all clients except preserved services
         for _, client in pairs(clients) do
-          local should_restart = false
-          for _, server_name in ipairs(language_servers) do
-            if client.name == server_name then
-              should_restart = true
+          local should_preserve = false
+          for _, service_name in ipairs(preserve_services) do
+            if client.name:match(service_name) then
+              should_preserve = true
+              table.insert(preserved_clients, client.name)
               break
             end
           end
           
-          if should_restart then
+          if not should_preserve then
             table.insert(stopped_clients, client.name)
             vim.lsp.stop_client(client.id, true)
           end
         end
         
         if #stopped_clients > 0 then
-          vim.notify("Restarting LSP servers: " .. table.concat(stopped_clients, ", "), vim.log.levels.INFO)
+          vim.notify("Stopping LSP servers: " .. table.concat(stopped_clients, ", "), vim.log.levels.INFO)
+          if #preserved_clients > 0 then
+            vim.notify("Preserving services: " .. table.concat(preserved_clients, ", "), vim.log.levels.INFO)
+          end
           
-          -- Wait a bit for clients to fully stop, then restart them
+          -- Wait for clients to fully stop, then perform thorough restart
           vim.defer_fn(function()
-            -- Re-enable LSP for current buffer which will trigger LSP restart
-            vim.cmd("edit!")  -- Reload buffer to trigger LSP attach
+            -- Clear all LSP-related autocommands and state for current buffer
+            local bufnr = vim.api.nvim_get_current_buf()
             
-            -- Also send workspace refresh to remaining clients (like copilot)
-            for _, client in pairs(vim.lsp.get_clients()) do
-              if client.supports_method("workspace/didChangeConfiguration") then
-                client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+            -- Clear buffer-local LSP autocommands
+            pcall(vim.api.nvim_clear_autocmds, { buffer = bufnr, group = "LspFormatOnSave" })
+            
+            -- Clear diagnostic cache for all buffers
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+              if vim.api.nvim_buf_is_loaded(buf) then
+                vim.diagnostic.reset(nil, buf)
               end
             end
             
-            vim.notify("LSP workspace restart completed!", vim.log.levels.INFO)
-          end, 300)  -- Reduced delay since we're only restarting specific servers
+            -- Re-enable all language servers for all buffers
+            local language_servers = { "lua_ls", "ts_ls", "pyright", "clangd", "sourcekit", "jdtls", "kotlin_language_server" }
+            for _, server in ipairs(language_servers) do
+              pcall(vim.lsp.enable, server)
+            end
+            
+            -- Reload all open buffers to trigger fresh LSP attachment
+            local current_buf = vim.api.nvim_get_current_buf()
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+              if vim.api.nvim_buf_is_loaded(buf) and vim.api.nvim_buf_get_option(buf, 'buftype') == '' then
+                local buf_name = vim.api.nvim_buf_get_name(buf)
+                if buf_name ~= '' and vim.fn.filereadable(buf_name) == 1 then
+                  -- Switch to buffer and reload it
+                  vim.api.nvim_set_current_buf(buf)
+                  vim.cmd("edit!")
+                end
+              end
+            end
+            
+            -- Return to original buffer
+            if vim.api.nvim_buf_is_valid(current_buf) then
+              vim.api.nvim_set_current_buf(current_buf)
+            end
+            
+            -- Send workspace refresh to preserved clients
+            vim.defer_fn(function()
+              for _, client in pairs(vim.lsp.get_clients()) do
+                if client.supports_method("workspace/didChangeConfiguration") then
+                  client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+                end
+              end
+              vim.notify("Thorough LSP restart completed! All language servers reinitialized.", vim.log.levels.INFO)
+            end, 500)
+            
+          end, 500)  -- Allow more time for complete shutdown
         else
           vim.notify("No language servers to restart", vim.log.levels.WARN)
         end
-      end, { desc = "Restart LSP workspace (selective restart)" })
+      end, { desc = "Thorough LSP workspace restart (preserves copilot)" })
       -- Initialize Mason and LSP
       require("mason").setup()
       require("mason-lspconfig").setup({
