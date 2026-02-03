@@ -56,42 +56,41 @@ return {
           
           -- Wait for clients to fully stop, then perform thorough restart
           vim.defer_fn(function()
-            -- Clear all LSP-related autocommands and state for current buffer
-            local bufnr = vim.api.nvim_get_current_buf()
+            -- Get current buffer and all visible buffers
+            local current_buf = vim.api.nvim_get_current_buf()
+            local visible_buffers = {}
             
-            -- Clear buffer-local LSP autocommands
-            pcall(vim.api.nvim_clear_autocmds, { buffer = bufnr, group = "LspFormatOnSave" })
+            -- Collect all buffers that are currently visible in any window
+            for _, win in ipairs(vim.api.nvim_list_wins()) do
+              local buf = vim.api.nvim_win_get_buf(win)
+              visible_buffers[buf] = true
+            end
             
-            -- Clear diagnostic cache for all buffers
+            -- Close only invisible buffers with empty buftype (normal editing buffers)
             for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-              if vim.api.nvim_buf_is_loaded(buf) then
-                vim.diagnostic.reset(nil, buf)
+              if not visible_buffers[buf] and vim.api.nvim_buf_is_loaded(buf) then
+                -- Only close normal editing buffers (empty buftype), keep terminals, help, etc.
+                local buftype = vim.api.nvim_buf_get_option(buf, 'buftype')
+                if buftype == '' then
+                  pcall(vim.api.nvim_buf_delete, buf, { force = true })
+                end
               end
             end
             
-            -- Re-enable all language servers for all buffers
+            -- Clear all LSP-related autocommands and state for current buffer
+            pcall(vim.api.nvim_clear_autocmds, { buffer = current_buf, group = "LspFormatOnSave" })
+            
+            -- Clear diagnostic cache for current buffer
+            vim.diagnostic.reset(nil, current_buf)
+            
+            -- Re-enable all language servers
             local language_servers = { "lua_ls", "ts_ls", "pyright", "clangd", "sourcekit", "jdtls", "kotlin_language_server" }
             for _, server in ipairs(language_servers) do
               pcall(vim.lsp.enable, server)
             end
             
-            -- Reload all open buffers to trigger fresh LSP attachment
-            local current_buf = vim.api.nvim_get_current_buf()
-            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-              if vim.api.nvim_buf_is_loaded(buf) and vim.api.nvim_buf_get_option(buf, 'buftype') == '' then
-                local buf_name = vim.api.nvim_buf_get_name(buf)
-                if buf_name ~= '' and vim.fn.filereadable(buf_name) == 1 then
-                  -- Switch to buffer and reload it
-                  vim.api.nvim_set_current_buf(buf)
-                  vim.cmd("edit!")
-                end
-              end
-            end
-            
-            -- Return to original buffer
-            if vim.api.nvim_buf_is_valid(current_buf) then
-              vim.api.nvim_set_current_buf(current_buf)
-            end
+            -- Reload current buffer to trigger fresh LSP attachment
+            pcall(vim.cmd, "silent! edit!")
             
             -- Send workspace refresh to preserved clients
             vim.defer_fn(function()
