@@ -56,16 +56,26 @@ local function get_code_review_prompt_template(lang, commit_format)
 
   local prompts = {
     ['en'] = [[
-As a professional code reviewer, please analyze the above git diff and output your review in clear, structured English Markdown. Strictly follow this format:
+As a professional code reviewer, please analyze the above git diff and output your review in clear, structured English Markdown. Note that this diff may only show partial changes, so consider the broader codebase context when necessary. Strictly follow this format:
 
-1. **Problematic Code & Explanation**
-   - List all code snippets with potential issues (bugs, design flaws, maintainability, performance, etc.), and clearly explain the reason and impact for each.
+1. **Context Analysis & Dependencies**
+   - Identify what files, modules, or components might be affected by these changes
+   - Point out if additional context from related files would be helpful for a complete review
+   - Highlight any potential integration points or cross-module dependencies that should be considered
 
-2. **Improvement Suggestions**
-   - For each issue, provide concrete suggestions for improvement or fixes.
+2. **Problematic Code & Explanation**
+   - List all code snippets with potential issues (bugs, design flaws, maintainability, performance, security, etc.)
+   - Clearly explain the reason and impact for each issue, considering both local and system-wide effects
 
-3. **Overall Assessment**
-   - Summarize the strengths and risks of this change, and highlight anything that needs special attention.
+3. **Improvement Suggestions**
+   - For each issue, provide concrete suggestions for improvement or fixes
+   - Include recommendations for additional testing or validation if needed
+   - Suggest related files that should be reviewed or updated alongside these changes
+
+4. **Overall Assessment**
+   - Summarize the strengths and risks of this change within the broader system context
+   - Highlight anything that needs special attention or follow-up reviews
+   - Recommend any additional files or areas that should be examined to ensure system integrity
 
 ]] .. commit_message_section_en .. [[
 
@@ -73,16 +83,26 @@ Format your output in clean Markdown for easy copy-paste into review tools or co
 ]],
 
     ['zh-cn'] = [[
-作为一名专业的代码审查员，请分析上述 git diff 并以清晰、结构化的中文 Markdown 格式输出您的审查意见。请严格遵循以下格式：
+作为一名专业的代码审查员，请分析上述 git diff 并以清晰、结构化的中文 Markdown 格式输出您的审查意见。请注意此 diff 可能只显示部分变更，必要时请考虑更广泛的代码库上下文。请严格遵循以下格式：
 
-1. **问题代码及说明**
-   - 列出所有存在潜在问题的代码片段（bug、设计缺陷、可维护性、性能等），并清楚说明每个问题的原因和影响。
+1. **上下文分析与依赖关系**
+   - 识别这些变更可能影响的文件、模块或组件
+   - 指出是否需要相关文件的额外上下文来进行完整审查
+   - 突出显示应该考虑的任何潜在集成点或跨模块依赖关系
 
-2. **改进建议**
-   - 针对每个问题，提供具体的改进或修复建议。
+2. **问题代码及说明**
+   - 列出所有存在潜在问题的代码片段（bug、设计缺陷、可维护性、性能、安全性等）
+   - 清楚说明每个问题的原因和影响，同时考虑局部和系统级的影响
 
-3. **整体评估**
-   - 总结此次变更的优势和风险，并突出需要特别关注的地方。
+3. **改进建议**
+   - 针对每个问题，提供具体的改进或修复建议
+   - 如需要，包括额外测试或验证的建议
+   - 建议应与这些变更一起审查或更新的相关文件
+
+4. **整体评估**
+   - 在更广泛的系统上下文中总结此次变更的优势和风险
+   - 突出需要特别关注或后续审查的地方
+   - 推荐应该检查的其他文件或区域，以确保系统完整性
 
 ]] .. commit_message_section_zh .. [[
 
