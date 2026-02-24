@@ -1,100 +1,78 @@
 -- ============================================================================
--- GitHub Copilot - AI pair programming (basic auto-completion only)
+-- GitHub Copilot - AI pair programming (official plugin)
 -- ============================================================================
 
 -- Function to reset Copilot suggestion highlight
 local function reset_copilot_suggestion_highlight()
-  vim.api.nvim_set_hl(0, "CopilotSuggestion", { 
-    fg = "#808080", -- Gray color for suggestions
-    italic = true 
+  vim.api.nvim_set_hl(0, "CopilotSuggestion", {
+    fg = "#808080",
+    italic = true
   })
 end
 
 return {
-  -- GitHub Copilot for code completion (basic functionality only)
   {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
+    "github/copilot.vim",
+    event = "VeryLazy",
     config = function()
       local provider = require("config.ai_completion_provider")
       local is_active = provider.is_enabled("copilot")
-      
-      -- Only setup if this is the active provider
+
       if not is_active then
+        vim.g.copilot_enabled = false
         return
       end
-      
-      require("copilot").setup({
-        panel = {
-          keymap = {
-            open = "<M-CR>"  -- Only keep the customized keymap
-          },
-        },
-        suggestion = {
-          auto_trigger = true,  -- Keep: different from default (false)
-          keymap = {
-            accept = "<C-l>",  -- Keep: custom Tab mapping setup
-            next = "<C-.>",   -- Keep: custom keymap
-            prev = "<C-,>",   -- Keep: custom keymap
-            dismiss = "<C-/>", -- Keep: custom keymap
-          },
-        },
-        filetypes = {
-          help = false,           -- Vim help files
-          gitcommit = false,      -- Git commit messages
-          gitrebase = false,      -- Git rebase interactive
-          hgcommit = false,       -- Mercurial commit messages
-          svn = false,            -- SVN files
-          cvs = false,            -- CVS files
-        },
-      })
-      
-      -- Set up custom highlight for Copilot suggestions
+
+      vim.g.copilot_no_tab_map = true
+      vim.g.copilot_filetypes = {
+        ["help"] = false,
+        ["gitcommit"] = false,
+        ["gitrebase"] = false,
+        ["hgcommit"] = false,
+        ["svn"] = false,
+        ["cvs"] = false,
+      }
+
       reset_copilot_suggestion_highlight()
-      
-      -- Auto-reset Copilot highlight when colorscheme changes
+
       vim.api.nvim_create_autocmd("ColorScheme", {
         callback = function()
-          -- Delay the reset to ensure the new colorscheme is fully applied
           vim.defer_fn(function()
             reset_copilot_suggestion_highlight()
           end, 100)
         end,
         desc = "Auto-reset Copilot suggestion highlight after colorscheme change"
       })
-      
-      -- Smart Tab mapping: accept Copilot suggestion if available, otherwise indent at cursor
+
+      -- Smart Tab: accept Copilot suggestion if available, otherwise normal Tab behavior
       vim.keymap.set("i", "<Tab>", function()
-        local copilot = require("copilot.suggestion")
-        if copilot.is_visible() then
-          copilot.accept()
-          return ""  -- Return empty string to prevent further processing
+        local suggestion = vim.fn["copilot#GetDisplayedSuggestion"]()
+        if suggestion.text ~= "" then
+          return vim.fn["copilot#Accept"]("")
+        elseif vim.fn.pumvisible() == 1 then
+          return "<C-n>"
         else
-          -- Check if completion menu is visible
-          if vim.fn.pumvisible() == 1 then
-            return "<C-n>"  -- Navigate completion menu
+          local sw = vim.bo.shiftwidth
+          if vim.bo.expandtab then
+            return string.rep(" ", sw)
           else
-            -- Insert spaces based on shiftwidth at cursor position (not whole line)
-            local sw = vim.bo.shiftwidth
-            if vim.bo.expandtab then
-              return string.rep(" ", sw)  -- Insert spaces
-            else
-              return "\t"  -- Insert actual tab character
-            end
+            return "\t"
           end
         end
-      end, { expr = true, desc = "Accept Copilot or indent at cursor" })
+      end, { expr = true, silent = true, desc = "Accept Copilot or indent at cursor" })
+
+      vim.keymap.set("i", "<C-l>", 'copilot#Accept("")', { expr = true, replace_keycodes = false, desc = "Accept Copilot suggestion" })
+      vim.keymap.set("i", "<C-.>", "<Plug>(copilot-next)", { desc = "Next Copilot suggestion" })
+      vim.keymap.set("i", "<C-,>", "<Plug>(copilot-previous)", { desc = "Previous Copilot suggestion" })
+      vim.keymap.set("i", "<C-/>", "<Plug>(copilot-dismiss)", { desc = "Dismiss Copilot suggestion" })
     end,
     keys = {
-      -- Basic Copilot management commands only
-      { "<space>Ca", ":Copilot auth signin<CR>", desc = "Copilot auth" },
-      { "<space>Ci", ":Copilot auth info<CR>", desc = "Copilot auth info" },
-      { "<space>Co", ":Copilot auth signout<CR>", desc = "Copilot sign out" },
-      { "<space>Cp", ":Copilot panel<CR>", desc = "Copilot panel" },
+      { "<space>Ca", ":Copilot setup<CR>", desc = "Copilot setup/auth" },
       { "<space>Cs", ":Copilot status<CR>", desc = "Copilot status" },
       { "<space>Ce", ":Copilot enable<CR>", desc = "Copilot enable" },
       { "<space>Cd", ":Copilot disable<CR>", desc = "Copilot disable" },
+      { "<space>Cp", ":Copilot panel<CR>", desc = "Copilot panel" },
+      { "<space>Cv", ":Copilot version<CR>", desc = "Copilot version" },
       { "<space>Ch", function()
         reset_copilot_suggestion_highlight()
         vim.notify("Copilot suggestion highlight reset", vim.log.levels.INFO)
