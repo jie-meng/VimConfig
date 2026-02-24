@@ -88,7 +88,7 @@ return {
     end,
     keys = {
       -- Basic Copilot management commands only
-      { "<space>Ca", ":Copilot auth<CR>", desc = "Copilot auth" },
+      { "<space>Ca", ":Copilot auth signin<CR>", desc = "Copilot auth" },
       { "<space>Ci", ":Copilot auth info<CR>", desc = "Copilot auth info" },
       { "<space>Co", ":Copilot auth signout<CR>", desc = "Copilot sign out" },
       { "<space>Cp", ":Copilot panel<CR>", desc = "Copilot panel" },
