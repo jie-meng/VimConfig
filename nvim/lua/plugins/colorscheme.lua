@@ -192,14 +192,26 @@ return {
     config = function()
       require("colorizer").setup({
         filetypes = { "*" },
-        user_default_options = {
-          RGB = true, RRGGBB = true, names = true,
-          RRGGBBAA = false, AARRGGBB = false,
-          rgb_fn = false, hsl_fn = false,
-          css = false, css_fn = false,
-          mode = "background", tailwind = false,
-          sass = { enable = false, parsers = { "css" } },
-          virtualtext = "■",
+        options = {
+          parsers = {
+            names = { enable = true },
+            hex = {
+              rgb = true,
+              rrggbb = true,
+              rrggbbaa = false,
+              aarrggbb = false,
+            },
+            rgb = { enable = false },
+            hsl = { enable = false },
+            css = false,
+            css_fn = false,
+            tailwind = { enable = false },
+            sass = { enable = false, parsers = { "css" } },
+          },
+          display = {
+            mode = "background",
+            virtualtext = { char = "■" },
+          },
         },
         buftypes = {},
       })
