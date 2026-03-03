@@ -137,11 +137,7 @@ Sync project configurations to system `~/.config/nvim/`:
 ./sync-to-system.sh
 ```
 
-### Sync configuration from system
-Sync system configurations back to project directory:
-```bash
-./sync-from-system.sh
-```
+This script performs a direct overwrite update (no backup is created).
 
 ## 📁 Directory Structure
 
@@ -171,8 +167,7 @@ nvim/
 │       └── utils.lua        # Other utilities
 ├── install-mac.sh           # macOS install script
 ├── install-ubuntu.sh        # Ubuntu install script
-├── sync-to-system.sh        # Sync to system script
-└── sync-from-system.sh      # Sync from system script
+└── sync-to-system.sh        # Sync to system script (direct overwrite)
 ```
 
 ## 🔧 Customization

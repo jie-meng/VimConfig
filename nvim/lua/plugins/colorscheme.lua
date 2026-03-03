@@ -188,7 +188,7 @@ return {
     end,
   },
   -- Color highlighter plugin
-  { "NvChad/nvim-colorizer.lua",
+  { "catgoose/nvim-colorizer.lua",
     config = function()
       require("colorizer").setup({
         filetypes = { "*" },

@@ -33,11 +33,10 @@ echo -e "${GREEN}Syncing nvim configuration TO system...${NC}"
 echo -e "${YELLOW}From: $PROJECT_NVIM_DIR${NC}"
 echo -e "${YELLOW}To: $SYSTEM_NVIM_DIR${NC}"
 
-# Create backup if system config exists
+# Remove existing system config if it exists
 if [ -d "$SYSTEM_NVIM_DIR" ]; then
-    BACKUP_DIR="$SYSTEM_NVIM_DIR.backup.$(date +%Y%m%d_%H%M%S)"
-    echo -e "${YELLOW}Creating backup at: $BACKUP_DIR${NC}"
-    mv "$SYSTEM_NVIM_DIR" "$BACKUP_DIR"
+    echo -e "${YELLOW}Removing existing config: $SYSTEM_NVIM_DIR${NC}"
+    rm -rf "$SYSTEM_NVIM_DIR"
 fi
 
 # Create .config directory if it doesn't exist
@@ -50,9 +49,6 @@ cp -r "$PROJECT_NVIM_DIR" "$SYSTEM_NVIM_DIR"
 # Remove this script from the copied config (if it exists there)
 if [ -f "$SYSTEM_NVIM_DIR/sync-to-system.sh" ]; then
     rm "$SYSTEM_NVIM_DIR/sync-to-system.sh"
-fi
-if [ -f "$SYSTEM_NVIM_DIR/sync-from-system.sh" ]; then
-    rm "$SYSTEM_NVIM_DIR/sync-from-system.sh"
 fi
 if [ -f "$SYSTEM_NVIM_DIR/install-mac.sh" ]; then
     rm "$SYSTEM_NVIM_DIR/install-mac.sh"
