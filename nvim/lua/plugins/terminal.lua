@@ -153,38 +153,8 @@ return {
       vim.cmd("startinsert")  -- Enter insert mode automatically
     end
     
-    -- Store previous window and cursor position
-    local prev_win = nil
-    local prev_cursor = nil
-
     -- Main toggle terminal function
     local function toggle_terminal()
-      -- Check if current window is a non-user terminal (e.g., claudecode)
-      -- If so, don't close it, just create/show user terminal
-      local current_buf = vim.api.nvim_get_current_buf()
-      if vim.bo[current_buf].buftype == "terminal" then
-        local ok, is_user_terminal = pcall(vim.api.nvim_buf_get_var, current_buf, "user_terminal")
-        if not (ok and is_user_terminal) then
-          -- Current window is a non-user terminal (like claudecode), don't close it
-          -- Just show/create user terminal
-          local term_buf = find_terminal_buffer()
-          if term_buf then
-            local term_win = find_terminal_window(term_buf)
-            if term_win then
-              -- User terminal already visible, focus it
-              vim.api.nvim_set_current_win(term_win)
-            else
-              -- User terminal exists but not visible, show it
-              show_existing_terminal(term_buf)
-            end
-          else
-            -- No user terminal exists, create new one
-            create_new_terminal()
-          end
-          return
-        end
-      end
-
       -- Always save current position when opening terminal
       _G.save_terminal_position()
 
@@ -223,28 +193,13 @@ return {
     -- F2: Toggle terminal (like original vim config)
     vim.keymap.set({"n", "v"}, "<F2>", toggle_terminal, { desc = "Toggle terminal" })
 
-    -- F2 in terminal mode: Close terminal directly (only for user terminal)
+    -- F2 in terminal mode: Toggle managed terminal
     vim.keymap.set("t", "<F2>", function()
-      local current_buf = vim.api.nvim_get_current_buf()
-      -- Check if this is a user terminal
-      local ok, is_user_terminal = pcall(vim.api.nvim_buf_get_var, current_buf, "user_terminal")
-      if ok and is_user_terminal then
-        -- This is user terminal, close it
-        local term_win = vim.api.nvim_get_current_win()
-        -- Save height before closing
-        terminal_height = vim.api.nvim_win_get_height(term_win)
-        vim.api.nvim_win_close(term_win, false)
-        -- Restore saved position
-        _G.restore_terminal_position()
-      else
-        -- This is not user terminal (e.g., claudecode)
-        -- Exit terminal mode first, then toggle user terminal
-        vim.cmd("stopinsert")
-        vim.defer_fn(function()
-          toggle_terminal()
-        end, 50)
-      end
-    end, { desc = "Close user terminal or toggle from other terminal" })
+      vim.cmd("stopinsert")
+      vim.defer_fn(function()
+        toggle_terminal()
+      end, 50)
+    end, { desc = "Toggle terminal" })
     
     -- F3: Exit terminal mode to normal mode (works in terminal mode only)
     vim.keymap.set("t", "<F3>", "<C-\\><C-n>", { desc = "Exit terminal mode to normal" })
