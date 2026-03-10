@@ -122,8 +122,8 @@ return {
             folder_statuses = "only_folded",
           },
           win_config = {
-            position = "left",
-            width = 50,
+            position = "bottom",
+            height = 12,
             win_opts = {}
           },
         },
