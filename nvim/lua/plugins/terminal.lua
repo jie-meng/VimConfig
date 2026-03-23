@@ -219,11 +219,6 @@ return {
       else
         print("No terminal buffer found")
       end
-      
-      -- Also reset Avante layout if available
-      if _G.reset_avante_layout then
-        _G.reset_avante_layout()
-      end
     end
     
     vim.keymap.set({"n", "t", "v"}, "<S-F3>", reset_terminal_height, { desc = "Reset terminal height" })
