@@ -161,3 +161,19 @@ autocmd({ "BufNewFile", "BufRead" }, {
     end,
 })
 
+-- Handle *.template files: detect filetype from the real preceding extension.
+-- e.g., server_config.yaml.template -> yaml, nginx.conf.template -> nginx
+augroup("TemplateFiletype", { clear = true })
+autocmd({ "BufNewFile", "BufRead" }, {
+    group = "TemplateFiletype",
+    pattern = "*.template",
+    callback = function(ev)
+        local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(ev.buf), ":t")
+        local without_template = fname:gsub("%.template$", "")
+        local ft = vim.filetype.match({ filename = without_template })
+        if ft then
+            vim.bo[ev.buf].filetype = ft
+        end
+    end,
+})
+
