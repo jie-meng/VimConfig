@@ -3,10 +3,15 @@ local autocmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 
 -- Enable treesitter highlighting for all filetypes (nvim 0.12+ owns this, not nvim-treesitter).
--- pcall silently skips filetypes without a parser.
+-- Skip markdown until nvim-treesitter is updated to the new main-branch rewrite:
+-- the old master-branch query_predicates.lua crashes on nvim 0.12 when parsing
+-- fenced code blocks (injection queries call match[id]:range() which changed API).
 augroup("TreesitterHighlight", { clear = true })
 autocmd("FileType", {
   group = "TreesitterHighlight",
+  pattern = { "c", "cpp", "lua", "vim", "python", "javascript", "typescript",
+              "html", "css", "json", "yaml", "toml", "rust", "go", "java",
+              "vimdoc", "query" },
   callback = function()
     pcall(vim.treesitter.start)
   end,
