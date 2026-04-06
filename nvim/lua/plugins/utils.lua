@@ -4,20 +4,20 @@
 
 return {
   -- Syntax highlighting - replaces vim-polyglot
+  -- nvim-treesitter was fully rewritten for nvim 0.12+; the new version no longer
+  -- owns highlight/indent activation — those are nvim-native. The plugin only
+  -- installs parsers and provides queries.
   {
     "nvim-treesitter/nvim-treesitter",
+    lazy = false,
     build = ":TSUpdate",
     config = function()
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = {
-          "c", "cpp", "lua", "vim", "vimdoc", "query",
-          "python", "javascript", "typescript", "html", "css",
-          "json", "yaml", "toml", "rust", "go", "java",
-          "markdown", "markdown_inline"
-        },
-        sync_install = false,
-        highlight = { enable = true },
-        indent = { enable = true },
+      require("nvim-treesitter").setup()
+      require("nvim-treesitter").install({
+        "c", "cpp", "lua", "vim", "vimdoc", "query",
+        "python", "javascript", "typescript", "html", "css",
+        "json", "yaml", "toml", "rust", "go", "java",
+        "markdown", "markdown_inline",
       })
     end,
   },

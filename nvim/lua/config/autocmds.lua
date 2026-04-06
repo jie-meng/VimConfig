@@ -2,6 +2,16 @@
 local autocmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 
+-- Enable treesitter highlighting for all filetypes (nvim 0.12+ owns this, not nvim-treesitter).
+-- pcall silently skips filetypes without a parser.
+augroup("TreesitterHighlight", { clear = true })
+autocmd("FileType", {
+  group = "TreesitterHighlight",
+  callback = function()
+    pcall(vim.treesitter.start)
+  end,
+})
+
 -- Always disable auto comment on new line for all buffers
 autocmd("BufEnter", {
   callback = function()
