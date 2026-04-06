@@ -10,11 +10,11 @@ return {
   -- by the build hook `:TSUpdate`; no Lua install() call is needed at startup.
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
     lazy = false,
     build = ":TSUpdate",
     config = function()
       -- setup() is optional (only needed to override install_dir).
-      -- Silently no-op if the local copy is still the old version pending update.
       local ok, ts = pcall(require, "nvim-treesitter")
       if ok and type(ts.setup) == "function" then
         ts.setup()
