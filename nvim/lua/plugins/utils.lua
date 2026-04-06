@@ -14,6 +14,15 @@ return {
     lazy = false,
     build = ":TSUpdate",
     config = function()
+      -- The new main-branch rewrite stores queries under runtime/queries/ inside
+      -- the plugin dir, but nvim's rtp lookup expects queries/ at the rtp root.
+      -- Adding the plugin's runtime/ subdir to rtp bridges that gap so nvim can
+      -- find highlight queries for languages not bundled with nvim (python, json, …).
+      local runtime_dir = vim.fn.stdpath('data') .. '/lazy/nvim-treesitter/runtime'
+      if vim.uv.fs_stat(runtime_dir) then
+        vim.opt.rtp:prepend(runtime_dir)
+      end
+
       -- setup() is optional (only needed to override install_dir).
       local ok, ts = pcall(require, "nvim-treesitter")
       if ok and type(ts.setup) == "function" then
