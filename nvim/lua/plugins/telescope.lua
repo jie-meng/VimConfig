@@ -4,7 +4,6 @@
 
 return {
   "nvim-telescope/telescope.nvim",
-  tag = "0.1.8",
   dependencies = {
     "nvim-lua/plenary.nvim",
     {
@@ -45,6 +44,11 @@ return {
         prompt_prefix = "> ",
         selection_caret = "> ",
         path_display = { "truncate" },
+        preview = {
+          -- Disable treesitter highlighting in preview to avoid nvim 0.12 API breakage.
+          -- Remove this once nvim-treesitter fully supports nvim 0.12.
+          treesitter = false,
+        },
         file_ignore_patterns = { 
           "%.git/",
           "node_modules/",
