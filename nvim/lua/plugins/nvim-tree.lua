@@ -197,6 +197,15 @@ return {
           end
         end
         vim.keymap.set('n', 'fi', show_node_info, { buffer = bufnr, noremap = true, silent = true, desc = "Show file/folder info" })
+
+        -- Copy absolute path of node under cursor to system clipboard
+        vim.keymap.set('n', 'yp', function()
+          local node = api.tree.get_node_under_cursor()
+          if not node then return end
+          local path = node.absolute_path
+          vim.fn.setreg('+', path)
+          vim.notify("Copied: " .. path, vim.log.levels.INFO)
+        end, { buffer = bufnr, noremap = true, silent = true, desc = "Copy absolute path to clipboard" })
         
         -- Override delete mapping to handle buffer replacement before deletion
         vim.keymap.set('n', 'd', function()
