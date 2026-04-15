@@ -16,22 +16,58 @@ M.themes = {
 }
 
 -- 2. State and persistence
-M.theme_file = vim.fn.stdpath('data') .. "/nvim_theme.txt"
-M.project_theme_file = vim.fn.stdpath('config') .. "/project_themes.json"
+M.store_file = vim.fn.stdpath('data') .. "/theme_store.json"
+
+local function read_store()
+  local f = io.open(M.store_file, "r")
+  if not f then return { global = nil, projects = {} } end
+  local content = f:read("*a")
+  f:close()
+  if content == "" then return { global = nil, projects = {} } end
+  local ok, data = pcall(vim.fn.json_decode, content)
+  if ok and type(data) == "table" then
+    data.projects = data.projects or {}
+    return data
+  end
+  return { global = nil, projects = {} }
+end
+
+local function write_store(store)
+  local f = io.open(M.store_file, "w")
+  if not f then return end
+  -- Sort project keys alphabetically
+  local proj_keys = {}
+  for k in pairs(store.projects or {}) do table.insert(proj_keys, k) end
+  table.sort(proj_keys)
+  local proj_lines = {}
+  for _, k in ipairs(proj_keys) do
+    table.insert(proj_lines, string.format('    %s: %s', vim.fn.json_encode(k), vim.fn.json_encode(store.projects[k])))
+  end
+  local proj_block = #proj_lines > 0
+    and ("{\n" .. table.concat(proj_lines, ",\n") .. "\n  }")
+    or  "{}"
+  f:write(string.format(
+    '{\n  "global": %s,\n  "projects": %s\n}\n',
+    vim.fn.json_encode(store.global),
+    proj_block
+  ))
+  f:close()
+end
 
 local function read_theme_idx()
-  local f = io.open(M.theme_file, "r")
-  if f then
-    local t = f:read("*l")
-    f:close()
-    for i, v in ipairs(M.themes) do if v.name == t then return i end end
+  local store = read_store()
+  if store.global then
+    for i, v in ipairs(M.themes) do
+      if v.name == store.global then return i end
+    end
   end
   return 1
 end
 
 local function write_theme_idx(idx)
-  local f = io.open(M.theme_file, "w")
-  if f then f:write(M.themes[idx].name) f:close() end
+  local store = read_store()
+  store.global = M.themes[idx].name
+  write_store(store)
 end
 
 local function get_project_root()
@@ -44,43 +80,13 @@ local function get_project_root()
   return vim.fn.getcwd()
 end
 
-local function read_project_themes()
-  local f = io.open(M.project_theme_file, "r")
-  if not f then return {} end
-  local content = f:read("*a")
-  f:close()
-  if content == "" then return {} end
-  local ok, data = pcall(vim.fn.json_decode, content)
-  if ok and type(data) == "table" then return data end
-  return {}
-end
-
-local function write_project_themes(data)
-  local f = io.open(M.project_theme_file, "w")
-  if not f then return end
-  -- Collect and sort keys alphabetically
-  local keys = {}
-  for k in pairs(data) do table.insert(keys, k) end
-  table.sort(keys)
-  local lines = {}
-  for _, k in ipairs(keys) do
-    table.insert(lines, string.format('  %s: %s', vim.fn.json_encode(k), vim.fn.json_encode(data[k])))
-  end
-  if #lines == 0 then
-    f:write("{}\n")
-  else
-    f:write("{\n" .. table.concat(lines, ",\n") .. "\n}\n")
-  end
-  f:close()
-end
-
 -- Walk up from `path` and return the nearest ancestor (inclusive) that has a
--- saved theme, plus the theme name. Returns nil if none found.
-local function find_theme_by_ancestry(path, project_themes)
+-- saved theme, plus the matched path. Returns nil if none found.
+local function find_theme_by_ancestry(path, projects)
   local current = path
   while true do
-    if project_themes[current] then
-      return project_themes[current], current
+    if projects[current] then
+      return projects[current], current
     end
     local parent = vim.fn.fnamemodify(current, ":h")
     if parent == current then break end  -- reached filesystem root
@@ -92,18 +98,18 @@ end
 function M.save_project_theme()
   local root = get_project_root()
   local theme_name = M.themes[M.current_idx].name
-  local data = read_project_themes()
-  data[root] = theme_name
-  write_project_themes(data)
+  local store = read_store()
+  store.projects[root] = theme_name
+  write_store(store)
   vim.notify("Saved theme '" .. theme_name .. "' for " .. root)
 end
 
 function M.clear_project_theme()
   local root = get_project_root()
-  local data = read_project_themes()
-  if data[root] then
-    data[root] = nil
-    write_project_themes(data)
+  local store = read_store()
+  if store.projects[root] then
+    store.projects[root] = nil
+    write_store(store)
     vim.notify("Cleared theme for " .. root)
   else
     vim.notify("No project theme saved for " .. root)
@@ -111,7 +117,9 @@ function M.clear_project_theme()
 end
 
 function M.clear_all_project_themes()
-  write_project_themes({})
+  local store = read_store()
+  store.projects = {}
+  write_store(store)
   vim.notify("Cleared all project themes")
 end
 
@@ -209,8 +217,8 @@ end
 
 -- 4. Keymap bindings
 local function setup_keymaps()
-  vim.keymap.set("n", "<leader>+",  M.next_theme,              { desc = "Next theme" })
-  vim.keymap.set("n", "<leader>_",  M.prev_theme,              { desc = "Prev theme" })
+  vim.keymap.set("n", "<leader>t=", M.next_theme,               { desc = "Next theme" })
+  vim.keymap.set("n", "<leader>t-", M.prev_theme,               { desc = "Prev theme" })
   vim.keymap.set("n", "<leader>ts", M.save_project_theme,       { desc = "Save project theme" })
   vim.keymap.set("n", "<leader>tc", M.clear_project_theme,      { desc = "Clear project theme" })
   vim.keymap.set("n", "<leader>tx", M.clear_all_project_themes, { desc = "Clear all project themes" })
@@ -219,16 +227,15 @@ end
 -- 5. Auto-apply last theme on startup (project-specific theme takes priority)
 vim.schedule(function()
   local root = get_project_root()
-  local project_themes = read_project_themes()
-  local project_theme, matched_path = find_theme_by_ancestry(root, project_themes)
+  local store = read_store()
+  local project_theme, matched_path = find_theme_by_ancestry(root, store.projects)
   if project_theme then
     for i, v in ipairs(M.themes) do
       if v.name == project_theme then
-        local silent = matched_path == root  -- notify only when matched via ancestor
         if matched_path ~= root then
           vim.notify("Project theme from parent: " .. matched_path .. " → " .. project_theme)
         end
-        M.apply_theme(i, silent)
+        M.apply_theme(i, true)
         return
       end
     end
