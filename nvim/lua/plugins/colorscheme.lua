@@ -9,10 +9,12 @@ local CURSORLINE_DIM_BG = "#282a36"
 
 -- 1. Theme list (extend as needed)
 M.themes = {
-   { name = "gruvbox",      lualine = "gruvbox"      },
+  { name = "gruvbox",      lualine = "gruvbox"      },
   { name = "monokai-pro",  lualine = "monokai-pro"  },
   { name = "dracula",      lualine = "dracula"      },
   { name = "bamboo",       lualine = "bamboo"       },
+  { name = "rose-pine",    lualine = "rose-pine"    },
+  { name = "bonbon",       lualine = "bonbon"       },
 }
 
 -- 2. State and persistence
@@ -127,10 +129,12 @@ M.current_idx = read_theme_idx()
 
 -- 3. Theme switching logic
 local plugin_map = {
-  gruvbox      = "gruvbox.nvim",
+  gruvbox         = "gruvbox.nvim",
   ["monokai-pro"] = "monokai-pro.nvim",
-  dracula      = "dracula.nvim",
-  bamboo       = "bamboo.nvim",
+  dracula         = "dracula.nvim",
+  bamboo          = "bamboo.nvim",
+  ["rose-pine"]   = "rose-pine",
+  bonbon          = "bonbon.nvim",
 }
 
 
@@ -300,6 +304,36 @@ return {
     config = function()
       require("bamboo").setup({
         style = "vulgaris", -- Choose between 'vulgaris' (regular), 'multiplex', or 'light'
+      })
+    end,
+  },
+  {
+    "rose-pine/neovim",
+    name = "rose-pine",
+    lazy = true,
+    config = function()
+      require("rose-pine").setup({
+        variant = "main", -- dark variant (main or moon)
+        dark_variant = "main",
+      })
+    end,
+  },
+  {
+    "pankvitek/bonbon.nvim",
+    name = "bonbon.nvim",
+    lazy = true,
+    config = function()
+      vim.o.background = "dark"
+      require("bonbon").setup({
+        overrides = {
+          CursorLine               = { bg = CURSORLINE_BG },
+          CursorColumn             = { bg = CURSORLINE_BG },
+          NvimTreeFolderIcon       = { fg = "#8ac4f5" },
+          NvimTreeFolderName       = { fg = "#8ac4f5" },
+          NvimTreeOpenedFolderName = { fg = "#a3e36c" },
+          NvimTreeRootFolder       = { fg = "#ff829c" },
+          NvimTreeFileIcon         = { fg = "#ffe7c6" },
+        },
       })
     end,
   },
