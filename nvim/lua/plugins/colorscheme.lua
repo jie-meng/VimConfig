@@ -58,18 +58,35 @@ end
 local function write_project_themes(data)
   local f = io.open(M.project_theme_file, "w")
   if not f then return end
-  -- Pretty-print: one entry per line
+  -- Collect and sort keys alphabetically
+  local keys = {}
+  for k in pairs(data) do table.insert(keys, k) end
+  table.sort(keys)
   local lines = {}
-  for k, v in pairs(data) do
-    table.insert(lines, string.format('  %s: %s', vim.fn.json_encode(k), vim.fn.json_encode(v)))
+  for _, k in ipairs(keys) do
+    table.insert(lines, string.format('  %s: %s', vim.fn.json_encode(k), vim.fn.json_encode(data[k])))
   end
-  table.sort(lines)
   if #lines == 0 then
     f:write("{}\n")
   else
     f:write("{\n" .. table.concat(lines, ",\n") .. "\n}\n")
   end
   f:close()
+end
+
+-- Walk up from `path` and return the nearest ancestor (inclusive) that has a
+-- saved theme, plus the theme name. Returns nil if none found.
+local function find_theme_by_ancestry(path, project_themes)
+  local current = path
+  while true do
+    if project_themes[current] then
+      return project_themes[current], current
+    end
+    local parent = vim.fn.fnamemodify(current, ":h")
+    if parent == current then break end  -- reached filesystem root
+    current = parent
+  end
+  return nil, nil
 end
 
 function M.save_project_theme()
@@ -203,11 +220,15 @@ end
 vim.schedule(function()
   local root = get_project_root()
   local project_themes = read_project_themes()
-  local project_theme = project_themes[root]
+  local project_theme, matched_path = find_theme_by_ancestry(root, project_themes)
   if project_theme then
     for i, v in ipairs(M.themes) do
       if v.name == project_theme then
-        M.apply_theme(i, true)
+        local silent = matched_path == root  -- notify only when matched via ancestor
+        if matched_path ~= root then
+          vim.notify("Project theme from parent: " .. matched_path .. " → " .. project_theme)
+        end
+        M.apply_theme(i, silent)
         return
       end
     end
