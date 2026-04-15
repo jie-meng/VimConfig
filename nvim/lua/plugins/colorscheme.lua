@@ -17,6 +17,7 @@ M.themes = {
 
 -- 2. State and persistence
 M.theme_file = vim.fn.stdpath('data') .. "/nvim_theme.txt"
+M.project_theme_file = vim.fn.stdpath('config') .. "/project_themes.json"
 
 local function read_theme_idx()
   local f = io.open(M.theme_file, "r")
@@ -31,6 +32,70 @@ end
 local function write_theme_idx(idx)
   local f = io.open(M.theme_file, "w")
   if f then f:write(M.themes[idx].name) f:close() end
+end
+
+local function get_project_root()
+  local result = vim.fn.systemlist(
+    "git -C " .. vim.fn.shellescape(vim.fn.getcwd()) .. " rev-parse --show-toplevel"
+  )
+  if vim.v.shell_error == 0 and result[1] and result[1] ~= "" then
+    return result[1]
+  end
+  return vim.fn.getcwd()
+end
+
+local function read_project_themes()
+  local f = io.open(M.project_theme_file, "r")
+  if not f then return {} end
+  local content = f:read("*a")
+  f:close()
+  if content == "" then return {} end
+  local ok, data = pcall(vim.fn.json_decode, content)
+  if ok and type(data) == "table" then return data end
+  return {}
+end
+
+local function write_project_themes(data)
+  local f = io.open(M.project_theme_file, "w")
+  if not f then return end
+  -- Pretty-print: one entry per line
+  local lines = {}
+  for k, v in pairs(data) do
+    table.insert(lines, string.format('  %s: %s', vim.fn.json_encode(k), vim.fn.json_encode(v)))
+  end
+  table.sort(lines)
+  if #lines == 0 then
+    f:write("{}\n")
+  else
+    f:write("{\n" .. table.concat(lines, ",\n") .. "\n}\n")
+  end
+  f:close()
+end
+
+function M.save_project_theme()
+  local root = get_project_root()
+  local theme_name = M.themes[M.current_idx].name
+  local data = read_project_themes()
+  data[root] = theme_name
+  write_project_themes(data)
+  vim.notify("Saved theme '" .. theme_name .. "' for " .. root)
+end
+
+function M.clear_project_theme()
+  local root = get_project_root()
+  local data = read_project_themes()
+  if data[root] then
+    data[root] = nil
+    write_project_themes(data)
+    vim.notify("Cleared theme for " .. root)
+  else
+    vim.notify("No project theme saved for " .. root)
+  end
+end
+
+function M.clear_all_project_themes()
+  write_project_themes({})
+  vim.notify("Cleared all project themes")
 end
 
 M.current_idx = read_theme_idx()
@@ -127,12 +192,27 @@ end
 
 -- 4. Keymap bindings
 local function setup_keymaps()
-  vim.keymap.set("n", "<leader>+", M.next_theme, { desc = "Next theme" })
-  vim.keymap.set("n", "<leader>_", M.prev_theme, { desc = "Prev theme" })
+  vim.keymap.set("n", "<leader>+",  M.next_theme,              { desc = "Next theme" })
+  vim.keymap.set("n", "<leader>_",  M.prev_theme,              { desc = "Prev theme" })
+  vim.keymap.set("n", "<leader>ts", M.save_project_theme,       { desc = "Save project theme" })
+  vim.keymap.set("n", "<leader>tc", M.clear_project_theme,      { desc = "Clear project theme" })
+  vim.keymap.set("n", "<leader>tx", M.clear_all_project_themes, { desc = "Clear all project themes" })
 end
 
--- 5. Auto-apply last theme on startup
+-- 5. Auto-apply last theme on startup (project-specific theme takes priority)
 vim.schedule(function()
+  local root = get_project_root()
+  local project_themes = read_project_themes()
+  local project_theme = project_themes[root]
+  if project_theme then
+    for i, v in ipairs(M.themes) do
+      if v.name == project_theme then
+        M.apply_theme(i, true)
+        return
+      end
+    end
+    vim.notify("Project theme '" .. project_theme .. "' not in theme list, using default", vim.log.levels.WARN)
+  end
   M.apply_theme(M.current_idx, true)
 end)
 setup_keymaps()
