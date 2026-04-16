@@ -236,9 +236,6 @@ vim.schedule(function()
   if project_theme then
     for i, v in ipairs(M.themes) do
       if v.name == project_theme then
-        if matched_path ~= root then
-          vim.notify("Project theme from parent: " .. matched_path .. " → " .. project_theme)
-        end
         M.apply_theme(i, true)
         return
       end
