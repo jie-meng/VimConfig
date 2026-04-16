@@ -2,6 +2,19 @@
 local autocmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 
+-- Patch vim.treesitter.start to never throw. Neovim 0.12+ built-in ftplugins
+-- (e.g. ftplugin/lua.lua) call it without pcall. A stale nvim-treesitter
+-- parser can produce "Invalid field name" query errors that propagate into
+-- async contexts like diffview's buffer-creation coroutine, causing
+-- "Failed to create diff buffer" errors. Run :TSUpdate to fix the mismatch.
+do
+  local _ts_start = vim.treesitter.start
+  ---@diagnostic disable-next-line: duplicate-set-field
+  vim.treesitter.start = function(...)
+    pcall(_ts_start, ...)
+  end
+end
+
 -- Enable treesitter highlighting for all filetypes (nvim 0.12+ owns this, not nvim-treesitter).
 -- pcall silently skips filetypes without a parser.
 augroup("TreesitterHighlight", { clear = true })
