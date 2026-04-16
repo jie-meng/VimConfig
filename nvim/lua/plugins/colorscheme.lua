@@ -184,6 +184,12 @@ function M.apply_theme(idx, silent, tried)
     })
   end
 
+  -- Hide end-of-buffer ~ markers (match background color)
+  local normal_hl = vim.api.nvim_get_hl(0, { name = "Normal" })
+  if normal_hl.bg then
+    vim.api.nvim_set_hl(0, "EndOfBuffer", { fg = normal_hl.bg })
+  end
+
   -- Enhance diff highlight contrast
   vim.api.nvim_set_hl(0, "DiffAdd",    { bg = "#335533", bold = true })
   vim.api.nvim_set_hl(0, "DiffChange", { bg = "#444444", bold = true })
