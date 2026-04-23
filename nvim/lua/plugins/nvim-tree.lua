@@ -34,7 +34,7 @@ return {
         end
       },
       media = {
-        extensions = { 
+        extensions = {
           -- Images
           "jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "tiff", "tif", "ico",
           -- Videos
@@ -44,7 +44,7 @@ return {
           -- Open media files with system default application (same as 's' key)
           local filename = vim.fn.fnamemodify(file_path, ":t")
           local cmd
-          
+
           if vim.fn.has("mac") == 1 then
             cmd = string.format("open '%s'", file_path)
           elseif vim.fn.has("unix") == 1 then
@@ -55,7 +55,7 @@ return {
             vim.notify("Unsupported system for opening media files", vim.log.levels.WARN)
             return
           end
-          
+
           vim.fn.jobstart(cmd, {
             detach = true,
             on_exit = function(_, exit_code)
@@ -78,7 +78,7 @@ return {
     -- Function to handle file opening based on type
     local function handle_file_open(file_path)
       local extension = get_file_extension(file_path)
-      
+
       -- Check each file type handler
       for file_type, config in pairs(file_handlers) do
         for _, ext in ipairs(config.extensions) do
@@ -88,7 +88,7 @@ return {
           end
         end
       end
-      
+
       return false -- File should be opened normally
     end
     -- Disable netrw
@@ -106,10 +106,13 @@ return {
       },
       on_attach = function(bufnr)
         local api = require("nvim-tree.api")
-        
+
         -- Default mappings
         api.config.mappings.default_on_attach(bufnr)
-        
+
+        -- Remove default 'f' (live-filter) to avoid conflict with 'fi' mapping
+        vim.keymap.del('n', 'f', { buffer = bufnr })
+
         -- Disable Ctrl-] parent directory root change
         vim.keymap.set('n', '<C-]>', function() end, {
           buffer = bufnr,
@@ -122,13 +125,13 @@ return {
         local function custom_edit()
           local node = api.tree.get_node_under_cursor()
           if not node then return end
-          
+
           -- Check if this is the parent directory node (..) at the top of tree
           if node.type == "directory" and node.name == ".." then
             -- Do nothing - prevent cd to parent directory
             return
           end
-          
+
           if node.type == "file" then
             local file_path = node.absolute_path
             -- Try custom handler first
@@ -141,11 +144,11 @@ return {
             api.node.open.edit()
           end
         end
-        
+
         -- Override the default <CR> and 'o' mappings
         vim.keymap.set('n', '<CR>', custom_edit, { buffer = bufnr, noremap = true, silent = true, nowait = true })
         vim.keymap.set('n', 'o', custom_edit, { buffer = bufnr, noremap = true, silent = true, nowait = true })
-        
+
         -- Add custom keymaps from global config
         vim.keymap.set('n', 'mx', ':qa!<CR>', { buffer = bufnr, noremap = true, silent = true, desc = "Quit all" })
         vim.keymap.set('n', 'mq', ':q<CR>', { buffer = bufnr, noremap = true, silent = true, desc = "Quit" })
@@ -206,16 +209,16 @@ return {
           vim.fn.setreg('+', path)
           vim.notify("Copied: " .. path, vim.log.levels.INFO)
         end, { buffer = bufnr, noremap = true, silent = true, desc = "Copy absolute path to clipboard" })
-        
+
         -- Override delete mapping to handle buffer replacement before deletion
         vim.keymap.set('n', 'd', function()
           local node = api.tree.get_node_under_cursor()
           if not node then return end
-          
+
           -- If it's a file, replace all windows showing this file with empty buffers
           if node.type == "file" then
             local file_path = node.absolute_path
-            
+
             -- Find all windows displaying this file
             local windows_with_file = {}
             for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -227,14 +230,14 @@ return {
                 end
               end
             end
-            
+
             -- Replace each window with an empty buffer BEFORE deletion
             for _, win in ipairs(windows_with_file) do
               local new_buf = vim.api.nvim_create_buf(true, false)
               vim.api.nvim_win_set_buf(win, new_buf)
             end
           end
-          
+
           -- Now perform the actual delete operation
           api.fs.remove()
         end, { buffer = bufnr, noremap = true, silent = true, desc = "Delete file/folder" })
@@ -313,7 +316,7 @@ return {
 
       -- open the tree
       require("nvim-tree.api").tree.open()
-      
+
       -- Move focus back to the main window
       vim.cmd("wincmd p")
     end
