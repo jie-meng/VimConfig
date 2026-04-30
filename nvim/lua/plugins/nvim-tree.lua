@@ -302,6 +302,25 @@ return {
       },
     })
 
+    -- Force a tree reload after any delete. Default nvim-tree relies on
+    -- filesystem_watchers to repaint the tree, but on macOS those events can
+    -- be missed for nested dirs (e.g. `<basename>.assets`), leaving the
+    -- removed file visible in the tree even though the on-disk delete and
+    -- the success notification both succeeded. Subscribing here is robust:
+    -- it covers the default `d`, the custom `d` below, and any future
+    -- delete path.
+    do
+      local api = require("nvim-tree.api")
+      local Event = api.events.Event
+      local function reload()
+        vim.schedule(function()
+          pcall(api.tree.reload)
+        end)
+      end
+      api.events.subscribe(Event.FileRemoved, reload)
+      api.events.subscribe(Event.FolderRemoved, reload)
+    end
+
     -- Auto open nvim-tree when starting nvim
     local function open_nvim_tree(data)
       -- buffer is a directory
