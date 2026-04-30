@@ -190,3 +190,19 @@ autocmd({ "BufNewFile", "BufRead" }, {
     end,
 })
 
+-- Markdown image helpers (Typora-style). Buffer-local mappings only — these
+-- keys do nothing in non-markdown buffers.
+augroup("MarkdownImageMaps", { clear = true })
+autocmd("FileType", {
+    group = "MarkdownImageMaps",
+    pattern = "markdown",
+    callback = function(ev)
+        vim.keymap.set("n", "<Space>pi", function()
+            require("config.markdown_image").paste_image()
+        end, { buffer = ev.buf, desc = "Markdown: paste image (path on line -> Typora-style assets)" })
+        vim.keymap.set("n", "<Space>pz", function()
+            require("config.markdown_image").resize_image()
+        end, { buffer = ev.buf, desc = "Markdown: zoom/resize image on current line" })
+    end,
+})
+

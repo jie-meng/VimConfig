@@ -82,6 +82,41 @@ Maintains the same key mappings as the original Vim configuration:
 - `:A` - Switch between header (.h/.hpp) and source (.cpp/.cc/.cxx) files
 - `<Leader>a` - Same as `:A` (quick switch alternate file)
 
+### Markdown Images (Typora-style, markdown buffers only)
+
+Workflow: drag an image file onto the markdown buffer (or paste a path).
+Place the cursor on that line and press `<Space>pi` — the path will be
+recognized, the file copied into `<basename>.assets/`, and the line
+rewritten as `![alt](<basename>.assets/file.ext)`.
+
+- `<Space>pi` - **Paste image**. Reads the current line, finds an image
+  path, copies it into `<basename>.assets/` next to the current `.md`
+  file, and replaces the path with a Markdown image link.
+
+  Recognized inputs on the line (in priority order):
+    1. an existing `![alt](path)` link
+    2. an existing `<img src="...">` tag
+    3. a bare absolute path (`/Users/...`, `~/Downloads/...`)
+    4. a `file://` URL (percent-decoded)
+
+  Image detection: extension whitelist (`png/jpg/jpeg/gif/webp/bmp/svg/`
+  `tiff/tif/ico/avif/heic/heif`, **case-insensitive** — `PNG`, `Png`,
+  `png` all work). If the extension is missing or unusual, the file is
+  also content-sniffed via magic numbers.
+
+- `<Space>pz` - **Picture zoom**. Resize the image reference on the
+  current line. Prompts for a zoom percentage (default `50`) and rewrites
+  the line as `<img src="..." alt="..." style="zoom:NN%;" />`. Works on
+  both `![alt](path)` and existing `<img ...>` tags.
+
+The on-disk layout matches Typora exactly, so the same files render in
+both Typora and `:MarkdownPreviewToggle`.
+
+Mappings live under `<Space>p*` (paste / picture). `<Space>i*` was
+deliberately avoided because `i` is the built-in *insert* key in normal
+mode — keeping the namespace away from `i` reduces the risk of
+mis-keying into insert mode.
+
 ### AI Providers
 The configuration supports two AI completion providers:
 - **Copilot**: GitHub's cloud-based AI (requires authentication)
@@ -150,6 +185,7 @@ nvim/
 │   │   ├── keymaps.lua                 # Key mappings
 │   │   ├── autocmds.lua                # Auto commands
 │   │   ├── ai_completion_provider.lua  # AI completion provider manager
+│   │   ├── markdown_image.lua          # Typora-style image insert/resize
 │   │   └── lazy.lua                    # Plugin manager setup
 │   └── plugins/
 │       ├── nvim-tree.lua    # File tree

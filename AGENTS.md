@@ -35,3 +35,4 @@ Do not reintroduce backup/rollback logic unless explicitly requested.
 - Preserve existing Lua style and plugin organization.
 - Update docs (`README.md` / `nvim/README.md`) when behavior changes.
 - Prefer not to add new tools/scripts unless requested.
+
