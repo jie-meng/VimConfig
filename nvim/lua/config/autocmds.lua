@@ -190,19 +190,25 @@ autocmd({ "BufNewFile", "BufRead" }, {
     end,
 })
 
--- Markdown image helpers (Typora-style). Buffer-local mappings only — these
+-- Markdown helpers. Buffer-local mappings under <Leader>m — these
 -- keys do nothing in non-markdown buffers.
-augroup("MarkdownImageMaps", { clear = true })
+augroup("MarkdownMaps", { clear = true })
 autocmd("FileType", {
-    group = "MarkdownImageMaps",
+    group = "MarkdownMaps",
     pattern = "markdown",
     callback = function(ev)
-        vim.keymap.set("n", "<Space>pi", function()
-            require("config.markdown_image").paste_image()
+        vim.keymap.set("n", "<Leader>mi", function()
+            require("config.markdown").paste_image()
         end, { buffer = ev.buf, desc = "Markdown: paste image (path on line -> Typora-style assets)" })
-        vim.keymap.set("n", "<Space>pz", function()
-            require("config.markdown_image").resize_image()
+        vim.keymap.set("n", "<Leader>mz", function()
+            require("config.markdown").resize_image()
         end, { buffer = ev.buf, desc = "Markdown: zoom/resize image on current line" })
+        vim.keymap.set("n", "<Leader>mt", function()
+            require("config.markdown").insert_table()
+        end, { buffer = ev.buf, desc = "Markdown: insert table at cursor" })
+        vim.keymap.set("n", "<Leader>md", function()
+            require("config.markdown").cleanup_assets()
+        end, { buffer = ev.buf, desc = "Markdown: delete unused assets" })
     end,
 })
 

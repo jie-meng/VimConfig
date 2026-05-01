@@ -1,7 +1,7 @@
 -- ============================================================================
--- Markdown image helpers (Typora-style)
+-- Markdown helpers
 --
--- Two operations are exposed:
+-- Operations (buffer-local, markdown only):
 --   * paste_image()  - read the current line, extract a path that points to
 --                      an image (already-dropped path, file:// URL, or
 --                      existing ![alt](path) link), then copy that file into
@@ -12,9 +12,16 @@
 --                      zoom percentage (default 50) and rewrite it as the
 --                      Typora <img src=... alt="..." style="zoom:NN%;" />
 --                      form.
+--   * insert_table() - prompt for rows x cols (e.g. "3x4"), insert a
+--                      markdown table at the current cursor position.
+--   * cleanup_assets() - scan <basename>.assets/ for files not referenced
+--                        in the document and offer to delete them.
 --
--- The on-disk layout matches Typora exactly so the same files render
--- cleanly in both Typora and :MarkdownPreviewToggle.
+-- Keybindings (under <Leader>m, buffer-local):
+--   <Leader>mi  - paste image
+--   <Leader>mz  - zoom/resize image
+--   <Leader>mt  - insert table
+--   <Leader>md  - delete unused assets
 -- ============================================================================
 
 local M = {}
@@ -407,6 +414,99 @@ function M.resize_image()
 
     local new_line = line:sub(1, s - 1) .. replacement .. line:sub(e + 1)
     vim.api.nvim_buf_set_lines(0, row - 1, row, false, { new_line })
+  end)
+end
+
+function M.insert_table()
+  if not is_markdown_buffer() then return end
+  vim.ui.input({
+    prompt = "Table size (rows x cols, e.g. 3x4): ",
+    default = "2x2",
+  }, function(input)
+    if not input or input == "" then return end
+    local rows, cols = input:match("(%d+)%s*[xX]%s*(%d+)")
+    if not rows or not cols then
+      vim.notify("Invalid format. Use NxM, e.g. 3x4", vim.log.levels.WARN)
+      return
+    end
+    rows = tonumber(rows)
+    cols = tonumber(cols)
+    if rows < 1 or cols < 1 then
+      vim.notify("Rows and cols must be >= 1", vim.log.levels.WARN)
+      return
+    end
+
+    local function make_row(cells)
+      return "| " .. table.concat(cells, " | ") .. " |"
+    end
+
+    local cells = {}
+    for _ = 1, cols do
+      table.insert(cells, " ")
+    end
+    local header = make_row(cells)
+    local separator = make_row(vim.tbl_map(function() return "---" end, cells))
+    local data_row = make_row(cells)
+
+    local lines = { header, separator }
+    for _ = 1, rows do
+      table.insert(lines, data_row)
+    end
+
+    local row = vim.api.nvim_win_get_cursor(0)[1]
+    vim.api.nvim_buf_set_lines(0, row, row, false, lines)
+    -- Move cursor to first cell (header row, first column content)
+    vim.api.nvim_win_set_cursor(0, { row + 1, 2 })
+    vim.cmd("startinsert")
+  end)
+end
+
+function M.cleanup_assets()
+  if not is_markdown_buffer() then return end
+  local md_path = current_md_path()
+  if not md_path then return end
+
+  local assets = assets_dir_for(md_path)
+  if vim.fn.isdirectory(assets) ~= 1 then
+    vim.notify("No assets directory: " .. vim.fn.fnamemodify(assets, ":~."), vim.log.levels.INFO)
+    return
+  end
+
+  local basename = vim.fn.fnamemodify(md_path, ":t:r")
+  local rel_prefix = basename .. ".assets/"
+  local files = vim.fn.readdir(assets)
+  if not files or #files == 0 then
+    vim.notify("Assets directory is empty", vim.log.levels.INFO)
+    return
+  end
+
+  local buf = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), "\n")
+  local unused = {}
+  for _, f in ipairs(files) do
+    local full = assets .. "/" .. f
+    if vim.fn.isdirectory(full) == 0 and not f:match("^%.") then
+      if not buf:find(rel_prefix .. f, 1, true) then
+        table.insert(unused, f)
+      end
+    end
+  end
+
+  if #unused == 0 then
+    vim.notify("All assets are referenced. Nothing to clean.", vim.log.levels.INFO)
+    return
+  end
+
+  vim.ui.input({
+    prompt = #unused .. " unused asset(s):\n" .. table.concat(unused, "\n") .. "\n\nDelete? (y/N): ",
+    default = "",
+  }, function(answer)
+    if answer and answer:lower() == "y" then
+      local n = 0
+      for _, f in ipairs(unused) do
+        if vim.fn.delete(assets .. "/" .. f) == 0 then n = n + 1 end
+      end
+      vim.notify("Deleted " .. n .. " unused asset(s)", vim.log.levels.INFO)
+    end
   end)
 end
 
