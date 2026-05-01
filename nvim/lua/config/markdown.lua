@@ -3,23 +3,26 @@
 --
 -- Operations (buffer-local, markdown only):
 --   * paste_image()  - read the current line, extract a path that points to
---                      an image (already-dropped path, file:// URL, or
---                      existing ![alt](path) link), then copy that file into
+--                      a media file (already-dropped path, file:// URL, or
+--                      existing link), then copy that file into
 --                      <md-basename>.assets/ and replace the line/segment
---                      with the proper Markdown image link.
---   * resize_image() - find the image reference on the current line
---                      (either ![](path) or <img src=...>), prompt for a
---                      zoom percentage (default 50) and rewrite it as the
---                      Typora <img src=... alt="..." style="zoom:NN%;" />
---                      form.
+--                      with the proper Markdown link:
+--                        image -> ![name](path)
+--                        video -> <video src="path" controls></video>
+--                        audio -> <audio src="path" controls></audio>
+--   * resize_image() - find the image/video reference on the current line,
+--                      prompt for a size percentage (default 50) and rewrite:
+--                        image -> <img src="..." style="zoom:N%;" />
+--                        video -> <video src="..." style="width:N%;" controls></video>
+--                      Audio is not supported (no visual size).
 --   * insert_table() - prompt for rows x cols (e.g. "3x4"), insert a
 --                      markdown table at the current cursor position.
 --   * cleanup_assets() - scan <basename>.assets/ for files not referenced
 --                        in the document and offer to delete them.
 --
 -- Keybindings (under <Leader>m, buffer-local):
---   <Leader>mi  - paste image
---   <Leader>mz  - zoom/resize image
+--   <Leader>mi  - paste media (image/video/audio)
+--   <Leader>mz  - zoom/resize image or video
 --   <Leader>mt  - insert table
 --   <Leader>md  - delete unused assets
 -- ============================================================================
@@ -32,6 +35,16 @@ local IMAGE_EXTS = {
   png = true, jpg = true, jpeg = true, gif = true, webp = true,
   bmp = true, svg = true, tiff = true, tif = true, ico = true,
   avif = true, heic = true, heif = true,
+}
+
+local VIDEO_EXTS = {
+  mp4 = true, mov = true, avi = true, mkv = true, webm = true,
+  flv = true, wmv = true, m4v = true, mpg = true, mpeg = true,
+}
+
+local AUDIO_EXTS = {
+  mp3 = true, ogg = true, wav = true, flac = true, aac = true,
+  m4a = true, opus = true, wma = true,
 }
 
 -- Magic-number sniff for cases where the extension is missing or wrong.
@@ -181,6 +194,18 @@ local function is_image_file(path)
   return false, "extension '." .. ext .. "' is not an image and content does not look like an image"
 end
 
+-- Classify a file as "image", "video", "audio", or nil.
+-- Uses extension only (no content sniff for video/audio).
+local function classify_media(path)
+  if vim.fn.filereadable(path) == 0 then return nil end
+  local ext = vim.fn.fnamemodify(path, ":e"):lower()
+  if ext == "" then return nil end
+  if IMAGE_EXTS[ext] then return "image" end
+  if VIDEO_EXTS[ext] then return "video" end
+  if AUDIO_EXTS[ext] then return "audio" end
+  return nil
+end
+
 -- Strip surrounding decoration (quotes, brackets, parens) from the candidate.
 local function strip_decor(s)
   s = s:gsub("^%s+", ""):gsub("%s+$", "")
@@ -243,17 +268,18 @@ local function extract_path_from_line(line)
     if p then return p, s, e end
   end
 
-  -- 2) Existing <img src="..."> tag — also useful (e.g. user dragged then
-  --    Typora-style HTML was already inserted manually).
-  local hs, he = line:find("<img[^>]->")
-  if hs then
-    local tag = line:sub(hs, he)
-    local src = tag:match('src%s*=%s*"([^"]+)"')
-      or tag:match("src%s*=%s*'([^']+)'")
-      or tag:match("src%s*=%s*([^%s/>]+)")
-    if src then
-      local p = normalize_path(src)
-      if p then return p, hs, he end
+  -- 2) Existing HTML media tag: <img>, <video>, or <audio>.
+  for _, tagname in ipairs({ "img", "video", "audio" }) do
+    local hs, he = line:find("<" .. tagname .. "[^>]->", 1)
+    if hs then
+      local tag = line:sub(hs, he)
+      local src = tag:match('src%s*=%s*"([^"]+)"')
+        or tag:match("src%s*=%s*'([^']+)'")
+        or tag:match("src%s*=%s*([^%s/>]+)")
+      if src then
+        local p = normalize_path(src)
+        if p then return p, hs, he end
+      end
     end
   end
 
@@ -329,9 +355,10 @@ function M.paste_image()
     return
   end
 
-  local ok, why = is_image_file(src_path)
-  if not ok then
-    vim.notify("Not an image: " .. src_path .. " (" .. (why or "unknown") .. ")", vim.log.levels.ERROR)
+  local media_type = classify_media(src_path)
+  if not media_type then
+    local ext = vim.fn.fnamemodify(src_path, ":e"):lower()
+    vim.notify("Unsupported media type: " .. (ext ~= "" and ("." .. ext) or "no extension"), vim.log.levels.ERROR)
     return
   end
 
@@ -342,8 +369,16 @@ function M.paste_image()
   if not dst then return end
 
   local rel = vim.fn.fnamemodify(md_path, ":t:r") .. ".assets/" .. base
-  local alt = vim.fn.fnamemodify(base, ":r")
-  local link = string.format("![%s](%s)", alt, rel)
+  local name = vim.fn.fnamemodify(base, ":r")
+  local link
+
+  if media_type == "image" then
+    link = string.format("![%s](%s)", name, rel)
+  elseif media_type == "video" then
+    link = string.format('<video src="%s" controls></video>', rel)
+  elseif media_type == "audio" then
+    link = string.format('<audio src="%s" controls></audio>', rel)
+  end
 
   if seg_s and seg_e then
     local new_line, end_col = replace_segment(line, seg_s, seg_e, link)
@@ -354,43 +389,74 @@ function M.paste_image()
     vim.api.nvim_win_set_cursor(0, { row, #link })
   end
 
-  vim.notify("Pasted image: " .. rel, vim.log.levels.INFO)
+  vim.notify("Pasted " .. media_type .. ": " .. rel, vim.log.levels.INFO)
 end
 
--- Resize the image reference on the current line. Supports both
---   ![alt](path)
--- and
---   <img src="path" .../> | <img src=path .../>
--- Rewrites it to the Typora zoom form:
---   <img src="path" alt="alt" style="zoom:NN%;" />
+-- Resize the media reference on the current line.
+--   Images: ![alt](path) or <img .../>  ->  <img src="..." style="zoom:N%;" />
+--   Videos: <video ...></video>          ->  <video src="..." style="width:N%;" controls></video>
+--   Audio:  not supported (no visual size).
 function M.resize_image()
   if not is_markdown_buffer() then return end
   local row = vim.api.nvim_win_get_cursor(0)[1]
   local line = vim.api.nvim_get_current_line()
 
-  local s, e, alt, src
+  local s, e, alt, src, media_kind
+
+  -- 1) Markdown image link: ![alt](path)
   s, e, alt, src = line:find("!%[([^%]]*)%]%(([^%)]+)%)")
-  if not s then
+  if s then
+    media_kind = "image"
+  end
+
+  -- 2) HTML <img> tag
+  if not media_kind then
     s, e = line:find("<img[^>]->")
-    if not s then
-      vim.notify("No image link on this line", vim.log.levels.WARN)
-      return
-    end
-    local tag = line:sub(s, e)
-    src = tag:match('src%s*=%s*"([^"]+)"')
-      or tag:match("src%s*=%s*'([^']+)'")
-      or tag:match("src%s*=%s*([^%s/>]+)")
-    alt = tag:match('alt%s*=%s*"([^"]*)"')
-      or tag:match("alt%s*=%s*'([^']*)'")
-      or ""
-    if not src then
-      vim.notify("Could not parse <img> src", vim.log.levels.WARN)
-      return
+    if s then
+      media_kind = "image"
+      local tag = line:sub(s, e)
+      src = tag:match('src%s*=%s*"([^"]+)"')
+        or tag:match("src%s*=%s*'([^']+)'")
+        or tag:match("src%s*=%s*([^%s/>]+)")
+      alt = tag:match('alt%s*=%s*"([^"]*)"')
+        or tag:match("alt%s*=%s*'([^']*)'")
+        or ""
+      if not src then
+        vim.notify("Could not parse <img> src", vim.log.levels.WARN)
+        return
+      end
     end
   end
 
+  -- 3) HTML <video> tag
+  if not media_kind then
+    s, e = line:find("<video[^>]*>.-</video>")
+    if s then
+      media_kind = "video"
+      local tag = line:sub(s, e)
+      src = tag:match('src%s*=%s*"([^"]+)"')
+        or tag:match("src%s*=%s*'([^']+)'")
+        or tag:match("src%s*=%s*([^%s/>]+)")
+      if not src then
+        vim.notify("Could not parse <video> src", vim.log.levels.WARN)
+        return
+      end
+    end
+  end
+
+  -- 4) HTML <audio> tag — reject
+  if not media_kind then
+    if line:find("<audio[^>]->") then
+      vim.notify("Cannot resize audio", vim.log.levels.WARN)
+      return
+    end
+    vim.notify("No image or video on this line", vim.log.levels.WARN)
+    return
+  end
+
+  local prompt_label = media_kind == "video" and "Width % (default 50): " or "Zoom % (default 50): "
   vim.ui.input({
-    prompt = "Zoom % (default 50): ",
+    prompt = prompt_label,
     default = "",
   }, function(input)
     local pct = 50
@@ -403,14 +469,21 @@ function M.resize_image()
       pct = math.floor(n + 0.5)
     end
 
-    if alt == nil or alt == "" then
-      alt = vim.fn.fnamemodify(src, ":t:r")
+    local replacement
+    if media_kind == "video" then
+      replacement = string.format(
+        '<video src="%s" style="width:%d%%;" controls></video>',
+        src, pct
+      )
+    else
+      if alt == nil or alt == "" then
+        alt = vim.fn.fnamemodify(src, ":t:r")
+      end
+      replacement = string.format(
+        '<img src="%s" alt="%s" style="zoom:%d%%;" />',
+        src, alt, pct
+      )
     end
-
-    local replacement = string.format(
-      '<img src="%s" alt="%s" style="zoom:%d%%;" />',
-      src, alt, pct
-    )
 
     local new_line = line:sub(1, s - 1) .. replacement .. line:sub(e + 1)
     vim.api.nvim_buf_set_lines(0, row - 1, row, false, { new_line })
