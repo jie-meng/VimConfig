@@ -578,8 +578,10 @@ function M.cleanup_assets()
       for _, f in ipairs(unused) do
         if vim.fn.delete(assets .. "/" .. f) == 0 then n = n + 1 end
       end
-      vim.notify("Deleted " .. n .. " unused asset(s)", vim.log.levels.INFO)
-      pcall(function() require("nvim-tree.api").tree.reload() end)
+      vim.schedule(function()
+        vim.notify("Deleted " .. n .. " unused asset(s)", vim.log.levels.INFO)
+        pcall(function() require("nvim-tree.api").tree.reload() end)
+      end)
     end
   end)
 end
