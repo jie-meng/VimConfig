@@ -41,7 +41,7 @@ return {
     vim.o.autoread = true
 
     -- Toggle opencode terminal panel
-    vim.keymap.set({ "n", "t" }, "<Space>ot", function()
+    vim.keymap.set("n", "<Space>ot", function()
       require("opencode").toggle()
     end, { desc = "OpenCode: Toggle panel" })
 
