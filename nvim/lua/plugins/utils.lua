@@ -142,6 +142,48 @@ return {
       vim.g.mkdp_refresh_slow = 0
       vim.g.mkdp_command_for_global = 0
       vim.g.mkdp_open_to_the_world = 0
+
+      -- Workaround for upstream markdown-preview.nvim:
+      --   * stop_server uses synchronous rpcrequest with no timeout, so an
+      --     unresponsive Node preview server freezes nvim, and the autocmd
+      --     on VimLeave can make :q hang indefinitely.
+      --   * get_server_status reads an autoload script-local cache that our
+      --     stop_server override cannot reset, so the next toggle calls
+      --     open_browser on a dead channel and the preview never reopens.
+      -- Replace stop_server with a non-blocking variant (rpcnotify + jobstop
+      -- + bounded jobwait), and reimplement get_server_status against the
+      -- live channel list. pcall first to force the autoload file to source
+      -- so our overrides win.
+      pcall(vim.fn["mkdp#rpc#get_server_status"])
+      vim.cmd([[
+        function! mkdp#rpc#stop_server() abort
+          let l:jobs = []
+          for l:chan in nvim_list_chans()
+            if !has_key(l:chan, 'argv') | continue | endif
+            let l:argv_str = join(l:chan.argv, ' ')
+            if l:argv_str =~? 'markdown-preview' || l:argv_str =~? '/mkdp/'
+              try | silent! call rpcnotify(l:chan.id, 'close_all_pages') | catch | endtry
+              try | silent! call jobstop(l:chan.id) | catch | endtry
+              call add(l:jobs, l:chan.id)
+            endif
+          endfor
+          if !empty(l:jobs)
+            silent! call jobwait(l:jobs, 200)
+          endif
+          let b:MarkdownPreviewToggleBool = 0
+        endfunction
+
+        function! mkdp#rpc#get_server_status() abort
+          for l:chan in nvim_list_chans()
+            if !has_key(l:chan, 'argv') | continue | endif
+            let l:argv_str = join(l:chan.argv, ' ')
+            if l:argv_str =~? 'markdown-preview' || l:argv_str =~? '/mkdp/'
+              return 1
+            endif
+          endfor
+          return -1
+        endfunction
+      ]])
     end,
   },
 
