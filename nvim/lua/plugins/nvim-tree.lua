@@ -38,7 +38,9 @@ return {
           -- Images
           "jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "tiff", "tif", "ico",
           -- Videos
-          "mp4", "avi", "mkv", "mov", "wmv", "flv", "webm", "m4v", "3gp", "ogv"
+          "mp4", "avi", "mkv", "mov", "wmv", "flv", "webm", "m4v", "3gp", "ogv",
+          -- PDF
+          "pdf"
         },
         handler = function(file_path)
           -- Open media files with system default application (same as 's' key)
