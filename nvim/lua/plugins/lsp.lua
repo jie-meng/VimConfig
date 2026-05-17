@@ -257,7 +257,10 @@ return {
           local line = cursor[1] - 1
           local diagnostics = vim.diagnostic.get(bufnr, { lnum = line })
           if #diagnostics > 0 then
+            local filepath = vim.api.nvim_buf_get_name(bufnr)
             local messages = {}
+            table.insert(messages, filepath .. ":" .. cursor[1])
+            table.insert(messages, "")
             for _, diag in ipairs(diagnostics) do
               table.insert(messages, diag.message)
             end
