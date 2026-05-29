@@ -115,6 +115,13 @@ return {
         -- Remove default 'f' (live-filter) to avoid conflict with 'fi' mapping
         vim.keymap.del('n', 'f', { buffer = bufnr })
 
+        -- Remove default 'e' (rename basename) so it falls through to normal Vim e (end of word)
+        vim.keymap.del('n', 'e', { buffer = bufnr })
+
+        -- Move toggle bookmark from 'm' to 't' to free 'm' for movement combos (mb, me, etc.)
+        vim.keymap.del('n', 'm', { buffer = bufnr })
+        vim.keymap.set('n', 't', api.marks.toggle, { buffer = bufnr, noremap = true, silent = true, nowait = true, desc = "Toggle bookmark" })
+
         -- Disable Ctrl-] parent directory root change
         vim.keymap.set('n', '<C-]>', function() end, {
           buffer = bufnr,
