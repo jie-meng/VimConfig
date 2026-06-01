@@ -121,6 +121,8 @@ return {
         -- Move toggle bookmark from 'm' to 't' to free 'm' for movement combos (mb, me, etc.)
         vim.keymap.del('n', 'm', { buffer = bufnr })
         vim.keymap.set('n', 't', api.marks.toggle, { buffer = bufnr, noremap = true, silent = true, nowait = true, desc = "Toggle bookmark" })
+        vim.keymap.del('v', 'm', { buffer = bufnr })
+        vim.keymap.set('v', 't', api.marks.toggle, { buffer = bufnr, noremap = true, silent = true, nowait = true, desc = "Toggle bookmark" })
 
         -- Disable Ctrl-] parent directory root change
         vim.keymap.set('n', '<C-]>', function() end, {
