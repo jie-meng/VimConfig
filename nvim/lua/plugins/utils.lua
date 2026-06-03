@@ -187,6 +187,19 @@ return {
     end,
   },
 
+  -- Markdown renderer - inline rendering of markdown elements in normal mode
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    ft = { "markdown" },
+    keys = {
+      { "<Leader>mr", "<cmd>RenderMarkdown toggle<CR>", ft = "markdown", desc = "Toggle markdown render" },
+    },
+    config = function()
+      require("render-markdown").setup({})
+    end,
+  },
+
   -- Global replace - replaces greplace
   {
     "nvim-pack/nvim-spectre",
