@@ -221,6 +221,33 @@ return {
           vim.notify("Copied: " .. path, vim.log.levels.INFO)
         end, { buffer = bufnr, noremap = true, silent = true, desc = "Copy absolute path to clipboard" })
 
+        -- Toggle executable permission on file (chmod a+x / a-x)
+        vim.keymap.set('n', 'X', function()
+          local node = api.tree.get_node_under_cursor()
+          if not node then return end
+          if node.type ~= "file" then
+            vim.notify("Cannot toggle executable permission on a directory", vim.log.levels.WARN)
+            return
+          end
+          local path = node.absolute_path
+          local perms = vim.fn.getfperm(path)
+          if perms == "" then
+            vim.notify("Cannot read permissions: " .. path, vim.log.levels.WARN)
+            return
+          end
+          local is_executable = perms:sub(3, 3) == "x" or perms:sub(6, 6) == "x" or perms:sub(9, 9) == "x"
+          if is_executable then
+            vim.fn.system({ "chmod", "a-x", path })
+            vim.notify("Removed executable permission: " .. vim.fn.fnamemodify(path, ":t"), vim.log.levels.INFO)
+          else
+            vim.fn.system({ "chmod", "a+x", path })
+            vim.notify("Added executable permission: " .. vim.fn.fnamemodify(path, ":t"), vim.log.levels.INFO)
+          end
+          vim.schedule(function()
+            pcall(api.tree.reload)
+          end)
+        end, { buffer = bufnr, noremap = true, silent = true, desc = "Toggle executable permission" })
+
         -- Override delete mapping to handle buffer replacement before deletion
         vim.keymap.set('n', 'd', function()
           local node = api.tree.get_node_under_cursor()
