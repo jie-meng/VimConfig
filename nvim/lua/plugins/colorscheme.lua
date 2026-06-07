@@ -179,7 +179,7 @@ function M.apply_theme(idx, silent, tried)
         lualine_c = { { 'filename', path = 3 } },
         lualine_x = { 'encoding', 'fileformat', 'filetype' },
         lualine_y = { 'progress' },
-        lualine_z = { 'location', { require("opencode").statusline } },
+        lualine_z = { 'location' },
       },
     })
   end
