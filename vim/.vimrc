@@ -94,6 +94,9 @@ nnoremap mn :noh<CR>
 " keymap.set("n", "mx", ":qa!<CR>", { desc = "Quit all" })
 " keymap.set("n", "mn", ":noh<CR>", { desc = "Clear search highlight" })
 
+"" Toggle wrap
+nnoremap <Space>W :set wrap!<CR>
+
 "" Better window navigation
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
