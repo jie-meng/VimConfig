@@ -147,8 +147,8 @@ keymap.set("n", "<F10>", function()
   vim.fn.jobstart("bgm toggle")
 end, { desc = "Toggle AI BGM" })
 
--- Copy file path, line number, and current line to clipboard (for AI context)
-keymap.set("n", "<space>Y", function()
+-- Copy file:line:code to clipboard (for AI context)
+keymap.set("n", "<space>yl", function()
   local filepath = vim.api.nvim_buf_get_name(0)
   local cursor = vim.api.nvim_win_get_cursor(0)
   local line_num = cursor[1]
@@ -163,3 +163,20 @@ keymap.set("n", "<space>Y", function()
   vim.fn.setreg('"', all)
   vim.notify(string.format("Copied: %s:%d — %s", vim.fn.fnamemodify(filepath, ":t"), line_num, line_content), vim.log.levels.INFO)
 end, { desc = "Copy file:line:code to clipboard" })
+
+-- Copy file absolute path to clipboard
+keymap.set("n", "<space>yf", function()
+  local filepath = vim.api.nvim_buf_get_name(0)
+  vim.fn.setreg('+', filepath)
+  vim.fn.setreg('"', filepath)
+  vim.notify(string.format("Copied: %s", filepath), vim.log.levels.INFO)
+end, { desc = "Copy file path to clipboard" })
+
+-- Copy file directory to clipboard
+keymap.set("n", "<space>yd", function()
+  local filepath = vim.api.nvim_buf_get_name(0)
+  local dir = vim.fn.fnamemodify(filepath, ":h") .. "/"
+  vim.fn.setreg('+', dir)
+  vim.fn.setreg('"', dir)
+  vim.notify(string.format("Copied: %s", dir), vim.log.levels.INFO)
+end, { desc = "Copy file directory to clipboard" })

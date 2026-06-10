@@ -24,13 +24,13 @@ return {
       -- Restart LSP workspace (thorough restart - preserves copilot and other services)
         vim.keymap.set("n", "<space>mr", function()
         vim.notify("Performing thorough LSP restart...", vim.log.levels.INFO)
-        
+
         -- Define services to preserve (copilot, null-ls, etc.)
         local preserve_services = { "copilot", "null-ls", "none-ls" }
         local clients = vim.lsp.get_clients()
         local stopped_clients = {}
         local preserved_clients = {}
-        
+
         -- Stop all clients except preserved services
         for _, client in pairs(clients) do
           local should_preserve = false
@@ -41,31 +41,31 @@ return {
               break
             end
           end
-          
+
           if not should_preserve then
             table.insert(stopped_clients, client.name)
             vim.lsp.stop_client(client.id, true)
           end
         end
-        
+
         if #stopped_clients > 0 then
           vim.notify("Stopping LSP servers: " .. table.concat(stopped_clients, ", "), vim.log.levels.INFO)
           if #preserved_clients > 0 then
             vim.notify("Preserving services: " .. table.concat(preserved_clients, ", "), vim.log.levels.INFO)
           end
-          
+
           -- Wait for clients to fully stop, then perform thorough restart
           vim.defer_fn(function()
             -- Get current buffer and all visible buffers
             local current_buf = vim.api.nvim_get_current_buf()
             local visible_buffers = {}
-            
+
             -- Collect all buffers that are currently visible in any window
             for _, win in ipairs(vim.api.nvim_list_wins()) do
               local buf = vim.api.nvim_win_get_buf(win)
               visible_buffers[buf] = true
             end
-            
+
             -- Close only invisible buffers with empty buftype (normal editing buffers)
             for _, buf in ipairs(vim.api.nvim_list_bufs()) do
               if not visible_buffers[buf] and vim.api.nvim_buf_is_loaded(buf) then
@@ -76,22 +76,22 @@ return {
                 end
               end
             end
-            
+
             -- Clear all LSP-related autocommands and state for current buffer
             pcall(vim.api.nvim_clear_autocmds, { buffer = current_buf, group = "LspFormatOnSave" })
-            
+
             -- Clear diagnostic cache for current buffer
             vim.diagnostic.reset(nil, current_buf)
-            
+
             -- Re-enable all language servers
             local language_servers = { "lua_ls", "ts_ls", "pyright", "clangd", "sourcekit", "jdtls", "kotlin_language_server" }
             for _, server in ipairs(language_servers) do
               pcall(vim.lsp.enable, server)
             end
-            
+
             -- Reload current buffer to trigger fresh LSP attachment
             pcall(vim.cmd, "silent! edit!")
-            
+
             -- Send workspace refresh to preserved clients
             vim.defer_fn(function()
               for _, client in pairs(vim.lsp.get_clients()) do
@@ -101,7 +101,7 @@ return {
               end
               vim.notify("Thorough LSP restart completed! All language servers reinitialized.", vim.log.levels.INFO)
             end, 500)
-            
+
           end, 500)  -- Allow more time for complete shutdown
         else
           vim.notify("No language servers to restart", vim.log.levels.WARN)
@@ -226,7 +226,7 @@ return {
         vim.keymap.set("n", "gi", vim.lsp.buf.implementation, vim.tbl_extend("force", opts, { desc = "Go to implementation" }))
         vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "Go to references" }))
         vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, vim.tbl_extend("force", opts, { desc = "Go to type definition" }))
-        
+
         -- Search keymaps
         vim.keymap.set("n", "gR", function()
           local word = vim.fn.expand("<cword>")
@@ -241,18 +241,18 @@ return {
             use_regex = false,
           })
         end, vim.tbl_extend("force", opts, { desc = "Global word search" }))
-        
+
         vim.keymap.set("n", "gs", vim.lsp.buf.document_symbol, vim.tbl_extend("force", opts, { desc = "Document symbols" }))
         vim.keymap.set("n", "gS", vim.lsp.buf.workspace_symbol, vim.tbl_extend("force", opts, { desc = "Workspace symbols" }))
-        
+
         -- Diagnostic keymaps
         vim.keymap.set("n", "g[", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
         vim.keymap.set("n", "g]", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
         vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover" }))
         vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, vim.tbl_extend("force", opts, { desc = "Show diagnostic" }))
-        
+
         -- Diagnostic copy keymap
-        vim.keymap.set("n", "<space>y", function()
+        vim.keymap.set("n", "<space>ye", function()
           local cursor = vim.api.nvim_win_get_cursor(0)
           local line = cursor[1] - 1
           local diagnostics = vim.diagnostic.get(bufnr, { lnum = line })
@@ -272,7 +272,7 @@ return {
             vim.notify("No diagnostic found at cursor line", vim.log.levels.WARN)
           end
         end, vim.tbl_extend("force", opts, { desc = "Copy diagnostic message" }))
-        
+
         -- Action keymaps
         vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename" }))
         vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
@@ -344,16 +344,16 @@ return {
             vim.notify("tools.py not found in project root", vim.log.levels.WARN)
             return
           end
-          
+
           -- Execute python tools.py todo and capture output
           local cmd = "python tools.py todo"
           local output = vim.fn.system(cmd)
-          
+
           if vim.v.shell_error ~= 0 then
             vim.notify("Error executing tools.py: " .. output, vim.log.levels.ERROR)
             return
           end
-          
+
           -- Parse output and create quickfix entries
           local qf_entries = {}
           for line in output:gmatch("[^\r\n]+") do
@@ -372,12 +372,12 @@ return {
               end
             end
           end
-          
+
           if #qf_entries == 0 then
             vim.notify("No TODO comments found", vim.log.levels.INFO)
             return
           end
-          
+
           -- Set quickfix list and open quickfix window
           vim.fn.setqflist(qf_entries, 'r')
           vim.cmd("copen")
@@ -460,10 +460,10 @@ return {
           capabilities = capabilities,
           on_attach = on_attach,
         }, config)
-        
+
         -- Configure the server
         vim.lsp.config(server, merged_config)
-        
+
         -- Enable the server
         vim.lsp.enable(server)
       end
