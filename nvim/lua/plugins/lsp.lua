@@ -12,7 +12,7 @@ return {
     },
     config = function()
       vim.keymap.set("n", "<Leader>mc", function()
-        local log_path = vim.lsp.get_log_path()
+        local log_path = vim.fn.stdpath("log") .. "/lsp.log"
         local ok = os.remove(log_path)
         if ok then
           vim.notify("LSP log cleared: " .. log_path, vim.log.levels.INFO)
@@ -44,7 +44,7 @@ return {
 
           if not should_preserve then
             table.insert(stopped_clients, client.name)
-            vim.lsp.stop_client(client.id, true)
+            client:stop(true)
           end
         end
 
@@ -70,8 +70,7 @@ return {
             for _, buf in ipairs(vim.api.nvim_list_bufs()) do
               if not visible_buffers[buf] and vim.api.nvim_buf_is_loaded(buf) then
                 -- Only close normal editing buffers (empty buftype), keep terminals, help, etc.
-                local buftype = vim.api.nvim_buf_get_option(buf, 'buftype')
-                if buftype == '' then
+                if vim.bo[buf].buftype == '' then
                   pcall(vim.api.nvim_buf_delete, buf, { force = true })
                 end
               end
@@ -90,13 +89,13 @@ return {
             end
 
             -- Reload current buffer to trigger fresh LSP attachment
-            pcall(vim.cmd, "silent! edit!")
+            pcall(function() vim.cmd("silent! edit!") end)
 
             -- Send workspace refresh to preserved clients
             vim.defer_fn(function()
               for _, client in pairs(vim.lsp.get_clients()) do
-                if client.supports_method("workspace/didChangeConfiguration") then
-                  client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+                if client:supports_method("workspace/didChangeConfiguration") then
+                  client:notify("workspace/didChangeConfiguration", { settings = client.config.settings })
                 end
               end
               vim.notify("Thorough LSP restart completed! All language servers reinitialized.", vim.log.levels.INFO)
@@ -165,8 +164,7 @@ return {
         local function find_editor_window()
           for _, win in ipairs(vim.api.nvim_list_wins()) do
             local buf = vim.api.nvim_win_get_buf(win)
-            local buftype = vim.api.nvim_buf_get_option(buf, 'buftype')
-            if buftype == '' then
+            if vim.bo[buf].buftype == '' then
               return win
             end
           end
@@ -246,8 +244,8 @@ return {
         vim.keymap.set("n", "gS", vim.lsp.buf.workspace_symbol, vim.tbl_extend("force", opts, { desc = "Workspace symbols" }))
 
         -- Diagnostic keymaps
-        vim.keymap.set("n", "g[", vim.diagnostic.goto_prev, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
-        vim.keymap.set("n", "g]", vim.diagnostic.goto_next, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
+        vim.keymap.set("n", "g[", function() vim.diagnostic.jump({ count = -1, float = true }) end, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
+        vim.keymap.set("n", "g]", function() vim.diagnostic.jump({ count = 1, float = true }) end, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
         vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover" }))
         vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, vim.tbl_extend("force", opts, { desc = "Show diagnostic" }))
 
@@ -406,7 +404,7 @@ return {
           focusable = false,
           style = "minimal",
           border = "rounded",
-          source = "always",
+          source = true,
           header = "",
           prefix = "",
         },
