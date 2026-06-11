@@ -132,6 +132,26 @@ return {
           desc = "Disabled in nvim-tree"
         })
 
+        -- Remove default H/M/L (filter toggles) to use for navigation
+        pcall(vim.keymap.del, 'n', 'H', { buffer = bufnr })
+        pcall(vim.keymap.del, 'n', 'M', { buffer = bufnr })
+        pcall(vim.keymap.del, 'n', 'L', { buffer = bufnr })
+
+        -- H/M/L: move to top/middle/bottom of tree (like telescope)
+        vim.keymap.set('n', 'H', function()
+          vim.cmd('normal! gg')
+        end, { buffer = bufnr, noremap = true, silent = true, desc = "Go to top of tree" })
+
+        vim.keymap.set('n', 'M', function()
+          local total = vim.api.nvim_buf_line_count(vim.api.nvim_get_current_buf())
+          local mid = math.floor(total / 2) + 1
+          vim.cmd('normal! ' .. mid .. 'G')
+        end, { buffer = bufnr, noremap = true, silent = true, desc = "Go to middle of tree" })
+
+        vim.keymap.set('n', 'L', function()
+          vim.cmd('normal! G')
+        end, { buffer = bufnr, noremap = true, silent = true, desc = "Go to bottom of tree" })
+
         -- Custom file opening handler
         local function custom_edit()
           local node = api.tree.get_node_under_cursor()
