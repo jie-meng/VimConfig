@@ -92,7 +92,7 @@ return {
         return function()
           if is_under_git_dir() then
             vim.cmd(cmd)
-          else 
+          else
             vim.notify("Cannot run Diffview not in .git directory", vim.log.levels.WARN)
           end
         end
@@ -159,8 +159,8 @@ return {
             local fallback = nil
             for _, win in ipairs(wins) do
               local buf = vim.api.nvim_win_get_buf(win)
-              local ft = vim.api.nvim_buf_get_option(buf, 'filetype')
-              local bt = vim.api.nvim_buf_get_option(buf, 'buftype')
+              local ft = vim.bo[buf].filetype
+              local bt = vim.bo[buf].buftype
               if bt == '' and ft ~= 'nerdtree' and ft ~= 'fugitive' and ft ~= 'qf' then
                 fallback = win
                 break
