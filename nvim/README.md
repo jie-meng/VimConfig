@@ -58,7 +58,16 @@ Maintains the same key mappings as the original Vim configuration:
 - `<space>gc` - Git commit
 - `<space>gb` - Git blame
 - `<space>gd` - Git diff
-- `g[` / `g]` - Previous/next Git hunk
+- `g[` / `g]` - Previous/next Git hunk (gitsigns, in normal buffer)
+- `<space>go` - Open Diffview (repo-wide diff)
+- `<space>gv` - Diffview file history
+- `<space>gf` - Diffview file history (current file)
+- `<space>gp` - Diffview file history (current directory)
+
+#### Diffview Navigation
+- `]c` / `[c` - Next / previous diff hunk (inside Diffview diff windows)
+- `u` / `d` - Scroll up / down 25% (in Diffview file panel)
+- `q` - Close Diffview
 
 ### LSP Operations
 - `gd` - Go to definition
