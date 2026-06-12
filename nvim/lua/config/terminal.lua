@@ -80,8 +80,9 @@ end
 -- Send a command to the terminal and enter insert mode
 function M.send_to_terminal(command)
   -- Always save current position before sending command to terminal
-  if _G.save_terminal_position then
-    _G.save_terminal_position()
+  local ok, terminal_state = pcall(require, "config.terminal_state")
+  if ok then
+    terminal_state.save_position()
   end
   
   local job_id, _ = get_or_show_terminal()

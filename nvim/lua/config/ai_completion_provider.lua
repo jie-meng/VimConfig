@@ -19,7 +19,7 @@ function M.get_current()
   if file then
     local content = file:read("*all")
     file:close()
-    
+
     -- Try to decode JSON
     local ok, data = pcall(vim.json.decode, content)
     if ok and data and data.provider then
@@ -40,18 +40,18 @@ function M.set_current(provider)
     vim.notify("Invalid AI completion provider: " .. provider, vim.log.levels.ERROR)
     return false
   end
-  
+
   local data = {
     provider = provider,
     updated_at = os.date("%Y-%m-%d %H:%M:%S")
   }
-  
+
   local ok, json_str = pcall(vim.json.encode, data)
   if not ok then
     vim.notify("Failed to encode AI completion provider data", vim.log.levels.ERROR)
     return false
   end
-  
+
   local file = io.open(state_file, "w")
   if file then
     file:write(json_str)
@@ -93,7 +93,7 @@ function M.setup_commands()
     end,
     desc = "Switch AI completion provider (copilot/minuet)"
   })
-  
+
   -- Command to show current provider
   vim.api.nvim_create_user_command("AICompletionProviderStatus", function()
     local current = M.get_current()

@@ -195,16 +195,16 @@ function M.apply_theme(idx, silent, tried)
   vim.api.nvim_set_hl(0, "DiffChange", { bg = "#444444", bold = true })
   vim.api.nvim_set_hl(0, "DiffDelete", { bg = "#553333", bold = true })
   vim.api.nvim_set_hl(0, "DiffText",   { bg = "#666600", bold = true })
-  
+
   -- Reset Copilot suggestion highlight after theme change (if Copilot is loaded)
   if package.loaded["copilot"] then
     vim.defer_fn(function()
-      vim.api.nvim_set_hl(0, "CopilotSuggestion", { 
+      vim.api.nvim_set_hl(0, "CopilotSuggestion", {
         fg = "#808080", -- Gray color for suggestions
-        italic = true 
+        italic = true
       })
     end, 50)
-  end 
+  end
 
   write_theme_idx(idx)
 

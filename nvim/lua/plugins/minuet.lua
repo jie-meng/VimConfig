@@ -8,12 +8,12 @@ return {
   config = function()
     local provider = require("config.ai_completion_provider")
     local is_active = provider.is_enabled("minuet")
-    
+
     -- Only setup if this is the active provider
     if not is_active then
       return
     end
-    
+
     require("minuet").setup({
       -- lsp = {
       --   enabled_ft = { "*" },

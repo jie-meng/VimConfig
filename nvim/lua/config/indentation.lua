@@ -32,7 +32,7 @@ local indent_settings = {
   zsh = { tabstop = 2, shiftwidth = 2, softtabstop = 2, expandtab = true },
   vim = { tabstop = 2, shiftwidth = 2, softtabstop = 2, expandtab = true },
   markdown = { tabstop = 2, shiftwidth = 2, softtabstop = 2, expandtab = true },
-  
+
   -- 4-space indentation languages
   c = { tabstop = 4, shiftwidth = 4, softtabstop = 4, expandtab = true },
   cpp = { tabstop = 4, shiftwidth = 4, softtabstop = 4, expandtab = true },
@@ -44,7 +44,7 @@ local indent_settings = {
   cs = { tabstop = 4, shiftwidth = 4, softtabstop = 4, expandtab = true }, -- C#
   sql = { tabstop = 4, shiftwidth = 4, softtabstop = 4, expandtab = true },
   rust = { tabstop = 4, shiftwidth = 4, softtabstop = 4, expandtab = true },
-  
+
   -- Tab-based languages (using real tabs)
   go = { tabstop = 4, shiftwidth = 4, softtabstop = 0, expandtab = false }, -- Go uses tabs
   makefile = { tabstop = 4, shiftwidth = 4, softtabstop = 0, expandtab = false }, -- Makefiles require tabs
@@ -54,7 +54,7 @@ local indent_settings = {
 local function find_project_root()
   local current_dir = vim.fn.expand("%:p:h")
   local root_patterns = {".git", ".clang-format", ".clangd", "compile_commands.json", "CMakeLists.txt", "Makefile"}
-  
+
   while current_dir ~= "/" do
     for _, pattern in ipairs(root_patterns) do
       local path = current_dir .. "/" .. pattern
@@ -64,39 +64,39 @@ local function find_project_root()
     end
     current_dir = vim.fn.fnamemodify(current_dir, ":h")
   end
-  
+
   return nil
 end
 
 -- Function to read clang-format configuration
 local function read_clang_format_config(project_root)
   local clang_format_files = {".clang-format", "_clang-format"}
-  
+
   for _, filename in ipairs(clang_format_files) do
     local config_path = project_root .. "/" .. filename
     if vim.fn.filereadable(config_path) == 1 then
       local content = vim.fn.readfile(config_path)
       local indent_width = nil
       local use_tabs = false
-      
+
       for _, line in ipairs(content) do
         -- Remove leading/trailing whitespace and convert to lowercase
         local clean_line = string.lower(vim.trim(line))
-        
+
         -- Check for IndentWidth
         local width = string.match(clean_line, "indentwidth%s*:%s*(%d+)")
         if width then
           indent_width = tonumber(width)
         end
-        
+
         -- Check for UseTab
-        if string.match(clean_line, "usetab%s*:%s*true") or 
+        if string.match(clean_line, "usetab%s*:%s*true") or
            string.match(clean_line, "usetab%s*:%s*always") or
            string.match(clean_line, "usetab%s*:%s*forindentation") then
           use_tabs = true
         end
       end
-      
+
       if indent_width then
         return {
           tabstop = indent_width,
@@ -107,7 +107,7 @@ local function read_clang_format_config(project_root)
       end
     end
   end
-  
+
   return nil
 end
 
@@ -121,37 +121,37 @@ local function read_editorconfig(project_root)
     local indent_size = nil
     local indent_style = nil
     local tab_width = nil
-    
+
     for _, line in ipairs(content) do
       local clean_line = vim.trim(line)
-      
+
       -- Skip comments and empty lines
       if clean_line == "" or string.match(clean_line, "^#") then
         goto continue
       end
-      
+
       -- Check for section headers
       if string.match(clean_line, "^%[.+%]$") then
         local pattern = string.match(clean_line, "^%[(.+)%]$")
         -- Simple pattern matching for C/C++ files
-        section_applies = string.match(pattern, "%.c$") or 
-                         string.match(pattern, "%.cpp$") or 
-                         string.match(pattern, "%.cc$") or 
-                         string.match(pattern, "%.cxx$") or 
-                         string.match(pattern, "%.h$") or 
+        section_applies = string.match(pattern, "%.c$") or
+                         string.match(pattern, "%.cpp$") or
+                         string.match(pattern, "%.cc$") or
+                         string.match(pattern, "%.cxx$") or
+                         string.match(pattern, "%.h$") or
                          string.match(pattern, "%.hpp$") or
                          pattern == "*"
         in_section = true
         goto continue
       end
-      
+
       -- Parse properties if in applicable section
       if in_section and section_applies then
         local key, value = string.match(clean_line, "^([^=]+)=(.+)$")
         if key and value then
           key = vim.trim(string.lower(key))
           value = vim.trim(string.lower(value))
-          
+
           if key == "indent_size" then
             indent_size = tonumber(value)
           elseif key == "indent_style" then
@@ -161,10 +161,10 @@ local function read_editorconfig(project_root)
           end
         end
       end
-      
+
       ::continue::
     end
-    
+
     if indent_size and indent_style then
       local use_tabs = (indent_style == "tab")
       return {
@@ -175,7 +175,7 @@ local function read_editorconfig(project_root)
       }
     end
   end
-  
+
   return nil
 end
 
@@ -185,26 +185,26 @@ local function get_project_indent_settings(filetype)
   if not project_root then
     return indent_settings[filetype]
   end
-  
+
   -- For C/C++ files, check clang-format and editorconfig
   if filetype == "c" or filetype == "cpp" then
     local clang_format_config = read_clang_format_config(project_root)
     if clang_format_config then
       return clang_format_config
     end
-    
+
     local editorconfig = read_editorconfig(project_root)
     if editorconfig then
       return editorconfig
     end
   end
-  
+
   -- For other files, check editorconfig
   local editorconfig = read_editorconfig(project_root)
   if editorconfig then
     return editorconfig
   end
-  
+
   -- Fall back to default settings
   return indent_settings[filetype]
 end
@@ -231,10 +231,10 @@ local function show_indent_info()
   local sw = vim.bo.shiftwidth
   local sts = vim.bo.softtabstop
   local et = vim.bo.expandtab
-  
+
   local project_root = find_project_root()
   local config_source = "default"
-  
+
   if project_root then
     if ft == "c" or ft == "cpp" then
       if read_clang_format_config(project_root) then
@@ -248,9 +248,9 @@ local function show_indent_info()
       end
     end
   end
-  
+
   print(string.format("FileType: %s", ft))
-  print(string.format("tabstop: %d, shiftwidth: %d, softtabstop: %d, expandtab: %s", 
+  print(string.format("tabstop: %d, shiftwidth: %d, softtabstop: %d, expandtab: %s",
     ts, sw, sts, et and "true" or "false"))
   print(string.format("Config source: %s", config_source))
   if project_root then

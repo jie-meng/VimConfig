@@ -42,7 +42,7 @@ return {
           auto_format_filetypes[filetype] = true
         end
       end
-      
+
       -- Set formatter arguments
       if config.formatter_args then
         formatters[config.formatter] = {

@@ -61,7 +61,7 @@ autocmd("WinLeave", {
     end,
 })
 autocmd("WinEnter", {
-    group = "CursorHighlight", 
+    group = "CursorHighlight",
     callback = function()
         vim.opt.cursorline = true
         vim.opt.cursorcolumn = true
@@ -118,9 +118,9 @@ vim.api.nvim_create_user_command('A', function()
     local current_file = vim.fn.expand('%:p')
     local file_ext = vim.fn.expand('%:e')
     local file_base = vim.fn.expand('%:p:r')
-    
+
     local alternate_file = nil
-    
+
     if file_ext == 'h' or file_ext == 'hpp' or file_ext == 'hxx' then
         -- Header file, look for source
         local source_extensions = {'cpp', 'cc', 'cxx', 'c'}
@@ -142,7 +142,7 @@ vim.api.nvim_create_user_command('A', function()
             end
         end
     end
-    
+
     if alternate_file then
         vim.cmd('edit ' .. alternate_file)
     else

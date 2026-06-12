@@ -82,7 +82,7 @@ return {
       local extension = get_file_extension(file_path)
 
       -- Check each file type handler
-      for file_type, config in pairs(file_handlers) do
+      for _, config in pairs(file_handlers) do
         for _, ext in ipairs(config.extensions) do
           if extension == ext then
             config.handler(file_path)
@@ -110,7 +110,7 @@ return {
         local api = require("nvim-tree.api")
 
         -- Default mappings
-        api.config.mappings.default_on_attach(bufnr)
+        api.map.on_attach.default(bufnr)
 
         -- Remove default 'f' (live-filter) to avoid conflict with 'fi' mapping
         vim.keymap.del('n', 'f', { buffer = bufnr })
@@ -412,6 +412,5 @@ return {
         end
       end
     })
-
   end,
 }

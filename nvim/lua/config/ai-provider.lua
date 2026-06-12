@@ -34,7 +34,7 @@ function M.set_current(provider)
     vim.notify("Invalid provider: " .. provider, vim.log.levels.ERROR)
     return false
   end
-  
+
   local file = io.open(state_file, "w")
   if file then
     file:write(provider)
@@ -76,7 +76,7 @@ function M.setup_commands()
     end,
     desc = "Switch AI provider (copilot/minuet)"
   })
-  
+
   -- Command to show current provider
   vim.api.nvim_create_user_command("AiProviderStatus", function()
     local current = M.get_current()

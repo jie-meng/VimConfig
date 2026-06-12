@@ -22,7 +22,7 @@ local function find_nearest_pytest_func()
   local cur_line = cursor[1]
   local test_name = nil
   local class_name = nil
-  
+
   -- First, find the nearest test function/method
   for i = cur_line, 1, -1 do
     local line = vim.fn.getline(i)
@@ -47,7 +47,7 @@ local function find_nearest_pytest_func()
       break
     end
   end
-  
+
   return test_name, class_name
 end
 
@@ -232,7 +232,7 @@ local function find_nearest_kotlin_java_test_method()
   local cursor = vim.api.nvim_win_get_cursor(0)
   local acc = ""
   local test_line = nil
-  
+
   -- First, find the nearest @Test annotation above cursor
   for i = cursor[1], 1, -1 do
     local line = vim.fn.getline(i)
@@ -241,31 +241,31 @@ local function find_nearest_kotlin_java_test_method()
       break
     end
   end
-  
+
   if not test_line then
     return nil
   end
-  
+
   -- Then, search downward from @Test to find method name
   local total_lines = vim.fn.line('$')
   for i = test_line, total_lines do
     local line = vim.fn.getline(i)
-    
+
     -- Skip commented lines
     if line:match("^%s*//") then
       acc = ""
       goto continue
     end
-    
+
     -- Skip @Test line itself
     if line:match("^%s*@Test") then
       acc = ""
       goto continue
     end
-    
+
     -- Accumulate lines and look for method name
     acc = acc .. " " .. line
-    
+
     -- Match method name patterns:
     -- 1. Kotlin backtick method: fun `method name`(
     -- 2. Kotlin normal method: fun methodName(
@@ -278,11 +278,11 @@ local function find_nearest_kotlin_java_test_method()
                        acc:match("protected%s+void%s+([%w_]+)%s*%(") or -- Java protected void method
                        acc:match("%s+([%w_]+)%s*%(%s*%)%s*{") or  -- Method with () { pattern
                        acc:match("%s+([%w_]+)%s*%(") -- Simple method pattern
-    
+
     if method_name then
       return method_name
     end
-    
+
     ::continue::
   end
   return nil

@@ -366,7 +366,7 @@ function M.paste_image()
   if not ensure_dir(assets) then return end
 
   local dst, base = copy_into(src_path, assets)
-  if not dst then return end
+  if not dst or not base then return end
 
   local rel = vim.fn.fnamemodify(md_path, ":t:r") .. ".assets/" .. base
   local name = vim.fn.fnamemodify(base, ":r")
