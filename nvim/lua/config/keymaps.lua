@@ -122,10 +122,10 @@ keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to lower window" })
 keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to upper window" })
 keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
 
--- Toggle wrap
+-- Toggle wrap (global, affects current + all new buffers in this session)
 keymap.set("n", "<Space>W", function()
-  vim.wo.wrap = not vim.wo.wrap
-  vim.notify("wrap: " .. (vim.wo.wrap and "on" or "off"))
+  vim.o.wrap = not vim.o.wrap
+  vim.notify("wrap: " .. (vim.o.wrap and "on" or "off"))
 end, { desc = "Toggle line wrap" })
 
 -- Clear search highlight
