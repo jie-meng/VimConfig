@@ -139,18 +139,16 @@ return {
 
         -- H/M/L: move to top/middle/bottom of tree (like telescope)
         vim.keymap.set('n', 'H', function()
-          vim.cmd('normal! gg')
-        end, { buffer = bufnr, noremap = true, silent = true, desc = "Go to top of tree" })
+          vim.cmd('normal! H')
+        end, { buffer = bufnr, noremap = true, silent = true, desc = "Go to top of visible area" })
 
         vim.keymap.set('n', 'M', function()
-          local total = vim.api.nvim_buf_line_count(vim.api.nvim_get_current_buf())
-          local mid = math.floor(total / 2) + 1
-          vim.cmd('normal! ' .. mid .. 'G')
-        end, { buffer = bufnr, noremap = true, silent = true, desc = "Go to middle of tree" })
+          vim.cmd('normal! M')
+        end, { buffer = bufnr, noremap = true, silent = true, desc = "Go to middle of visible area" })
 
         vim.keymap.set('n', 'L', function()
-          vim.cmd('normal! G')
-        end, { buffer = bufnr, noremap = true, silent = true, desc = "Go to bottom of tree" })
+          vim.cmd('normal! L')
+        end, { buffer = bufnr, noremap = true, silent = true, desc = "Go to bottom of visible area" })
 
         -- Custom file opening handler
         local function custom_edit()
