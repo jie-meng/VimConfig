@@ -15,7 +15,6 @@ set bg=dark
 set hlsearch
 set nocompatible
 set backspace=indent,eol,start
-set smartindent
 set wildignore+=*.pyc,*.o,*.obj,*.exe,*.class,*.DS_Store,*.meta
 "" if hidden is not set, TextEdit might fail.
 set hidden
@@ -70,7 +69,7 @@ map <Leader>] :bn<Enter>
 "" enable clipboard
 :inoremap <C-v> <ESC>"+pa
 :vnoremap <C-c> "+y
-:vnoremap<C-d> "+d
+:vnoremap <C-d> "+d
 
 "" move
 nnoremap mb ^
@@ -86,13 +85,6 @@ nnoremap mx :qa!<CR>
 
 "" Clear search highlight
 nnoremap mn :noh<CR>
-
-" keymap.set("n", "mo", ":A<CR>", { desc = "Switch to alternate file" })
-" keymap.set("n", "mw", ":w<CR>", { desc = "Write file" })
-" keymap.set("n", "mr", ":e<CR>", { desc = "Reload file" })
-" keymap.set("n", "mq", ":q<CR>", { desc = "Quit" })
-" keymap.set("n", "mx", ":qa!<CR>", { desc = "Quit all" })
-" keymap.set("n", "mn", ":noh<CR>", { desc = "Clear search highlight" })
 
 "" Toggle wrap
 nnoremap <Space>W :set wrap!<CR>
@@ -119,7 +111,6 @@ set expandtab
 set smarttab
 set autoindent
 set smartindent
-
 
 augroup FileTypeIndent
     autocmd!
@@ -305,7 +296,6 @@ colorscheme gruvbox
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 "" open NERDTree automatically when vim starts up on opening a directory
-autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 "" toggle tree
 map <space>w :NERDTreeToggle<Enter>
@@ -389,7 +379,10 @@ nmap g] <Plug>(GitGutterNextHunk)
 nmap g[ <Plug>(GitGutterPrevHunk)
 
 "" <fzf>
-set rtp+=/usr/local/opt/fzf
+let s:fzf_prefix = trim(system('brew --prefix fzf 2>/dev/null'))
+if !empty(s:fzf_prefix) && isdirectory(s:fzf_prefix)
+  execute 'set rtp+=' . s:fzf_prefix
+endif
 
 nnoremap <space>fg :GFiles<CR>
 nnoremap <space>ff :Files<CR>

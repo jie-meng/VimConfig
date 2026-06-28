@@ -1,11 +1,11 @@
-# /bin/sh
+#!/bin/sh
 
 main() {
-    # ag
-    if brew ls --versions ag > /dev/null; then
+    # ag (the_silver_searcher)
+    if brew ls --versions the_silver_searcher > /dev/null; then
         echo "You had install ag"
     else
-        brew install ag
+        brew install the_silver_searcher
     fi
 
     # fzf
@@ -21,14 +21,15 @@ main() {
         echo "You had install ctags"
     else
         brew install ctags
-        alias ctags="`brew --prefix`/bin/ctags"
+        # Note: add the following to your ~/.zshrc or ~/.bashrc to use Homebrew ctags:
+        # alias ctags="$(brew --prefix)/bin/ctags"
     fi
 
     # ccls
     brew install ccls
 
     # vim-plug
-    if [ ! -f "~/.vim/autoload/plug.vim" ]; then
+    if [ ! -f ~/.vim/autoload/plug.vim ]; then
         curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
             https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     fi
