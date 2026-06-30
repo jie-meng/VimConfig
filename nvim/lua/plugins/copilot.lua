@@ -56,6 +56,7 @@ return {
       { "<space>Cd", ":Copilot disable<CR>", desc = "Copilot disable" },
       { "<space>Cp", ":Copilot panel<CR>", desc = "Copilot panel" },
       { "<space>Cv", ":Copilot version<CR>", desc = "Copilot version" },
+      { "<space>Co", ":Copilot signout<CR>", desc = "Copilot signout" },
       { "<space>Ch", function()
         reset_copilot_suggestion_highlight()
         vim.notify("Copilot suggestion highlight reset", vim.log.levels.INFO)
