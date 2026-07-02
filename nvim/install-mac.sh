@@ -68,12 +68,15 @@ fi
 
 # Install JetBrains Nerd Font
 echo -e "${GREEN}Installing JetBrains Nerd Font...${NC}"
-if ! fc-list | grep -i "JetBrainsMono Nerd Font" &> /dev/null; then
+# fc-list (from fontconfig) not available on all macOS systems; fall back to checking common font dirs
+if (command -v fc-list &> /dev/null && fc-list | grep -qi "JetBrainsMono Nerd Font") \
+    || ls ~/Library/Fonts 2>/dev/null | grep -qi "JetBrainsMonoNerdFont" \
+    || ls /Library/Fonts 2>/dev/null | grep -qi "JetBrainsMonoNerdFont"; then
+    echo -e "${YELLOW}JetBrains Mono Nerd Font is already installed.${NC}"
+else
     brew tap homebrew/cask-fonts
     brew install --cask font-jetbrains-mono-nerd-font
     echo -e "${GREEN}JetBrains Mono Nerd Font installed.${NC}"
-else
-    echo -e "${YELLOW}JetBrains Mono Nerd Font is already installed.${NC}"
 fi
 
 # Create config directory
