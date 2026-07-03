@@ -149,6 +149,14 @@ function M.apply_theme(idx, silent, tried)
 
   -- Switch colorscheme
   local ok = pcall(vim.cmd.colorscheme, entry.name)
+
+  -- Re-apply devicon highlights after colorscheme change.
+  -- nvim-web-devicons uses a ColorScheme autocmd to refresh, but it may not
+  -- fire or may skip already-defined groups. Force-refresh here.
+  if package.loaded["nvim-web-devicons"] then
+    require("nvim-web-devicons").set_up_highlights(true)
+  end
+
   if not ok then
     vim.notify("Theme '" .. entry.name .. "' not installed, skipping...", vim.log.levels.WARN)
     tried[idx] = true

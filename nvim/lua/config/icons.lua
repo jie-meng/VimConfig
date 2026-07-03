@@ -5,4 +5,4 @@
 -- Affects: nvim-tree file/folder icons, lualine statusline icons.
 -- Restart nvim after changing.
 
-vim.g.icons_enabled = false
+vim.g.icons_enabled = true
