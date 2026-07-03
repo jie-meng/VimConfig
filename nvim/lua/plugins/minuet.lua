@@ -1,21 +1,5 @@
 -- ============================================================================
--- Minuet AI - Local AI code completion with Llama.cpp
--- ============================================================================
---
--- Setup:
---   1. Install llama.cpp:  brew install llama.cpp
---   2. Start llama-server (auto-downloads model on first run):
---         llama-server \
---           -hf ggml-org/Qwen2.5-Coder-1.5B-Q8_0-GGUF \
---           --port 8012 -ngl 99 -fa auto -ub 1024 -b 1024 \
---           --ctx-size 0 --cache-reuse 256
---      Or use the provided launchd service for auto-start on login:
---         nvim/com.llamacpp.server.plist -> ~/Library/LaunchAgents/
---   3. View cached models:  llama-server --cache-list
---
--- References:
---   https://github.com/milanglacier/minuet-ai.nvim
---   https://github.com/milanglacier/minuet-ai.nvim/blob/main/recipes.md
+-- Minuet AI - Local AI code completion with Ollama
 -- ============================================================================
 
 return {
@@ -25,15 +9,21 @@ return {
     local provider = require("config.ai_completion_provider")
     local is_active = provider.is_enabled("minuet")
 
+    -- Only setup if this is the active provider
     if not is_active then
       return
     end
 
     require("minuet").setup({
+      -- lsp = {
+      --   enabled_ft = { "*" },
+      --   -- Enables automatic completion triggering using `vim.lsp.completion.enable`
+      --   enabled_auto_trigger_ft = { "*" },
+      -- },
       virtualtext = {
-        auto_trigger_ft = { "*" },
+        auto_trigger_ft = { "*" }, -- '*' stands for all file types
         keymap = {
-          accept = "<C-l>",
+          accept = "<C-l>", -- Disable builtin, use custom Tab key below
           accept_line = false,
           accept_n_lines = false,
           prev = "<C-->",
@@ -51,28 +41,15 @@ return {
       context_window = 512,
       provider_options = {
         openai_fim_compatible = {
+          -- For Windows users, TERM may not be present in environment variables.
+          -- Consider using APPDATA instead.
           api_key = "TERM",
-          name = "Llama.cpp",
-          end_point = "http://localhost:8012/v1/completions",
-          -- The model is set by the llama-cpp server and cannot be altered
-          -- post-launch.
-          model = "PLACEHOLDER",
+          name = "Ollama",
+          end_point = "http://localhost:11434/v1/completions",
+          model = "qwen2.5-coder:1.5b",
           optional = {
             max_tokens = 56,
             top_p = 0.9,
-          },
-          -- Llama.cpp does not support the `suffix` option in FIM completion.
-          -- Therefore, we must disable it and manually populate the special
-          -- tokens required for FIM completion.
-          template = {
-            prompt = function(context_before_cursor, context_after_cursor, _)
-              return "<|fim_prefix|>"
-                .. context_before_cursor
-                .. "<|fim_suffix|>"
-                .. context_after_cursor
-                .. "<|fim_middle|>"
-            end,
-            suffix = false,
           },
         },
       },
