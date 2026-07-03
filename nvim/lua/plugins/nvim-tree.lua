@@ -302,8 +302,8 @@ return {
         group_empty = true,
         icons = {
           show = {
-            file = false,
-            folder = false,
+            file = vim.g.icons_enabled,
+            folder = vim.g.icons_enabled,
             folder_arrow = true,
             git = true,
           },

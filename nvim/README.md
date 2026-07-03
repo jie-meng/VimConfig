@@ -233,6 +233,16 @@ nvim/
 3. Add or modify plugin configurations in `lua/plugins/`
 4. Run `./sync-to-system.sh` to apply changes
 
+### Icons (Nerd Font)
+
+Icons are **disabled by default** and require a [Nerd Font](https://www.nerdfonts.com/) in your terminal.
+
+- **Toggle all icons**: edit `lua/config/icons.lua` and change `vim.g.icons_enabled` to `true`
+- Restart Neovim after changing
+- This controls: file/folder icons in nvim-tree, statusline icons in lualine
+- Telescope and completion icons are **not affected** (they use plain text/emoji)
+- **iTerm2**: set Font and Non-ASCII Font to `JetBrainsMono Nerd Font` (Profiles → Text)
+
 ## 📝 Notes
 
 1. On first startup, Lazy.nvim will automatically install all plugins

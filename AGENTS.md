@@ -11,7 +11,11 @@ This repository stores personal Vim/Neovim configuration.
 
 - `nvim/init.lua`: Neovim entry file.
 - `nvim/lua/config/`: core config modules (options, keymaps, autocmds, lazy setup, etc.).
+  - `nvim/lua/config/icons.lua`: single `true`/`false` toggle for all UI icons.
 - `nvim/lua/plugins/`: plugin specs and plugin-specific config.
+  - `nvim/lua/plugins/icons.lua`: icon provider plugin (`nvim-web-devicons`).
+  - `nvim/lua/plugins/colorscheme.lua:172`: reads `vim.g.icons_enabled` for lualine icons.
+  - `nvim/lua/plugins/nvim-tree.lua:305-306`: reads `vim.g.icons_enabled` for file/folder icons.
 
 ## Operational Scripts
 

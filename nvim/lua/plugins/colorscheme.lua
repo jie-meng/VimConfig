@@ -168,7 +168,7 @@ function M.apply_theme(idx, silent, tried)
     require("lualine").setup({
       options = {
         theme = entry.lualine,
-        icons_enabled = false,
+        icons_enabled = vim.g.icons_enabled,
         component_separators = { left = "|", right = "|" },
         section_separators = { left = "", right = "" },
         globalstatus = false,
