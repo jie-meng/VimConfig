@@ -6,6 +6,14 @@
 --   1. Install Ollama:   brew install ollama
 --   2. Pull model:       ollama pull qwen2.5-coder:7b
 --   3. Start Ollama:     brew services start ollama
+--   4. Restart:          brew services restart ollama
+--   5. Stop:             brew services stop ollama
+--   6. Status:           brew services info ollama
+--
+-- Note: `brew services start ollama` only starts the Ollama API daemon.
+-- The model is NOT loaded at this point. It is loaded into memory (~4-6GB)
+-- automatically on the first completion request from Minuet, and stays
+-- cached for subsequent requests.
 --
 -- References:
 --   https://github.com/milanglacier/minuet-ai.nvim
