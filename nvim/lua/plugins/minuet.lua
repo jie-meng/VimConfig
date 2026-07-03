@@ -11,9 +11,13 @@
 --   6. Status:           brew services info ollama
 --
 -- Note: `brew services start ollama` only starts the Ollama API daemon.
--- The model is NOT loaded at this point. It is loaded into memory (~4-6GB)
--- automatically on the first completion request from Minuet, and stays
--- cached for subsequent requests.
+-- The model is NOT loaded at this point. Ollama manages model lifecycle:
+--   - Loads model on first request (~4-6GB RAM)
+--   - Keeps it cached for 5 min after last request (default keep-alive)
+--   - Unloads automatically when idle, freeing memory
+--   - Reloads on next request
+-- This means no manual process management needed — just start the daemon
+-- and Ollama handles the rest.
 --
 -- References:
 --   https://github.com/milanglacier/minuet-ai.nvim
