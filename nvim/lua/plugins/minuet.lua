@@ -1,6 +1,15 @@
 -- ============================================================================
 -- Minuet AI - Local AI code completion with Ollama
 -- ============================================================================
+--
+-- Setup:
+--   1. Install Ollama:   brew install ollama
+--   2. Pull model:       ollama pull qwen2.5-coder:7b
+--   3. Start Ollama:     brew services start ollama
+--
+-- References:
+--   https://github.com/milanglacier/minuet-ai.nvim
+-- ============================================================================
 
 return {
   "milanglacier/minuet-ai.nvim",
