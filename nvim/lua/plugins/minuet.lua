@@ -1,5 +1,5 @@
 -- ============================================================================
--- Minuet AI - Local AI code completion with Ollama
+-- Minuet AI - Local AI code completion with Llama.cpp
 -- ============================================================================
 
 return {
@@ -9,21 +9,15 @@ return {
     local provider = require("config.ai_completion_provider")
     local is_active = provider.is_enabled("minuet")
 
-    -- Only setup if this is the active provider
     if not is_active then
       return
     end
 
     require("minuet").setup({
-      -- lsp = {
-      --   enabled_ft = { "*" },
-      --   -- Enables automatic completion triggering using `vim.lsp.completion.enable`
-      --   enabled_auto_trigger_ft = { "*" },
-      -- },
       virtualtext = {
-        auto_trigger_ft = { "*" }, -- '*' stands for all file types
+        auto_trigger_ft = { "*" },
         keymap = {
-          accept = "<C-l>", -- Disable builtin, use custom Tab key below
+          accept = "<C-l>",
           accept_line = false,
           accept_n_lines = false,
           prev = "<C-->",
@@ -32,24 +26,27 @@ return {
         },
       },
       provider = "openai_fim_compatible",
-      n_completions = 1, -- Recommend for local model for resource saving
-      -- I recommend beginning with a small context window size and incrementally
-      -- expanding it, depending on your local computing power. A context window
-      -- of 512 serves as a good starting point to estimate your computing power.
-      -- Once you have a reliable estimate of your local computing power,
-      -- you should adjust the context window to a larger value.
+      n_completions = 1,
       context_window = 512,
       provider_options = {
         openai_fim_compatible = {
-          -- For Windows users, TERM may not be present in environment variables.
-          -- Consider using APPDATA instead.
           api_key = "TERM",
-          name = "Ollama",
-          end_point = "http://localhost:11434/v1/completions",
-          model = "qwen2.5-coder:1.5b",
+          name = "Llama.cpp",
+          end_point = "http://localhost:8012/v1/completions",
+          model = "PLACEHOLDER",
           optional = {
             max_tokens = 56,
             top_p = 0.9,
+          },
+          template = {
+            prompt = function(context_before_cursor, context_after_cursor, _)
+              return "<|fim_prefix|>"
+                .. context_before_cursor
+                .. "<|fim_suffix|>"
+                .. context_after_cursor
+                .. "<|fim_middle|>"
+            end,
+            suffix = false,
           },
         },
       },
