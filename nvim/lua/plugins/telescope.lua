@@ -2,6 +2,26 @@
 -- Fuzzy Finder (Telescope) - replaces fzf
 -- ============================================================================
 
+local rg_ignore_args = {
+  "--glob", "!.git/*",
+  "--glob", "!node_modules/*",
+  "--glob", "!*.pyc", "--glob", "!*.o", "--glob", "!*.obj",
+  "--glob", "!*.exe", "--glob", "!*.class",
+  "--glob", "!*.dll", "--glob", "!*.so", "--glob", "!*.dylib",
+  "--glob", "!*.asset", "--glob", "!*.prefab", "--glob", "!*.unity",
+  "--glob", "!*.mat", "--glob", "!*.fbx", "--glob", "!*.FBX",
+  "--glob", "!*.anim", "--glob", "!*.controller",
+  "--glob", "!*.png", "--glob", "!*.jpg", "--glob", "!*.jpeg",
+  "--glob", "!*.tga", "--glob", "!*.psd", "--glob", "!*.tif",
+  "--glob", "!*.bmp", "--glob", "!*.gif",
+  "--glob", "!*.wav", "--glob", "!*.mp3", "--glob", "!*.ogg",
+  "--glob", "!*.mp4", "--glob", "!*.avi", "--glob", "!*.mov",
+  "--glob", "!*.ttf", "--glob", "!*.otf",
+  "--glob", "!*.woff", "--glob", "!*.woff2",
+  "--glob", "!*.DS_Store", "--glob", "!*.meta",
+  "--glob", "!*.aar", "--glob", "!*.xcframework",
+}
+
 return {
   "nvim-telescope/telescope.nvim",
   dependencies = {
@@ -16,7 +36,11 @@ return {
   },
   keys = {
     { "<space>fg", ":Telescope git_files<CR>", desc = "Find git files" },
-    { "<space>ff", ":Telescope find_files<CR>", desc = "Find files" },
+    { "<space>ff", function()
+        local args = vim.deepcopy(rg_ignore_args)
+        table.insert(args, "--hidden")
+        require("telescope.builtin").find_files({ find_command = vim.list_extend({ "rg", "--files" }, args) })
+      end, desc = "Find files" },
     { "<space>fF", function()
         require("telescope.builtin").find_files({
           no_ignore = true,
@@ -27,13 +51,17 @@ return {
     { "<space>fe", ":Telescope buffers<CR>", desc = "Find buffers" },
     { "<space>fh", ":Telescope oldfiles<CR>", desc = "Find recent files" },
     { "<space>ft", ":Telescope tags<CR>", desc = "Find tags" },
-    { "<space>fs", ":Telescope live_grep<CR>", desc = "Live grep" },
+    { "<space>fs", function()
+        require("telescope.builtin").live_grep({ additional_args = function() return vim.deepcopy(rg_ignore_args) end })
+      end, desc = "Live grep" },
     { "<space>fS", function()
         require("telescope.builtin").live_grep({
           additional_args = function() return {"--no-ignore", "--hidden"} end
         })
       end, desc = "Live grep all files (ignore .gitignore)" },
-    { "<space>fw", ":Telescope grep_string<CR>", desc = "Grep current word" },
+    { "<space>fw", function()
+        require("telescope.builtin").grep_string({ additional_args = function() return vim.deepcopy(rg_ignore_args) end })
+      end, desc = "Grep current word" },
   },
   config = function()
     local telescope = require("telescope")
@@ -49,7 +77,7 @@ return {
           -- Remove this once nvim-treesitter fully supports nvim 0.12.
           treesitter = false,
         },
-        file_ignore_patterns = { 
+        file_ignore_patterns = {
           "%.git/",
           "node_modules/",
           "%.pyc",
@@ -58,7 +86,38 @@ return {
           "%.exe",
           "%.class",
           "%.DS_Store",
-          "%.meta"
+          "%.meta",
+          "%.dll",
+          "%.so",
+          "%.dylib",
+          "%.asset",
+          "%.prefab",
+          "%.unity",
+          "%.mat",
+          "%.anim",
+          "%.controller",
+          "%.fbx",
+          "%.FBX",
+          "%.png",
+          "%.jpg",
+          "%.jpeg",
+          "%.tga",
+          "%.psd",
+          "%.tif",
+          "%.bmp",
+          "%.gif",
+          "%.wav",
+          "%.mp3",
+          "%.ogg",
+          "%.mp4",
+          "%.avi",
+          "%.mov",
+          "%.ttf",
+          "%.otf",
+          "%.woff",
+          "%.woff2",
+          "%.aar",
+          "%.xcframework",
         },
         mappings = {
           i = {
