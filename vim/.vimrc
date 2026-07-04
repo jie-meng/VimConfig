@@ -128,8 +128,28 @@ vnoremap < <gv
 
 "" terminal
 set splitbelow
-nnoremap <F2> :ter ++rows=11<CR>
+
+function! s:OpenTerminal()
+  let l:has_term = 0
+  for l:i in range(1, winnr('$'))
+    if getbufvar(winbufnr(l:i), '&buftype') == 'terminal'
+      let l:has_term = 1
+      break
+    endif
+  endfor
+  if !l:has_term
+    terminal ++rows=11
+  endif
+endfunction
+
+nnoremap <F2> :call <SID>OpenTerminal()<CR>
 tnoremap <Esc> <C-\><C-n>
+
+" Window navigation from terminal mode
+tnoremap <C-h> <C-\><C-n><C-w>h
+tnoremap <C-j> <C-\><C-n><C-w>j
+tnoremap <C-k> <C-\><C-n><C-w>k
+tnoremap <C-l> <C-\><C-n><C-w>l
 
 "" AI BGM toggle
 nnoremap <F10> :call system('bgm toggle')<CR>
