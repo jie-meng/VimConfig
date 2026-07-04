@@ -4,6 +4,8 @@
 
 local rg_ignore_args = {
   "--glob", "!.git/*",
+  "--glob", "!build/*",
+  "--glob", "!Build/*",
   "--glob", "!node_modules/*",
   "--glob", "!*.pyc", "--glob", "!*.o", "--glob", "!*.obj",
   "--glob", "!*.exe", "--glob", "!*.class",
@@ -80,6 +82,8 @@ return {
         },
         file_ignore_patterns = {
           "%.git/",
+          "build/",
+          "Build/",
           "node_modules/",
           "%.pyc",
           "%.o",
