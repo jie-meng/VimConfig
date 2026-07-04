@@ -22,7 +22,7 @@ local rg_ignore_args = {
   "--glob", "!*.ttf", "--glob", "!*.otf",
   "--glob", "!*.woff", "--glob", "!*.woff2",
   "--glob", "!*.DS_Store", "--glob", "!*.meta",
-  "--glob", "!*.aar", "--glob", "!*.xcframework",
+  "--glob", "!*.aar", "--glob", "!*.bundle", "--glob", "!*.xcframework",
 }
 
 return {
@@ -124,6 +124,7 @@ return {
           "%.woff",
           "%.woff2",
           "%.aar",
+          "%.bundle",
           "%.xcframework",
         },
         mappings = {
