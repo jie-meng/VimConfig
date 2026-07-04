@@ -83,7 +83,7 @@ return {
             vim.diagnostic.reset(nil, current_buf)
 
             -- Re-enable all language servers
-            local language_servers = { "lua_ls", "ts_ls", "pyright", "clangd", "sourcekit", "jdtls", "kotlin_language_server" }
+            local language_servers = { "lua_ls", "ts_ls", "pyright", "clangd", "sourcekit", "jdtls", "kotlin_language_server", "omnisharp" }
             for _, server in ipairs(language_servers) do
               pcall(vim.lsp.enable, server)
             end
@@ -186,6 +186,10 @@ return {
       end
 
       -- Global keymaps and autocmds
+      vim.keymap.set("n", "<Leader>mh", function()
+        vim.cmd("checkhealth vim.lsp")
+      end, { desc = "Check LSP health" })
+
       vim.keymap.set("n", "<Esc>", function()
         local win = vim.api.nvim_get_current_win()
         for _, float in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
@@ -449,6 +453,14 @@ return {
         },
         -- jdtls = {},                    -- Java
         -- kotlin_language_server = {},   -- Kotlin
+        omnisharp = {                     -- C# / .NET
+          cmd = { home .. "/.local/share/nvim/mason/bin/OmniSharp", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
+          filetypes = { "cs", "csx" },
+          root_dir = function(filename)
+            return vim.fs.root(filename, { "*.csproj", "*.sln", "*.fsproj", ".git" })
+              or vim.fn.getcwd()
+          end,
+        },
       }
 
       -- Setup all language servers using vim.lsp.config
@@ -465,6 +477,20 @@ return {
         -- Enable the server
         vim.lsp.enable(server)
       end
+
+      -- Auto-start omnisharp for C# files (workaround for vim.lsp.enable not attaching)
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "cs", "csx" },
+        callback = function(args)
+          local clients = vim.lsp.get_clients({ bufnr = args.buf, name = "omnisharp" })
+          if #clients == 0 then
+            local config = vim.lsp.config.omnisharp
+            if config then
+              vim.lsp.start(config, { bufnr = args.buf })
+            end
+          end
+        end,
+      })
     end
   }
 }
