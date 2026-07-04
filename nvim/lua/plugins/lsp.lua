@@ -1,6 +1,20 @@
 -- ============================================================================
 -- LSP Configuration - replaces vim-lsp, vim-lsp-settings
 -- ============================================================================
+-- Supported LSP servers & Mason install names:
+--   :Mason → find below, press `i` to install
+--
+--   lua-language-server (lua_ls)
+--   typescript-language-server (ts_ls)
+--   pyright (pyright)
+--   clangd (clangd)
+--   sourcekit-lsp (sourcekit, prefer Xcode toolchain)
+--   ruby-lsp (ruby_lsp)
+--   omnisharp (omnisharp)
+--   rust-analyzer (rust_analyzer, not configured yet)
+--   jdtls (jdtls, Java, commented out)
+--   kotlin-lsp (kotlin_lsp, Kotlin, commented out)
+-- ============================================================================
 
 return {
   {
@@ -83,7 +97,7 @@ return {
             vim.diagnostic.reset(nil, current_buf)
 
             -- Re-enable all language servers
-            local language_servers = { "lua_ls", "ts_ls", "pyright", "clangd", "sourcekit", "jdtls", "kotlin_language_server", "omnisharp" }
+            local language_servers = { "lua_ls", "ts_ls", "pyright", "clangd", "sourcekit", "ruby_lsp", "jdtls", "kotlin_language_server", "omnisharp" }
             for _, server in ipairs(language_servers) do
               pcall(vim.lsp.enable, server)
             end
@@ -453,6 +467,9 @@ return {
         },
         -- jdtls = {},                    -- Java
         -- kotlin_language_server = {},   -- Kotlin
+        ruby_lsp = {
+          filetypes = { "ruby", "eruby" },
+        },
         omnisharp = {                     -- C# / .NET
           cmd = { home .. "/.local/share/nvim/mason/bin/OmniSharp", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
           filetypes = { "cs", "csx" },
