@@ -10,7 +10,7 @@
 --   clangd (clangd)
 --   sourcekit-lsp (sourcekit, prefer Xcode toolchain)
 --   ruby-lsp (ruby_lsp)
---   omnisharp (omnisharp)
+--   roslyn_ls (roslyn-language-server)
 --   rust-analyzer (rust_analyzer, not configured yet)
 --   jdtls (jdtls, Java, commented out)
 --   kotlin-lsp (kotlin_lsp, Kotlin, commented out)
@@ -97,7 +97,7 @@ return {
             vim.diagnostic.reset(nil, current_buf)
 
             -- Re-enable all language servers
-            local language_servers = { "lua_ls", "ts_ls", "pyright", "clangd", "sourcekit", "ruby_lsp", "jdtls", "kotlin_language_server", "omnisharp" }
+            local language_servers = { "lua_ls", "ts_ls", "pyright", "clangd", "sourcekit", "ruby_lsp", "jdtls", "kotlin_language_server", "roslyn_ls" }
             for _, server in ipairs(language_servers) do
               pcall(vim.lsp.enable, server)
             end
@@ -470,13 +470,16 @@ return {
         ruby_lsp = {
           filetypes = { "ruby", "eruby" },
         },
-        omnisharp = {                     -- C# / .NET
-          cmd = { home .. "/.local/share/nvim/mason/bin/OmniSharp", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
-          filetypes = { "cs", "csx" },
-          root_dir = function(filename)
-            return vim.fs.root(filename, { "*.csproj", "*.sln", "*.fsproj", ".git" })
-              or vim.fn.getcwd()
-          end,
+        roslyn_ls = {                     -- C# / .NET (official Microsoft Roslyn)
+          filetypes = { "cs" },
+          -- Mason's roslyn-language-server needs DOTNET_ROOT to find the runtime.
+          -- Without this, roslyn-language-server fails with "You must install .NET".
+          -- Homebrew .NET:     cmd_env = { DOTNET_ROOT = "/opt/homebrew/opt/dotnet/libexec" }
+          -- Official installer: cmd_env = { DOTNET_ROOT = "/usr/local/share/dotnet" }
+          -- Other: run `dotnet --list-runtimes` to find the runtime root, then set that path.
+          cmd_env = {
+            DOTNET_ROOT = "/opt/homebrew/opt/dotnet/libexec",
+          },
         },
       }
 
@@ -495,13 +498,13 @@ return {
         vim.lsp.enable(server)
       end
 
-      -- Auto-start omnisharp for C# files (workaround for vim.lsp.enable not attaching)
+      -- Auto-start roslyn_ls for C# files (workaround for vim.lsp.enable not attaching)
       vim.api.nvim_create_autocmd("FileType", {
-        pattern = { "cs", "csx" },
+        pattern = { "cs" },
         callback = function(args)
-          local clients = vim.lsp.get_clients({ bufnr = args.buf, name = "omnisharp" })
+          local clients = vim.lsp.get_clients({ bufnr = args.buf, name = "roslyn_ls" })
           if #clients == 0 then
-            local config = vim.lsp.config.omnisharp
+            local config = vim.lsp.config.roslyn_ls
             if config then
               vim.lsp.start(config, { bufnr = args.buf })
             end
