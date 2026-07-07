@@ -485,18 +485,24 @@ return {
 
       -- Setup all language servers using vim.lsp.config
       for server, config in pairs(servers) do
-        -- Merge the default config with server-specific config
         local merged_config = vim.tbl_deep_extend("force", {
           capabilities = capabilities,
-          on_attach = on_attach,
         }, config)
 
-        -- Configure the server
         vim.lsp.config(server, merged_config)
-
-        -- Enable the server
         vim.lsp.enable(server)
       end
+
+      -- Use LspAttach autocommand instead of on_attach in vim.lsp.config
+      -- to avoid E729 (Funcref as String) when checkhealth serializes the config
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client then
+            on_attach(client, args.buf)
+          end
+        end,
+      })
 
       -- Auto-start roslyn_ls for C# files (workaround for vim.lsp.enable not attaching)
       vim.api.nvim_create_autocmd("FileType", {
@@ -506,7 +512,19 @@ return {
           if #clients == 0 then
             local config = vim.lsp.config.roslyn_ls
             if config then
-              vim.lsp.start(config, { bufnr = args.buf })
+              config = vim.deepcopy(config)
+              -- Resolve root_dir function to a string before calling vim.lsp.start
+              -- to avoid client.root_dir being stored as a Funcref (E729 in checkhealth)
+              if type(config.root_dir) == "function" then
+                config.root_dir(args.buf, function(root_dir)
+                  config.root_dir = root_dir
+                  vim.schedule(function()
+                    vim.lsp.start(config, { bufnr = args.buf })
+                  end)
+                end)
+              else
+                vim.lsp.start(config, { bufnr = args.buf })
+              end
             end
           end
         end,
