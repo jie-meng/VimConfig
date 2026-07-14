@@ -1,0 +1,20 @@
+vim/.vimrc
+  s_9e24aabf8e440e::t_0ceafe41b10662 416
+  s_9e24aabf8e440e::t_dabc9297896211 415,417
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "25728716d346a098ab4e57ea91d27d3bba3de717",
+  "prompts": {},
+  "sessions": {
+    "s_9e24aabf8e440e": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_09fd4faf1ffe50qwM7Jtu6YSn1",
+        "model": "mimo-v2.5-free"
+      },
+      "human_author": "Jie Meng <jmengxy@gmail.com>"
+    }
+  }
+}
