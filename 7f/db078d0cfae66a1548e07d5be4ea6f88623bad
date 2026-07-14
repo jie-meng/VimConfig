@@ -1,0 +1,19 @@
+nvim/lua/plugins/minuet.lua
+  s_32f6d717076094::t_4533e6ec4eb56c 46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.13",
+  "base_commit_sha": "7fdb078d0cfae66a1548e07d5be4ea6f88623bad",
+  "prompts": {},
+  "sessions": {
+    "s_32f6d717076094": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0a093c944ffeaNAYy2Y0kQVxnA",
+        "model": "deepseek-v4-pro"
+      },
+      "human_author": "Jie Meng <jmengxy@gmail.com>"
+    }
+  }
+}
