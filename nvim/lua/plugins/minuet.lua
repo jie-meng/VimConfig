@@ -43,6 +43,7 @@ return {
       -- },
       virtualtext = {
         auto_trigger_ft = { "*" }, -- '*' stands for all file types
+        show_on_completion_menu = true,
         keymap = {
           accept = "<C-l>", -- Disable builtin, use custom Tab key below
           accept_line = false,
