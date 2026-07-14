@@ -412,6 +412,9 @@ nnoremap <space>ft :Tags<CR>
 nnoremap <space>fs :Ag <Space>
 nnoremap <space>fw :Ag <C-R><C-W><CR>
 
+"" Exit fzf with Esc instead of entering normal mode
+autocmd FileType fzf tnoremap <buffer> <Esc> <C-c>
+
 "" <vim-test>
 function! CustomStrategy(cmd)
     let g:last_test_command = a:cmd
