@@ -214,6 +214,13 @@ function M.apply_theme(idx, silent, tried)
     end, 50)
   end
 
+  -- Reset Minuet virtual text highlight after theme change (if Minuet is loaded)
+  if package.loaded["minuet"] then
+    vim.defer_fn(function()
+      vim.api.nvim_set_hl(0, "MinuetVirtualText", { link = "Comment" })
+    end, 50)
+  end
+
   write_theme_idx(idx)
 
   if not silent then
