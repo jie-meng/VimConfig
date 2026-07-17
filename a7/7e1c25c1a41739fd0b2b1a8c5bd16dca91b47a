@@ -1,0 +1,26 @@
+nvim/lua/config/keymaps.lua
+  s_674744efc3f352::t_608a76a7eb684b 155-175
+nvim/lua/config/autocmds.lua
+  s_674744efc3f352::t_401e1ea06a5fa3 193-201
+  s_674744efc3f352::t_61e6de23f0f1f4 192
+nvim/install-mac.sh
+  s_674744efc3f352::t_365a3b2254049f 60-65
+nvim/install-ubuntu.sh
+  s_674744efc3f352::t_1fe05b75111ab7 76-83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "a77e1c25c1a41739fd0b2b1a8c5bd16dca91b47a",
+  "prompts": {},
+  "sessions": {
+    "s_674744efc3f352": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_090f13a9bffeK5toTDJrHL4KAi",
+        "model": "deepseek-v4-pro"
+      },
+      "human_author": "Jie Meng <jmengxy@gmail.com>"
+    }
+  }
+}
