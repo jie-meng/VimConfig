@@ -57,6 +57,12 @@ if ! command -v fzf &> /dev/null; then
     brew install fzf
 fi
 
+# plantuml (for PlantUML preview)
+if ! command -v plantuml &> /dev/null; then
+    echo -e "${YELLOW}Installing plantuml...${NC}"
+    brew install plantuml
+fi
+
 # Install im-select for input method switching
 echo -e "${GREEN}Installing im-select (for input method switching)...${NC}"
 if ! command -v im-select &> /dev/null; then

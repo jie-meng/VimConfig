@@ -152,6 +152,27 @@ keymap.set("n", "<F10>", function()
   vim.fn.jobstart("bgm toggle")
 end, { desc = "Toggle AI BGM" })
 
+-- PlantUML preview (F8)
+keymap.set("n", "<F8>", function()
+  local filepath = vim.api.nvim_buf_get_name(0)
+  if vim.bo.filetype ~= "plantuml" then
+    vim.notify("Not a plantuml file", vim.log.levels.WARN)
+    return
+  end
+  local out = vim.fn.fnamemodify(filepath, ":r") .. ".svg"
+  vim.fn.jobstart({ "plantuml", "-tsvg", "-o", vim.fn.fnamemodify(filepath, ":h"), filepath }, {
+    on_exit = function(_, code)
+      if code == 0 then
+        local opener = vim.fn.has("macunix") == 1 and "open" or "xdg-open"
+        vim.fn.jobstart({ opener, out })
+        vim.notify("PlantUML preview: " .. vim.fn.fnamemodify(out, ":t"), vim.log.levels.INFO)
+      else
+        vim.notify("PlantUML render failed (exit " .. code .. ")", vim.log.levels.ERROR)
+      end
+    end,
+  })
+end, { desc = "PlantUML preview" })
+
 -- Copy file:line:code to clipboard (for AI context)
 keymap.set("n", "<space>yl", function()
   local filepath = vim.api.nvim_buf_get_name(0)

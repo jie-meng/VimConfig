@@ -73,6 +73,14 @@ else
     echo -e "${YELLOW}fzf is already installed.${NC}"
 fi
 
+# plantuml (for PlantUML preview)
+echo -e "${GREEN}Installing plantuml...${NC}"
+if ! command -v plantuml &> /dev/null; then
+    sudo apt-get install -y plantuml
+else
+    echo -e "${YELLOW}plantuml is already installed.${NC}"
+fi
+
 # Ensure ~/.local/bin is in PATH
 if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
     echo -e "${YELLOW}Adding ~/.local/bin to PATH...${NC}"

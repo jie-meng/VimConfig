@@ -190,6 +190,16 @@ autocmd({ "BufNewFile", "BufRead" }, {
     end,
 })
 
+-- PlantUML filetype detection
+augroup("PlantumlFiletype", { clear = true })
+autocmd({ "BufNewFile", "BufRead" }, {
+    group = "PlantumlFiletype",
+    pattern = { "*.puml", "*.plantuml", "*.pu" },
+    callback = function(ev)
+        vim.bo[ev.buf].filetype = "plantuml"
+    end,
+})
+
 -- Markdown helpers. Buffer-local mappings under <Leader>m — these
 -- keys do nothing in non-markdown buffers.
 augroup("MarkdownMaps", { clear = true })
