@@ -1,0 +1,21 @@
+nvim/lua/config/keymaps.lua
+  s_a5ae2b47212fc5::t_529fd598051d62 155,162-163,166
+  s_a5ae2b47212fc5::t_8c668ccbf4e9ae 164,169-170
+  s_a5ae2b47212fc5::t_59c249f5c6068f 165
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "22da43b0ec55715cbd1bfd0304baabd89364f586",
+  "prompts": {},
+  "sessions": {
+    "s_a5ae2b47212fc5": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_090e83423ffeqMhWkElJUCuqRz",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": null
+    }
+  }
+}
