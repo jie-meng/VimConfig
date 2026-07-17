@@ -152,17 +152,22 @@ keymap.set("n", "<F10>", function()
   vim.fn.jobstart("bgm toggle")
 end, { desc = "Toggle AI BGM" })
 
--- PlantUML preview (F8)
+-- PlantUML preview (F8) — renders to /tmp to avoid cluttering source dir
 keymap.set("n", "<F8>", function()
   local filepath = vim.api.nvim_buf_get_name(0)
   if vim.bo.filetype ~= "plantuml" then
     vim.notify("Not a plantuml file", vim.log.levels.WARN)
     return
   end
-  local out = vim.fn.fnamemodify(filepath, ":r") .. ".svg"
-  vim.fn.jobstart({ "plantuml", "-tsvg", "-o", vim.fn.fnamemodify(filepath, ":h"), filepath }, {
+  local tmpdir = "/tmp/plantuml-preview"
+  vim.fn.mkdir(tmpdir, "p")
+  local basename = vim.fn.fnamemodify(filepath, ":t:r")
+  local out = tmpdir .. "/preview.svg"
+  vim.fn.jobstart({ "plantuml", "-tsvg", "-o", tmpdir, filepath }, {
     on_exit = function(_, code)
       if code == 0 then
+        os.remove(out)
+        os.rename(tmpdir .. "/" .. basename .. ".svg", out)
         local opener = vim.fn.has("macunix") == 1 and "open" or "xdg-open"
         vim.fn.jobstart({ opener, out })
         vim.notify("PlantUML preview: " .. vim.fn.fnamemodify(out, ":t"), vim.log.levels.INFO)
