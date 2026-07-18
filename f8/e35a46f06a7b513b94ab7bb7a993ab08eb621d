@@ -1,0 +1,19 @@
+nvim/lua/plugins/colorscheme.lua
+  s_4b1cb7baefc196::t_611e35ef653ca1 354
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "f8e35a46f06a7b513b94ab7bb7a993ab08eb621d",
+  "prompts": {},
+  "sessions": {
+    "s_4b1cb7baefc196": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_08b90512fffe2NED27dK9jH5Xo",
+        "model": "deepseek-v4-flash-free"
+      },
+      "human_author": "Jie Meng <jmengxy@gmail.com>"
+    }
+  }
+}
