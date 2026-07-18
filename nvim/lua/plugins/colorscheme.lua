@@ -351,6 +351,7 @@ return {
           NvimTreeOpenedFolderName = { fg = "#a3e36c" },
           NvimTreeRootFolder       = { fg = "#ff829c" },
           NvimTreeFileIcon         = { fg = "#ffe7c6" },
+          NvimTreeExecFile         = { fg = "#a3e36c", bold = true },
         },
       })
     end,
